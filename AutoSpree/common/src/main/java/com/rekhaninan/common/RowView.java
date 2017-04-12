@@ -1,0 +1,736 @@
+package com.rekhaninan.common;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Point;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.Display;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import static com.rekhaninan.common.Constants.*;
+
+
+/**
+ * Created by nin234 on 8/27/16.
+ */
+public abstract class RowView {
+
+    protected int vwType;
+    protected Context ctxt;
+    protected View notes_row, pictures_row, check_row;
+    protected String album_name;
+    protected View camera_row, map_row;
+    protected ArrayAdapterMainVw adapter;
+    private String app_name;
+
+    public ArrayAdapterMainVw getAdapter() {
+        return adapter;
+    }
+
+    public void setAdapter(ArrayAdapterMainVw adapter) {
+        this.adapter = adapter;
+    }
+
+
+    public abstract String getItemName(Item itm);
+
+    private final String TAG = "RowView";
+
+
+    public void  setVwType(int vtype)
+    {
+        vwType = vtype;
+        return;
+    }
+
+    public String getApp_name() {
+        return app_name;
+    }
+
+    public void setApp_name(String app_name) {
+        this.app_name = app_name;
+    }
+
+    public int getVwType()
+    {
+        return vwType;
+    }
+
+
+    public void setCtxt(Context ctxt1)
+    {
+        ctxt = ctxt1;
+        return;
+    }
+       public  View getView(final Item itm, int position, ViewGroup parent)
+       {
+
+           WindowManager wm = (WindowManager) ctxt.getSystemService(Context.WINDOW_SERVICE);
+           Display display = wm.getDefaultDisplay();
+           Point size = new Point();
+           display.getSize(size);
+           int width = size.x;
+           int height = size.y;
+           int txtHeight = height / 12;
+           Log.d(getClass().getName(), "In Super getView position=" + position);
+           switch (vwType) {
+
+               case CONTACTS_ITEM_ADD:
+               {
+                   switch (position)
+                   {
+                       case CONTACTS_ROW_THREE:
+                       case CONTACTS_ROW_FIVE:
+                       case CONTACTS_ROW_ONE:
+                           return getNoLabelView(parent, txtHeight, width, "  ");
+
+
+                       case CONTACTS_NAME_ROW:
+                          return getContactNameView(parent, txtHeight, width, itm, true);
+                       case CONTACTS_SHARE_ID_ROW:
+                           return getContactShareId(parent, txtHeight, width, itm, true);
+
+                       default:
+                           break;
+                   }
+               }
+               break;
+
+               case CONTACTS_ITEM_DISPLAY:
+               {
+                    switch (position)
+                    {
+                        case CONTACTS_ROW_THREE:
+                        case CONTACTS_ROW_FIVE:
+                        case CONTACTS_ROW_ONE:
+                            return getNoLabelView(parent, txtHeight, width, "  ");
+                        case CONTACTS_NAME_ROW:
+                            return getContactNameView(parent, txtHeight, width, itm, false);
+                        case CONTACTS_SHARE_ID_ROW:
+                            return getContactShareId(parent, txtHeight, width, itm, false);
+
+                        default:
+                            break;
+
+                    }
+
+               }
+               break;
+
+               case CONTACTS_MAINVW:
+               {
+                   LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                   View vw = inflater.inflate(R.layout.no_label, parent, false);
+                   TextView tv = (TextView) vw.findViewById(R.id.name);
+                   tv.setHeight(txtHeight);
+                   String itemname = itm.getName();
+                   if (itemname == null || itemname.length() <=0)
+                   {
+                       itemname = Long.toString(itm.getShare_id());
+                   }
+                   Log.d(TAG, "Setting item name=" + itemname);
+                   tv.setText(itemname);
+                   tv.setTag(itm);
+                   tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+                   tv.setOnClickListener(new View.OnClickListener() {
+                                             @Override
+                                             public void onClick(View view) {
+
+                                                 TextView tv = (TextView) view;
+                                                 Item itm = (Item) tv.getTag();
+                                                 Log.d(getClass().getName(), "Clicked row " + tv.getText());
+                                                 Intent intent = new Intent(ctxt, ShareActivity.class);
+                                                 intent.putExtra("ViewType", CONTACTS_ITEM_DISPLAY);
+                                                 intent.putExtra("app_name", app_name);
+                                                 intent.putExtra("item", itm);
+                                                 ctxt.startActivity(intent);
+                                             }
+                                         }
+
+                   );
+                   return vw;
+               }
+
+               case CONTACTS_VW:
+               {
+                   LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                   View vw = inflater.inflate(R.layout.share_main, parent, false);
+                   TextView tv = (TextView) vw.findViewById(R.id.share_main_item);
+
+
+                   tv.setHeight(txtHeight);
+                   String itemname = itm.getName();
+                    if (itemname == null || itemname.length() <=0)
+                    {
+                        itemname = Long.toString(itm.getShare_id());
+                    }
+                   Log.d(TAG, "Setting item name=" + itemname);
+                   tv.setText(itemname);
+                   tv.setTag(itm);
+
+                   //tv.setText(Item, TextView.BufferType.EDITABLE);
+                   tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+
+                   final CheckBox cbx = (CheckBox) vw.findViewById(R.id.share_main_chkbox);
+                   cbx.setTag(itm);
+
+                   cbx.setOnClickListener(new View.OnClickListener() {
+                                              @Override
+                                              public void onClick(View view) {
+
+                                                  CheckBox cbxi = (CheckBox) view;
+                                                  Item itm = (Item) cbxi.getTag();
+                                                  Log.d(TAG, "Toggling checkbok " + itm.isSelected());
+                                                  itm.setSelected(cbxi.isSelected());
+                                              }
+                                          }
+
+                   );
+
+                   return vw;
+               }
+
+               case SHARE_MAINVW:
+               {
+                   LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                   View vw = inflater.inflate(R.layout.share_main, parent, false);
+                   TextView tv = (TextView) vw.findViewById(R.id.share_main_item);
+
+
+                   tv.setHeight(txtHeight);
+                   String itemname = getItemName(itm);
+
+                   Log.d(TAG, "Setting item name=" + itemname);
+                   tv.setText(itemname);
+                   tv.setTag(itm);
+
+                   //tv.setText(Item, TextView.BufferType.EDITABLE);
+                   tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+
+                   final CheckBox cbx = (CheckBox) vw.findViewById(R.id.share_main_chkbox);
+                   cbx.setTag(itm);
+
+                   cbx.setOnClickListener(new View.OnClickListener() {
+                                              @Override
+                                              public void onClick(View view) {
+
+                                                  CheckBox cbxi = (CheckBox) view;
+                                                  Item itm = (Item) cbxi.getTag();
+                                                  Log.d(TAG, "Toggling checkbok " + itm.isSelected());
+                                                  itm.setSelected(cbxi.isSelected());
+                                                  if (cbxi.isSelected())
+                                                  {
+                                                      adapter.resetSelected(itm.getRowno());
+                                                  }
+
+                                              }
+                                          }
+
+                   );
+
+                   return vw;
+
+               }
+               case AUTOSPREE_ADD_ITEM:
+               case AUTOSPREE_DISPLAY_ITEM:
+               case AUTOSPREE_EDIT_ITEM:
+               case OPENHOUSES_ADD_ITEM:
+               case OPENHOUSES_DISPLAY_ITEM:
+               case OPENHOUSES_EDIT_ITEM: {
+                   Log.d(getClass().getName(), "In Super ADD/display/edit ITEM position=" + position);
+                   switch (position) {
+
+                       case ROW_FIVE:
+                       {
+                           if (vwType == OPENHOUSES_DISPLAY_ITEM || vwType == AUTOSPREE_DISPLAY_ITEM)
+                           {
+                               if (check_row != null)
+                                   return check_row;
+                               check_row = getNotesCheckView(parent, txtHeight, width, "Check List");
+                               checkListRowSetOnClick(itm, true);
+                               return check_row;
+                           }
+                           else
+                           {
+                               if (camera_row != null)
+                                   return camera_row;
+
+                               camera_row = getCameraView(parent, txtHeight, width, "Camera");
+
+                               camera_row.setOnClickListener(new View.OnClickListener() {
+                                                                 @Override
+                                                                 public void onClick(View view) {
+                                                                     Log.d(getClass().getName(), "Clicked camera row starting camera");
+                                                                     if (!PermissionsManager.getInstance().hasCameraPermission(ctxt))
+                                                                     {
+                                                                         return;
+                                                                     }
+                                                                     Intent intent = new Intent(ctxt, CameraActivity.class);
+                                                                     intent.putExtra("album_name", itm.getAlbum_name());
+                                                                     ctxt.startActivity(intent);
+                                                                 }
+                                                             }
+                               );
+                               return camera_row;
+                           }
+                       }
+
+                       case ROW_SIX:
+                       {
+                           if (vwType == OPENHOUSES_DISPLAY_ITEM || vwType == AUTOSPREE_DISPLAY_ITEM)
+                           {
+                               if (notes_row != null)
+                                   return notes_row;
+                               notes_row = getNotesCheckView(parent, txtHeight, width, "Notes");
+                               notesRowSetOnClick(itm, true);
+                               return notes_row;
+                           }
+                           else
+                           {
+                               if (check_row != null)
+                                   return check_row;
+                               check_row = getNotesCheckView(parent, txtHeight, width, "Check List");
+                               checkListRowSetOnClick(itm, false);
+                               return check_row;
+                           }
+                       }
+
+                       case ROW_SEVEN:
+                       {
+                           if (vwType == OPENHOUSES_DISPLAY_ITEM || vwType == AUTOSPREE_DISPLAY_ITEM)
+                           {
+                               if (pictures_row != null)
+                                   return pictures_row;
+                               pictures_row = getPicturesView(parent, txtHeight, width);
+                               picturesRowSetOnClick(itm);
+                               return pictures_row;
+                           }
+                           else
+                           {
+                               if (notes_row != null)
+                                   return notes_row;
+                               notes_row = getNotesCheckView(parent, txtHeight, width, "Notes");
+                               notesRowSetOnClick(itm, false);
+                               return notes_row;
+                           }
+                       }
+
+
+                       case ROW_EIGHT:
+                       {
+                           if (vwType == OPENHOUSES_DISPLAY_ITEM || vwType == AUTOSPREE_DISPLAY_ITEM)
+                           {
+                               map_row = getMapView(parent, txtHeight, width);
+                               mapRowSetOnClick(itm);
+                               return map_row;
+                           }
+                           else
+                           {
+                               if (pictures_row != null)
+                                   return pictures_row;
+                               pictures_row = getPicturesView(parent, txtHeight, width);
+                               picturesRowSetOnClick(itm);
+                               return pictures_row;
+                           }
+                       }
+
+
+                       case ROW_NINE:
+                       {
+                           if (vwType == OPENHOUSES_DISPLAY_ITEM || vwType == AUTOSPREE_DISPLAY_ITEM)
+                           {
+                               return getAddrRowView(parent, txtHeight, width, "Street:", itm.getStreet());
+                           }
+                           else
+                           {
+                               map_row = getMapView(parent, txtHeight, width);
+                               mapRowSetOnClick(itm);
+                               return map_row;
+                           }
+
+                       }
+
+                       case ROW_TEN:
+                       {
+                            if (vwType == OPENHOUSES_DISPLAY_ITEM || vwType == AUTOSPREE_DISPLAY_ITEM)
+                            {
+                                return getAddrRowView(parent, txtHeight, width, "City:", itm.getCity());
+                            }
+                            else
+                            {
+                                Log.d(TAG, "Street=" + itm.getStreet());
+                                return getAddrRowView(parent, txtHeight, width, "Street:", itm.getStreet());
+                            }
+
+                       }
+
+                       case ROW_ELEVEN:
+                       {
+                           if (vwType == OPENHOUSES_DISPLAY_ITEM || vwType == AUTOSPREE_DISPLAY_ITEM)
+                           {
+                               return getAddrRowView(parent, txtHeight, width, "State:", itm.getState());
+                           }
+                           else
+                           {
+                               Log.d(TAG, "City=" + itm.getCity());
+                               return getAddrRowView(parent, txtHeight, width, "City:", itm.getCity());
+                           }
+
+                       }
+
+
+                       case ROW_TWELVE:
+                       {
+                           if (vwType == OPENHOUSES_DISPLAY_ITEM || vwType == AUTOSPREE_DISPLAY_ITEM)
+                           {
+                               return getAddrRowView(parent, txtHeight, width, "Zip:", itm.getZip());
+                           }
+                           else
+                           {
+                               Log.d(TAG, "State=" + itm.getState());
+                               return getAddrRowView(parent, txtHeight, width, "State:", itm.getState());
+                           }
+                       }
+
+
+                       case ROW_THIRTEEN:
+                       {
+                           if (!(vwType == OPENHOUSES_DISPLAY_ITEM || vwType == AUTOSPREE_DISPLAY_ITEM))
+                           {
+                               Log.d(TAG, "Zip=" + itm.getZip());
+                               return getAddrRowView(parent, txtHeight, width, "Zip:", itm.getZip());
+                           }
+                          
+                       }
+                       break;
+
+
+                       default:
+                           break;
+                   }
+               }
+               break;
+               default:
+                   break;
+           }
+
+           return null;
+       }
+
+    private void mapRowSetOnClick(final Item itm)
+    {
+        map_row.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(getClass().getName(), "Clicked Maps row displaying location map");
+                Intent intent = new Intent(ctxt, MapsActivity.class);
+                intent.putExtra("latitude", itm.getLatitude());
+                intent.putExtra("longitude", itm.getLongitude());
+                ctxt.startActivity(intent);
+            }
+        });
+    }
+
+       public  abstract void getKeyVals(Item itm);
+
+    public View getCameraView(ViewGroup parent, int txtHeight, int width, String cameraTxt)
+    {
+        LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View vw = inflater.inflate(R.layout.label_image, parent,false);
+        ImageView camera = (ImageView) vw.findViewById(R.id.label_image_icon);
+        camera.setMaxHeight(txtHeight);
+        camera.setMaxWidth(width/4);
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+        lp.setMargins(10, 5, width/10, 5);
+        camera.setLayoutParams(lp);
+
+        TextView label = (TextView) vw.findViewById(R.id.label_image_name);
+        label.setText(cameraTxt);
+        label.setHeight(txtHeight);
+        label.setWidth((width/4)*3);
+        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+         return vw;
+
+    }
+
+    public View getPicturesView(ViewGroup parent, int txtHeight, int width)
+    {
+        LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View vw = inflater.inflate(R.layout.label, parent,false);
+        TextView label = (TextView) vw.findViewById(R.id.name);
+        label.setText("Pictures");
+        label.setHeight(txtHeight);
+        label.setWidth((width/10)*8);
+        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+        ImageView disclosure = (ImageView) vw.findViewById(R.id.label_image_icon);
+        disclosure.setMaxHeight(txtHeight);
+        disclosure.setMaxWidth(width/10);
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+        lp.setMargins((width/10)*8, 5, 5, 5);
+        disclosure.setLayoutParams(lp);
+
+        return vw;
+    }
+
+    private View getNotesCheckView(ViewGroup parent, int txtHeight, int width, String lblTxt)
+    {
+        LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View vw = inflater.inflate(R.layout.label, parent,false);
+        TextView label = (TextView) vw.findViewById(R.id.name);
+        label.setText(lblTxt);
+        label.setHeight(txtHeight);
+        label.setWidth((width/10)*8);
+        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+        ImageView disclosure = (ImageView) vw.findViewById(R.id.label_image_icon);
+        disclosure.setMaxHeight(txtHeight);
+        disclosure.setMaxWidth(width/10);
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+        lp.setMargins((width/10)*8, 5, 5, 5);
+        disclosure.setLayoutParams(lp);
+
+        return vw;
+    }
+
+    public View getMapView(ViewGroup parent, int txtHeight, int width)
+    {
+        LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View vw = inflater.inflate(R.layout.label, parent,false);
+        TextView label = (TextView) vw.findViewById(R.id.name);
+        label.setText("Map");
+        label.setHeight(txtHeight);
+        label.setWidth((width/10)*8);
+        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+        ImageView disclosure = (ImageView) vw.findViewById(R.id.label_image_icon);
+        disclosure.setMaxHeight(txtHeight);
+        disclosure.setMaxWidth(width/10);
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+        lp.setMargins((width/10)*8, 5, 5, 5);
+        disclosure.setLayoutParams(lp);
+
+        return vw;
+    }
+
+    public View getAddrRowView(ViewGroup parent, int txtHeight, int width, String item, String value)
+    {
+        LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View vw = inflater.inflate(R.layout.label_text, parent,false);
+        TextView name = (TextView) vw.findViewById(R.id.name);
+        name.setText(item);
+        name.setHeight(txtHeight);
+        name.setWidth(width/4);
+        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+        EditText name_value = (EditText) vw.findViewById(R.id.value);
+        name_value.setText(value);
+        name_value.setKeyListener(null);
+        name_value.setHeight(txtHeight);
+        name_value.setWidth((width/4)*3);
+        name_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+        return vw;
+    }
+
+    protected void notesRowSetOnClick(final Item itm, final boolean displ)
+    {
+        notes_row.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(getClass().getName(), "Clicked Notes row displaying item notes");
+                Intent intent = new Intent(ctxt, NotesActivity.class);
+                intent.putExtra("display", displ);
+                intent.putExtra("notes", itm.getNotes());
+                Activity itemAct = (Activity) ctxt;
+                itemAct.startActivityForResult(intent, NOTES_ACTIVITY_REQUEST);
+
+            }
+        });
+    }
+
+    private void checkListRowSetOnClick(final Item item, final boolean displ)
+    {
+        List<Item> chklist = adapter.getCheckList();
+        if (displ)
+        {
+            if (chklist.size() ==0)
+            {
+                return;
+            }
+            else
+            {
+                Intent intent = new Intent(ctxt, SingleItemActivity.class);
+                intent.putExtra("ViewType", CHECK_LIST_DISPLAY);
+                intent.putExtra("item", item);
+                intent.putParcelableArrayListExtra("check_list", (ArrayList<Item>) adapter.getCheckList());
+                Activity itemAct = (Activity) ctxt;
+                itemAct.startActivity(intent);
+            }
+        }
+        else
+        {
+            if (chklist.size() ==0)
+            {
+                Intent intent = new Intent(ctxt, SingleItemActivity.class);
+                intent.putExtra("ViewType", CHECK_LIST_TEMPL_SELECTOR);
+                intent.putExtra("item", item);
+                intent.putExtra("check_list", true);
+                Activity itemAct = (Activity) ctxt;
+                itemAct.startActivityForResult(intent, ADD_CHECK_LIST_ACTIVITY_REQUEST);
+
+            }
+            else
+            {
+                Intent intent = new Intent(ctxt, SingleItemActivity.class);
+                intent.putExtra("ViewType", CHECK_LIST_EDIT);
+                intent.putExtra("item", item);
+                Activity itemAct = (Activity) ctxt;
+                intent.putParcelableArrayListExtra("check_list", (ArrayList<Item>) adapter.getCheckList());
+                itemAct.startActivityForResult(intent, EDIT_CHECK_LIST_ACTIVITY_REQUEST);
+            }
+
+        }
+    }
+
+    protected void picturesRowSetOnClick(final Item itm)
+    {
+        album_name = itm.getAlbum_name();
+        pictures_row.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(getClass().getName(), "Clicked picture row displaying image gallery");
+                Intent intent = new Intent(ctxt, PhotoRoll.class);
+                intent.putExtra("album_name", itm.getAlbum_name());
+                intent.putExtra("app_name", app_name);
+                intent.putExtra("ViewType", PICTURE_VW);
+                ctxt.startActivity(intent);
+            }
+        });
+    }
+
+
+
+    public View getNoLabelView(ViewGroup parent, int txtHeight, int width, String txt)
+    {
+        LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View vw = inflater.inflate(R.layout.label, parent,false);
+        TextView label = (TextView) vw.findViewById(R.id.name);
+        label.setText(txt);
+        label.setHeight(txtHeight);
+        label.setWidth(width);
+        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+        return vw;
+    }
+
+       public View getContactNameView (ViewGroup parent, int txtHeight, int width, final Item itm, boolean edit)
+    {
+        LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View vw = inflater.inflate(R.layout.label_text, parent,false);
+        TextView name = (TextView) vw.findViewById(R.id.name);
+        name.setText("Name: ");
+        name.setHeight(txtHeight);
+        name.setWidth(width/4);
+        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+        EditText name_value = (EditText) vw.findViewById(R.id.value);
+        if (edit && (itm.getName() != null && itm.getName().length() > 0))
+        {
+            name_value.setText(itm.getName(), TextView.BufferType.EDITABLE);
+        }
+        else if (!edit)
+        {
+            if (itm.getName() != null && itm.getName().length() > 0)
+                name_value.setText(itm.getName());
+            name_value.setKeyListener(null);
+        }
+
+        if (edit) {
+            name_value.addTextChangedListener(new TextWatcher() {
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    itm.setName(s.toString());
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start,
+                                              int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start,
+                                          int before, int count) {
+
+                }
+            });
+        }
+        name_value.setHeight(txtHeight);
+        name_value.setWidth((width/4)*3);
+        name_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+        return vw;
+    }
+
+    public View getContactShareId (ViewGroup parent, int txtHeight, int width, final Item itm, boolean edit)
+    {
+        LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View vw = inflater.inflate(R.layout.label_text_ints, parent,false);
+        TextView name = (TextView) vw.findViewById(R.id.name_ints);
+        name.setText("Share Id: ");
+        name.setHeight(txtHeight);
+        name.setWidth(width/4);
+        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+        EditText name_value = (EditText) vw.findViewById(R.id.value_ints);
+
+        if (edit && (itm.getShare_id() != 0))
+        {
+            name_value.setText(Long.toString(itm.getShare_id()), TextView.BufferType.EDITABLE);
+        }
+        else if (!edit)
+        {
+            if (itm.getShare_id() != 0)
+                name_value.setText(Long.toString(itm.getShare_id()));
+            name_value.setKeyListener(null);
+        }
+        if (edit) {
+            name_value.addTextChangedListener(new TextWatcher() {
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    itm.setShare_id(Integer.parseInt(s.toString()) );
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start,
+                                              int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start,
+                                          int before, int count) {
+
+                }
+            });
+        }
+        name_value.setHeight(txtHeight);
+        name_value.setWidth((width/4)*3);
+        name_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+
+        return vw;
+    }
+
+}
