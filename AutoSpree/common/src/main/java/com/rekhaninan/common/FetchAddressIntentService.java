@@ -4,6 +4,22 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.ResultReceiver;
+import android.text.TextUtils;
+import android.util.Log;
+
+import static android.content.ContentValues.TAG;
+
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
  * a service on a separate handler thread.
@@ -12,63 +28,102 @@ import android.content.Context;
  * helper methods.
  */
 public class FetchAddressIntentService extends IntentService {
-    // TODO: Rename actions, choose action names that describe tasks that this
-    // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
-    private static final String ACTION_FOO = "com.rekhaninan.common.action.FOO";
-    private static final String ACTION_BAZ = "com.rekhaninan.common.action.BAZ";
 
-    // TODO: Rename parameters
-    private static final String EXTRA_PARAM1 = "com.rekhaninan.common.extra.PARAM1";
-    private static final String EXTRA_PARAM2 = "com.rekhaninan.common.extra.PARAM2";
 
+    protected ResultReceiver mReceiver;
+    private static final String TAG = "FetchAddressIS";
     public FetchAddressIntentService() {
         super("FetchAddressIntentService");
     }
 
-    /**
-     * Starts this service to perform action Foo with the given parameters. If
-     * the service is already performing a task this action will be queued.
-     *
-     * @see IntentService
-     */
-    // TODO: Customize helper method
-    public static void startActionFoo(Context context, String param1, String param2) {
-        Intent intent = new Intent(context, FetchAddressIntentService.class);
-        intent.setAction(ACTION_FOO);
-        intent.putExtra(EXTRA_PARAM1, param1);
-        intent.putExtra(EXTRA_PARAM2, param2);
-        context.startService(intent);
-    }
 
-    /**
-     * Starts this service to perform action Baz with the given parameters. If
-     * the service is already performing a task this action will be queued.
-     *
-     * @see IntentService
-     */
-    // TODO: Customize helper method
-    public static void startActionBaz(Context context, String param1, String param2) {
-        Intent intent = new Intent(context, FetchAddressIntentService.class);
-        intent.setAction(ACTION_BAZ);
-        intent.putExtra(EXTRA_PARAM1, param1);
-        intent.putExtra(EXTRA_PARAM2, param2);
-        context.startService(intent);
-    }
 
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
-            final String action = intent.getAction();
-            if (ACTION_FOO.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                handleActionFoo(param1, param2);
-            } else if (ACTION_BAZ.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                handleActionBaz(param1, param2);
+
+            mReceiver = intent.getParcelableExtra(Constants.RECEIVER);
+
+            // Check if receiver was properly registered.
+            if (mReceiver == null) {
+                Log.e(TAG, "No receiver received. There is nowhere to send the results.");
+                return;
             }
+
+            // Get the location passed to this service through an extra.
+            Location location = intent.getParcelableExtra(Constants.LOCATION_DATA_EXTRA);
+
+            // Make sure that the location data was really sent over through an extra. If it wasn't,
+            // send an error error message and return.
+            if (location == null) {
+
+                Log.e(TAG, "No location data provided");
+                deliverResultToReceiver(Constants.FAILURE_RESULT, "No location data provided");
+                return;
+            }
+            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+            String errorMessage = "";
+
+
+
+            List<Address> addresses = null;
+
+            try {
+                addresses = geocoder.getFromLocation(
+                        location.getLatitude(),
+                        location.getLongitude(),
+                        // In this sample, get just a single address.
+                        1);
+            } catch (IOException ioException) {
+                // Catch network or other I/O problems.
+
+                Log.e(TAG, "Location service not available ", ioException);
+            } catch (IllegalArgumentException illegalArgumentException) {
+                // Catch invalid latitude or longitude values.
+
+                Log.e(TAG,  "Invalid latitude or longitude used . " +
+                        "Latitude = " + location.getLatitude() +
+                        ", Longitude = " +
+                        location.getLongitude(), illegalArgumentException);
+            }
+
+            // Handle case where no address was found.
+            if (addresses == null || addresses.size()  == 0) {
+
+                    Log.e(TAG, "Address not found");
+
+                deliverResultToReceiver(Constants.FAILURE_RESULT, errorMessage);
+            } else {
+                Address address = addresses.get(0);
+              //  ArrayList<String> addressFragments = new ArrayList<String>();
+
+                // Fetch the address lines using getAddressLine,
+                // join them, and send them to the thread.
+               // for(int i = 0; i < address.getMaxAddressLineIndex(); i++) {
+                //    addressFragments.add(address.getAddressLine(i));
+               // }
+                Log.i(TAG, "Address found");
+                deliverResultToReceiver(Constants.SUCCESS_RESULT,
+                        address);
+                //        TextUtils.join(System.getProperty("line.separator"),
+                  //              addressFragments));
+            }
+
+
         }
+    }
+
+    private void deliverResultToReceiver(int resultCode, Address address) {
+        Bundle bundle = new Bundle();
+
+        bundle.putParcelable(Constants.RESULT_DATA_KEY, address);
+        mReceiver.send(resultCode, bundle);
+    }
+
+    private void deliverResultToReceiver(int resultCode, String message) {
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.RESULT_DATA_KEY, message);
+        mReceiver.send(resultCode, bundle);
     }
 
     /**
