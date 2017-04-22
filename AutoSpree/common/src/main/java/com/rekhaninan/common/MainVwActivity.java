@@ -162,9 +162,9 @@ public class MainVwActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         }
-        else if (item.getItemId() == R.id.templ_list_view)
+        else if (item.getItemId() == R.id.check_list_view)
         {
-            Log.d (TAG, "Launching check lists");
+            Log.d (TAG, "Launching template lists");
             Intent intent = new Intent(this, SingleItemActivity.class);
             intent.putExtra("ViewType", EASYGROC_TEMPL_LISTS);
             Item itm = new Item();

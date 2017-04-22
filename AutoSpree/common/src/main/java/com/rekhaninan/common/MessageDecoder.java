@@ -14,6 +14,7 @@ import static com.rekhaninan.common.Constants.EASYGROC;
 import static com.rekhaninan.common.Constants.EASYGROC_ADD_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_DISPLAY_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_EDIT_ITEM;
+import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_ADD_ITEM;
 import static com.rekhaninan.common.Constants.GET_EASYGROC_LIST_MSG;
 import static com.rekhaninan.common.Constants.GET_SHARE_ID_RPLY_MSG;
 import static com.rekhaninan.common.Constants.MSG_AGGR_BUF_LEN;
@@ -23,6 +24,7 @@ import static com.rekhaninan.common.Constants.OPENHOUSES_EDIT_ITEM;
 import static com.rekhaninan.common.Constants.PIC_METADATA_MSG;
 import static com.rekhaninan.common.Constants.PIC_MSG;
 import static com.rekhaninan.common.Constants.SHARE_ITEM_MSG;
+import static com.rekhaninan.common.Constants.SHARE_TEMPL_ITEM_MSG;
 import static com.rekhaninan.common.Constants.STORE_TRNSCTN_ID_RPLY_MSG;
 
 /**
@@ -156,6 +158,32 @@ public class MessageDecoder {
         return true;
     }
 
+    boolean processShareTemplItemMessage (ByteBuffer buffer, int mlen)
+    {
+        int namelen = buffer.getInt(8); // 8== 2*sizeof(int)
+        int nameoffset = 16; // 4 * sizeof(int)
+        String name = new String (buffer.array(), nameoffset, namelen-1);
+        int listlenoffset = 20;
+        int listlen = buffer.getInt(listlenoffset);
+        int listoffset = namelen + 24;
+        String list = new String(buffer.array(), listoffset, listlen-1);
+        boolean bRet = false;
+        switch (app_name)
+        {
+
+            case EASYGROC:
+                bRet =  decodeAndStoreEasyGrocTemplItem(name, list);
+                break;
+
+            default:
+                break;
+
+        }
+        if (bRet)
+            ShareMgr.getInstance().refreshMainVw();
+        return bRet;
+
+    }
 
     boolean processShareItemMessage (ByteBuffer buffer, int mlen)
     {
@@ -190,12 +218,65 @@ public class MessageDecoder {
         return bRet;
     }
 
+    boolean decodeAndStoreEasyGrocTemplItem(String share_name, String list)
+    {
+        String[] listcomps = list.split(":;]:;");
+        int comps = listcomps.length;
+        long share_id =0;
+        for (int j=0; j < comps; ++j)
+        {
+            if (j==0)
+            {
+                String[] shareIdArr = listcomps[j].split(":");
+                share_id = Long.parseLong(shareIdArr[1]);
+
+                continue;
+            }
+            String[] pArr = listcomps[j].split("]:;");
+            int cnt = pArr.length;
+            String adjstedname = share_name;
+            if (j ==2)
+            {
+                adjstedname += ":INV";
+            }
+            else if (j == 3)
+            {
+                adjstedname += ":SCRTCH";
+            }
+            Item nameItem = new Item();
+            nameItem.setShare_id(share_id);
+            nameItem.setShare_name(adjstedname);
+            nameItem.setName(adjstedname);
+            Item shareItem = DBOperations.getInstance().shareItemExists(nameItem, EASYGROC_ADD_ITEM);
+            if (shareItem != null)
+            {
+
+                DBOperations.getInstance().deleteDb(shareItem, EASYGROC_TEMPL_ADD_ITEM);
+            }
+            for (int i=0; i < cnt; ++i) {
+                String[] kvarr = pArr[i].split(":");
+                if (kvarr.length != 5)
+                    continue;
+                Item itm = new Item();
+                itm.setShare_id(share_id);
+                itm.setShare_name(adjstedname);
+                itm.setName(adjstedname);
+                itm.setRowno(Integer.parseInt(kvarr[0]));
+                itm.setStart_month(Integer.parseInt(kvarr[1]));
+                itm.setEnd_month(Integer.parseInt(kvarr[2]));
+                itm.setInventory(Integer.parseInt(kvarr[3]));
+                itm.setItem(kvarr[4]);
+                DBOperations.getInstance().insertDb(itm, EASYGROC_TEMPL_ADD_ITEM);
+            }
+        }
+        return true;
+    }
     boolean decodeAndStoreEasyGrocItem(String share_name, String list, boolean bEasy)
     {
         String[] pArr = list.split("]:;");
         int cnt = pArr.length;
         long share_id =0;
-        String name = new String();
+
 
         for (int i=0; i < cnt; ++i)
         {
@@ -212,34 +293,16 @@ public class MessageDecoder {
                 Item shareItem = DBOperations.getInstance().shareItemExists(nameItem, EASYGROC_ADD_ITEM);
                 if (shareItem != null)
                 {
-                    name = shareItem.getName();
+
                     DBOperations.getInstance().deleteDb(shareItem, EASYGROC_DISPLAY_ITEM);
                 }
-                else
-                {
-                    if (bEasy) {
-                        SimpleDateFormat df = new SimpleDateFormat("MM/dd/yy HH:mm:ss");
-                        Calendar c = Calendar.getInstance();
-                        String formattedDate = df.format(c.getTime());
-                        name = nameItem.getName();
-                        if (name.length() < formattedDate.length())
-                            name += formattedDate;
-                        else {
-                            int endIndx = name.length() - formattedDate.length();
-                            String namePrefix = name.substring(0, endIndx);
-                            name = namePrefix + formattedDate;
-                        }
-                    }
-                    else
-                    {
-                        name = share_name;
-                    }
-                }
+
+
 
                 continue;
             }
             Item itm = new Item();
-            itm.setName(name);
+            itm.setName(share_name);
             itm.setShare_name(share_name);
             itm.setShare_id(share_id);
             itm.setItem(kvarr[1]);
@@ -428,6 +491,11 @@ public class MessageDecoder {
                      bRet = processShareItemMessage(buffer, mlen);
                 }
                 break;
+
+                case SHARE_TEMPL_ITEM_MSG:
+                {
+                    bRet = processShareTemplItemMessage(buffer, mlen);
+                }
 
 
                 default:

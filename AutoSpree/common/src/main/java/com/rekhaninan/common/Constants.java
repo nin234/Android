@@ -48,6 +48,7 @@ public final class Constants {
     public static final int CHECK_LIST_DISPLAY=25;
     public static final int CHECK_LIST_EDIT=26;
     public static final int EASYGROC_TEMPL_NAME_ADD_ITEM=27;
+    public static final int SHARE_TEMPL_MAINVW=28;
 
 
     public static final int AUTOSPREE_NAME_ROW=0;
@@ -95,6 +96,10 @@ public final class Constants {
     public static final int GET_SHARE_ID_RPLY_MSG =2;
     public static final int  STORE_TRNSCTN_ID_RPLY_MSG =4;
     public static final int GET_EASYGROC_LIST_MSG=40;
+    public static final int SHARE_TEMPL_ITEM_MSG=19;
+    public static final int SHARE_TEMPL_ITEM_RPLY_MSG=20;
+
+
 
     public static final int  MAX_BUF=16384;
     public static final int RCV_BUF_LEN=16384;

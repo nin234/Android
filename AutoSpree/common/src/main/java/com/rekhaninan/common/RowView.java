@@ -206,6 +206,7 @@ public abstract class RowView {
                    return vw;
                }
 
+               case SHARE_TEMPL_MAINVW:
                case SHARE_MAINVW:
                {
                    LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -225,6 +226,7 @@ public abstract class RowView {
 
                    final CheckBox cbx = (CheckBox) vw.findViewById(R.id.share_main_chkbox);
                    cbx.setTag(itm);
+                   itm.setCbx(cbx);
 
                    cbx.setOnClickListener(new View.OnClickListener() {
                                               @Override

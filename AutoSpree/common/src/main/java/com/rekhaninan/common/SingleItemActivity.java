@@ -621,8 +621,16 @@ public class SingleItemActivity extends AppCompatActivity
                 inflater.inflate(R.menu.edit_item, menu);
                 break;
 
-            case EASYGROC_TEMPL_LISTS:
-                inflater.inflate(R.menu.add_single_item, menu);
+            case EASYGROC_TEMPL_LISTS: {
+                String app_name = DBOperations.getInstance().getApp_name();
+                if (app_name.equals("EASYGROC"))
+                {
+                    inflater.inflate(R.menu.easygroc_templ_main, menu);
+                }
+                else {
+                    inflater.inflate(R.menu.add_single_item, menu);
+                }
+            }
                 break;
 
             case EASYGROC_TEMPL_DISPLAY_ITEM:
@@ -909,13 +917,28 @@ public class SingleItemActivity extends AppCompatActivity
 
             finish();
         }
-        else if (item.getItemId() == R.id.add_new_item)
+        else if (item.getItemId() == R.id.add_item_easy_templ)
         {
             switch (viewType)
             {
                 case EASYGROC_TEMPL_LISTS:
                 {
                     startEasyGrocTemplListAddActivity();
+                }
+                break;
+
+                default:
+                    break;
+            }
+            finish();
+        }
+        else if (item.getItemId() == R.id.share_templ)
+        {
+            switch (viewType)
+            {
+                case EASYGROC_TEMPL_LISTS:
+                {
+                    startEasyGrocTemplShareActivity();
                 }
                 break;
 
@@ -1015,6 +1038,17 @@ public class SingleItemActivity extends AppCompatActivity
             return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+
+    private void startEasyGrocTemplShareActivity()
+    {
+        Log.d (TAG, "Starting share activity");
+        String app_name = DBOperations.getInstance().getApp_name();
+        Intent intent = new Intent(this, ShareActivity.class);
+        intent.putExtra("app_name", app_name);
+        intent.putExtra("ViewType", SHARE_TEMPL_MAINVW);
+        startActivity(intent);
+
     }
 
     private void sendCheckListDisplayResult()

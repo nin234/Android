@@ -68,6 +68,8 @@ public class EasyGrocListDBIntf extends DBInterface {
     {
         try {
             values.put("name", itm.getName());
+            values.put("share_name", itm.getShare_name());
+            values.put("share_id", itm.getShare_id());
 
         } catch (NumberFormatException e) {
             Log.i(TAG, "Caught NumberFormatException exception" + e.getMessage());
@@ -235,6 +237,32 @@ public class EasyGrocListDBIntf extends DBInterface {
             }
             break;
 
+            case EASYGROC_TEMPL_ADD_ITEM:
+            case EASYGROC_TEMPL_EDIT_ITEM:
+            {
+                Cursor c = egrocDB.query("MasterListNames", column_names, "share_name = ? and share_id = ?",
+                        new String[]{itm.getShare_name(), Long.toString(itm.getShare_id())},
+                        null, null, null);
+                boolean suceed = c.moveToFirst();
+
+                while (suceed)
+                {
+                    String share_name = c.getString(c.getColumnIndexOrThrow("share_name"));
+                    long share_id = c.getLong(c.getColumnIndexOrThrow("share_id"));
+                    if (share_id == itm.getShare_id() && share_name.equals(itm.getShare_name())) {
+                        Item list = new Item();
+                        list.setName(c.getString(c.getColumnIndexOrThrow("name")));
+                        list.setShare_name(share_name);
+                        list.setShare_id(share_id);
+                        c.close();
+                        return list;
+                    }
+                    suceed = c.moveToNext();
+                }
+                c.close();
+            }
+            break;
+
             default:
                 break;
         }
@@ -323,7 +351,7 @@ public class EasyGrocListDBIntf extends DBInterface {
     {
         try {
 
-            String column_names[] = {"name"};
+            String column_names[] = {"name", "share_name", "share_id"};
             Cursor c =  egrocDB.query("MasterListNames", column_names, null, null, null, null, null);
             boolean suceed = c.moveToFirst();
             List<Item> templNameLst =  new ArrayList<Item>();
@@ -331,6 +359,8 @@ public class EasyGrocListDBIntf extends DBInterface {
             {
                 Item list = new Item();
                 list.setName(c.getString(c.getColumnIndexOrThrow("name")));
+                list.setShare_name(c.getString(c.getColumnIndexOrThrow("share_name")));
+                list.setShare_id(c.getLong(c.getColumnIndexOrThrow("share_id")));
                 templNameLst.add(list);
                 suceed = c.moveToNext();
             }

@@ -84,6 +84,7 @@ public class ArrayAdapterMainVw extends ArrayAdapter<Item> {
             if (itmElem.getRowno() == i)
                 continue;
             itmElem.setSelected(false);
+            itmElem.resetChkBox();
         }
         return;
     }

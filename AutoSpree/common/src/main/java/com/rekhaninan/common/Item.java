@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+import android.widget.CheckBox;
 
 /**
  * Created by nin234 on 9/4/16.
@@ -46,6 +47,15 @@ public class Item implements Parcelable  {
     private int start_month;
     private int end_month;
     private int inventory;
+    private CheckBox cbx;
+
+    public CheckBox getCbx() {
+        return cbx;
+    }
+
+    public void setCbx(CheckBox cbx) {
+        this.cbx = cbx;
+    }
 
     public int getStart_month() {
         return start_month;
@@ -117,6 +127,11 @@ public class Item implements Parcelable  {
 
     public void setSelected(boolean selected) {
         this.selected = selected;
+    }
+
+    public void resetChkBox()
+    {
+        cbx.setChecked(false);
     }
 
 

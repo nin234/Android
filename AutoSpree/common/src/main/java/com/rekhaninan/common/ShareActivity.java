@@ -32,6 +32,7 @@ import static com.rekhaninan.common.Constants.OPENHOUSES;
 import static com.rekhaninan.common.Constants.SHARE_MAINVW;
 import static com.rekhaninan.common.Constants.SHARE_PICTURE_ACTIVITY_REQUEST;
 import static com.rekhaninan.common.Constants.SHARE_PICTURE_VW;
+import static com.rekhaninan.common.Constants.SHARE_TEMPL_MAINVW;
 
 public class ShareActivity extends AppCompatActivity {
 
@@ -69,6 +70,22 @@ public class ShareActivity extends AppCompatActivity {
                 ArrayAdapterMainVw adapter = new ArrayAdapterMainVw(this, R.layout.simple_list_1, mainLst);
                 adapter.setParams(app_name, SHARE_MAINVW);
                 mListView.setAdapter(adapter);
+            }
+            break;
+
+            case SHARE_TEMPL_MAINVW:
+            {
+                java.util.List<Item> mainLst = DBOperations.getInstance().getTemplNameLst();
+                if (mainLst == null) {
+                    Log.d(TAG, "NULL main list");
+                    return;
+                }
+                no_items = mainLst.size();
+                mListView = (ListView) findViewById(R.id.recipe_list_view);
+                ArrayAdapterMainVw adapter = new ArrayAdapterMainVw(this, R.layout.simple_list_1, mainLst);
+                adapter.setParams(app_name, SHARE_TEMPL_MAINVW);
+                mListView.setAdapter(adapter);
+
             }
             break;
 
@@ -145,6 +162,7 @@ public class ShareActivity extends AppCompatActivity {
 
         switch (viewType) {
             case SHARE_MAINVW:
+            case SHARE_TEMPL_MAINVW:
                 inflater.inflate(R.menu.share_item, menu);
                 break;
 
@@ -181,8 +199,21 @@ public class ShareActivity extends AppCompatActivity {
                 java.util.ArrayList<Item> contactsLst = data.getParcelableArrayListExtra("contactslist");
                 switch (app_name)
                 {
-                    case EASYGROC:
-                        shareEasyGrocItem(contactsLst);
+                    case EASYGROC: {
+                        switch (viewType ) {
+
+                            case SHARE_MAINVW: {
+                                shareEasyGrocItem(contactsLst);
+                            }
+                            break;
+
+                            case SHARE_TEMPL_MAINVW:
+                            {
+                                shareEasyGrocTemplItem(contactsLst);
+                            }
+                            break;
+                        }
+                    }
                     break;
 
                     case OPENHOUSES:
@@ -354,6 +385,57 @@ public class ShareActivity extends AppCompatActivity {
         return chkLstMsg;
     }
 
+    private void shareEasyGrocTemplItem(java.util.ArrayList<Item> contactsLst)
+    {
+        String shrMsg = new String();
+        for (Item contact : contactsLst)
+        {
+            if (contact.getName().equals("ME"))
+                continue;
+            shrMsg += Long.toString(contact.getShare_id());
+            shrMsg += ";";
+        }
+
+        if (shrMsg == null || shrMsg.length() <=0)
+        {
+            Log.e(TAG, "No contact to share to");
+            return;
+        }
+        shrMsg += ":::";
+
+        shrMsg += Long.toString(ShareMgr.getInstance().getShare_id());
+        shrMsg += ":";
+        shrMsg += Long.toString(ShareMgr.getInstance().getShare_id());
+
+        shrMsg += ":;]:;";
+        for (int i=0; i < 3; ++i) {
+            String name = selectedItem.getName();
+            if (i==1) {
+                name += ":INV";
+            }
+            else if (i==2) {
+                name += ":SCRTCH";
+            }
+
+            java.util.List<Item> list = DBOperations.getInstance().getTemplList(name);
+            for (Item selItem : list) {
+                shrMsg += Integer.toString(selItem.getRowno());
+                shrMsg += ":";
+                shrMsg += Integer.toString(selItem.getStart_month());
+                shrMsg += ":";
+                shrMsg += Integer.toString(selItem.getEnd_month());
+                shrMsg += ":";
+                shrMsg += Integer.toString(selItem.getInventory());
+                shrMsg += ":";
+                shrMsg += selItem.getItem();
+                shrMsg += "]:;";
+            }
+            shrMsg += ":;]:;";
+        }
+        ShareMgr.getInstance().shareTemplItem(shrMsg, selectedItem.getName());
+
+    }
+
     private void shareEasyGrocItem(java.util.ArrayList<Item> contactsLst)
     {
         String shrMsg = new String();
@@ -383,6 +465,7 @@ public class ShareActivity extends AppCompatActivity {
             shrMsg += Long.toString(ShareMgr.getInstance().getShare_id());
             shrMsg += ":";
             shrMsg += Long.toString(ShareMgr.getInstance().getShare_id());
+            shrMsg += "]:;";
             for (Item selItem : list)
             {
                 shrMsg += Integer.toString(selItem.getRowno());

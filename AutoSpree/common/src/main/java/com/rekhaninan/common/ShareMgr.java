@@ -335,6 +335,14 @@ public class ShareMgr extends Thread {
         return;
     }
 
+    public void shareTemplItem (String item, String itemName)
+    {
+        if (item == null || item.length() <= 0 || itemName == null || itemName.length() <= 0)
+            return;
+        putMsgInQ(MessageTranslator.shareTemplItemMsg(share_id, itemName, item));
+        return;
+    }
+
     public void updateFriendList(String frndList)
     {
         if (frndList == null || frndList.length() <= 0)
