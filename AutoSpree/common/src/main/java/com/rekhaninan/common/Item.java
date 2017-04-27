@@ -48,6 +48,15 @@ public class Item implements Parcelable  {
     private int end_month;
     private int inventory;
     private CheckBox cbx;
+    private int rating;
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
 
     public CheckBox getCbx() {
         return cbx;
@@ -228,6 +237,10 @@ public class Item implements Parcelable  {
         phoneno = source.readInt();
         email = source.readString();
         share_name  = source.readString();
+        start_month = source.readInt();
+        end_month = source.readInt();
+        inventory = source.readInt();
+        rating = source.readInt();
     }
 
 
@@ -277,6 +290,10 @@ public class Item implements Parcelable  {
         dest.writeInt(phoneno);
         dest.writeString(email);
         dest.writeString(share_name);
+        dest.writeInt(start_month);
+        dest.writeInt(end_month);
+        dest.writeInt(inventory);
+        dest.writeInt(rating);
     }
 
 

@@ -99,7 +99,7 @@ public class SingleItemActivity extends AppCompatActivity
                 itm.setAlbum_name(Long.toString(rightNow));
                 itm.setNotes(" ");
 
-                for (int i=0; i < 13; ++i)
+                for (int i=0; i < 14; ++i)
                     mainLst.add(itm);
 
                 mListView = (ListView) findViewById(R.id.add_item_view);
@@ -121,7 +121,7 @@ public class SingleItemActivity extends AppCompatActivity
             case OPENHOUSES_EDIT_ITEM: {
 
                 setContentView(R.layout.activity_single_item);
-                for (int i=0; i < 12; ++i)
+                for (int i=0; i < 13; ++i)
                     mainLst.add(itm);
                 if (viewType == OPENHOUSES_EDIT_ITEM)
                     mainLst.add(itm);
@@ -144,7 +144,7 @@ public class SingleItemActivity extends AppCompatActivity
             case AUTOSPREE_DISPLAY_ITEM:
             case AUTOSPREE_EDIT_ITEM: {
                 setContentView(R.layout.activity_single_item);
-                for (int i=0; i < 12; ++i)
+                for (int i=0; i < 13; ++i)
                     mainLst.add(itm);
                 if (viewType == AUTOSPREE_EDIT_ITEM)
                     mainLst.add(itm);

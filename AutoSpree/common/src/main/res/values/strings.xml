@@ -13,6 +13,7 @@
     <string name="edit_item">Edit</string>
     <string name="title_activity_maps">Map</string>
     <string name="share_item">Share</string>
+    <string name="sort">Sort By</string>
     <string name="select_item">Select items</string>
     <string name="contact_mgr">Contacts</string>
     <string name="start_month">Start Month</string>
@@ -32,125 +33,88 @@
         <item>Dec</item>
     </string-array>
 
-    <string name="viewed"> Viewed first to</string>
-    <string name="viewed2"> left</string>
-    <string-array name="viewed_left">
-    <item>Viewed first to </item>
-        <item>Viewed last to </item>
+    <string name="viewed"> Viewed first to last</string>
+    <string-array name="viewed">
+        <item>Viewed first to last </item>
+        <item>Viewed last to first</item>
     </string-array>
 
-    <string-array name="viewed_right">
-        <item> last </item>
-        <item> first </item>
+
+
+    <string name="price"> Price high to low</string>
+    <string-array name="price">
+        <item>Price high to low</item>
+        <item>Price low to high</item>
     </string-array>
 
-    <string name="price"> Price high to</string>
-    <string name="price2"> low </string>
-    <string-array name="price_left">
-        <item>Price high to </item>
-        <item>Price low to </item>
+
+    <string name="ratings"> Ratings high to low</string>
+    <string-array name="ratings">
+        <item>Ratings high to low</item>
+        <item>Ratings low to high</item>
     </string-array>
 
-    <string-array name="price_right">
-        <item> low </item>
-        <item> high </item>
+    <string name="ratings_value">1</string>
+    <string-array name="ratings_value">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
     </string-array>
 
-    <string name="ratings"> Ratings high to</string>
-    <string name="ratings2"> low </string>
-    <string-array name="ratings_left">
-        <item>Ratings high to </item>
-        <item>Ratings low to </item>
+
+    <string name="area"> Area high to low</string>
+    <string-array name="area">
+        <item>Area high to low</item>
+        <item>Area low to high</item>
     </string-array>
 
-    <string-array name="ratings_right">
-        <item> low </item>
-        <item> high </item>
+
+    <string name="year"> Year new to old</string>
+    <string-array name="year">
+        <item>Year new to old</item>
+        <item>Year old to new</item>
     </string-array>
 
-    <string name="area"> Area high to</string>
-    <string name="area2"> low </string>
-    <string-array name="area_left">
-        <item>Area high to </item>
-        <item>Area low to </item>
+
+    <string name="beds"> Beds high to low</string>
+    <string-array name="beds">
+        <item>Beds high to low</item>
+        <item>Beds low to high</item>
     </string-array>
 
-    <string-array name="area_right">
-        <item> low </item>
-        <item> high </item>
+
+    <string name="baths"> Baths high to low</string>
+    <string-array name="baths">
+        <item>Baths high to low</item>
+        <item>Baths low to high</item>
     </string-array>
 
-    <string name="year"> Year new to</string>
-    <string name="year2"> old </string>
-    <string-array name="year_left">
-        <item>Year new to </item>
-        <item>Year old to </item>
+    <string name="make"> Make A to Z</string>
+    <string-array name="make">
+        <item>Make A to Z</item>
+        <item>Make Z to A</item>
     </string-array>
 
-    <string-array name="year_right">
-        <item> old </item>
-        <item> new </item>
+
+    <string name="model"> Model A to Z</string>
+
+    <string-array name="model">
+        <item>Model A to Z</item>
+        <item>Model Z to A</item>
     </string-array>
 
-    <string name="beds"> Beds high to</string>
-    <string name="beds2"> low </string>
-    <string-array name="beds_left">
-        <item>Beds high to </item>
-        <item>Beds low to </item>
-    </string-array>
 
-    <string-array name="beds_right">
-        <item> low </item>
-        <item> high </item>
+    <string name="color"> Color A to Z</string>
+    <string-array name="color">
+        <item>Color A to Z</item>
+        <item>Color Z to A</item>
     </string-array>
-
-    <string name="baths"> Baths high to</string>
-    <string name="baths2"> low </string>
-    <string-array name="baths_left">
-        <item>Baths high to </item>
-        <item>Baths low to </item>
-    </string-array>
-
-    <string-array name="baths_right">
-        <item> low </item>
-        <item> high </item>
-    </string-array>
-
-    <string name="make"> Make A to</string>
-    <string name="make2"> Z </string>
-    <string-array name="make_left">
-        <item>Make A to </item>
-        <item>Make Z to </item>
-    </string-array>
-
-    <string-array name="make_right">
-        <item> Z </item>
-        <item> A </item>
-    </string-array>
-
-    <string name="model"> Model A to</string>
-    <string name="model2"> Z </string>
-    <string-array name="model_left">
-        <item>Model A to </item>
-        <item>Model Z to </item>
-    </string-array>
-
-    <string-array name="model_right">
-        <item> Z </item>
-        <item> A </item>
-    </string-array>
-
-    <string name="color"> Color A to</string>
-    <string name="color2"> Z </string>
-    <string-array name="color_left">
-        <item>Color A to </item>
-        <item>Color Z to </item>
-    </string-array>
-
-    <string-array name="color_right">
-        <item> Z </item>
-        <item> A </item>
-    </string-array>
-
 
 </resources>

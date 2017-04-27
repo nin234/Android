@@ -27,34 +27,22 @@
 
         <Spinner
             android:layout_height="wrap_content"
-            android:id="@+id/viewed_left"
+            android:id="@+id/viewed"
             android:layout_below="@+id/sort_header"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_width="wrap_content"
             android:layout_weight="1"
-            android:entries="@array/viewed_left"
+            android:entries="@array/viewed"
             android:prompt="@string/viewed" />
 
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/viewed_right"
-            android:prompt="@string/viewed2"
-            android:layout_marginLeft="44dp"
-            android:layout_alignBaseline="@+id/viewed_left"
-            android:layout_alignBottom="@+id/viewed_left"
-            android:layout_toRightOf="@+id/viewed_left"
-            android:layout_toEndOf="@+id/viewed_left"
-            android:layout_weight="1"
-            android:entries="@array/viewed_right"
-            android:layout_marginStart="44dp" />
 
         <CheckBox
             android:text="CheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/viewed_check"
+            android:checked="true"
             android:layout_weight=".5" />
 
     </LinearLayout>
@@ -71,28 +59,15 @@
 
         <Spinner
             android:layout_height="wrap_content"
-            android:id="@+id/price_left"
+            android:id="@+id/price"
             android:layout_below="@+id/viewed_row"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_width="wrap_content"
             android:layout_weight="1"
-            android:entries="@array/price_left"
+            android:entries="@array/price"
             android:prompt="@string/price" />
 
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/price_right"
-            android:prompt="@string/price2"
-            android:layout_marginLeft="44dp"
-            android:layout_alignBaseline="@+id/price_left"
-            android:layout_alignBottom="@+id/price_left"
-            android:layout_toRightOf="@+id/price_left"
-            android:layout_toEndOf="@+id/price_left"
-            android:layout_weight="1"
-            android:entries="@array/price_right"
-            android:layout_marginStart="44dp" />
 
         <CheckBox
             android:text="CheckBox"
@@ -115,28 +90,15 @@
 
     <Spinner
         android:layout_height="wrap_content"
-        android:id="@+id/ratings_left"
+        android:id="@+id/ratings"
         android:layout_below="@+id/price_row"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_width="wrap_content"
         android:layout_weight="1"
-        android:entries="@array/ratings_left"
+        android:entries="@array/ratings"
         android:prompt="@string/ratings" />
 
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/ratings_right"
-        android:prompt="@string/price2"
-        android:layout_marginLeft="44dp"
-        android:layout_alignBaseline="@+id/ratings_left"
-        android:layout_alignBottom="@+id/ratings_left"
-        android:layout_toRightOf="@+id/ratings_left"
-        android:layout_toEndOf="@+id/ratings_left"
-        android:layout_weight="1"
-        android:entries="@array/ratings_right"
-        android:layout_marginStart="44dp" />
 
     <CheckBox
         android:text="CheckBox"
@@ -159,28 +121,15 @@
 
         <Spinner
             android:layout_height="wrap_content"
-            android:id="@+id/area_left"
+            android:id="@+id/area"
             android:layout_below="@+id/ratings_row"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_width="wrap_content"
             android:layout_weight="1"
-            android:entries="@array/area_left"
+            android:entries="@array/area"
             android:prompt="@string/area" />
 
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/area_right"
-            android:prompt="@string/area2"
-            android:layout_marginLeft="44dp"
-            android:layout_alignBaseline="@+id/area_left"
-            android:layout_alignBottom="@+id/area_left"
-            android:layout_toRightOf="@+id/area_left"
-            android:layout_toEndOf="@+id/area_left"
-            android:layout_weight="1"
-            android:entries="@array/area_right"
-            android:layout_marginStart="44dp" />
 
         <CheckBox
             android:text="CheckBox"
@@ -203,28 +152,16 @@
 
         <Spinner
             android:layout_height="wrap_content"
-            android:id="@+id/year_left"
+            android:id="@+id/year"
             android:layout_below="@+id/area_row"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_width="wrap_content"
             android:layout_weight="1"
-            android:entries="@array/year_left"
+            android:entries="@array/year"
             android:prompt="@string/year" />
 
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/year_right"
-            android:prompt="@string/year2"
-            android:layout_marginLeft="44dp"
-            android:layout_alignBaseline="@+id/year_left"
-            android:layout_alignBottom="@+id/year_left"
-            android:layout_toRightOf="@+id/year_left"
-            android:layout_toEndOf="@+id/year_left"
-            android:layout_weight="1"
-            android:entries="@array/year_right"
-            android:layout_marginStart="44dp" />
+
 
         <CheckBox
             android:text="CheckBox"
@@ -247,28 +184,15 @@
 
         <Spinner
             android:layout_height="wrap_content"
-            android:id="@+id/beds_left"
+            android:id="@+id/beds"
             android:layout_below="@+id/year_row"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_width="wrap_content"
             android:layout_weight="1"
-            android:entries="@array/beds_left"
+            android:entries="@array/beds"
             android:prompt="@string/beds" />
 
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/beds_right"
-            android:prompt="@string/beds2"
-            android:layout_marginLeft="44dp"
-            android:layout_alignBaseline="@+id/beds_left"
-            android:layout_alignBottom="@+id/beds_left"
-            android:layout_toRightOf="@+id/beds_left"
-            android:layout_toEndOf="@+id/beds_left"
-            android:layout_weight="1"
-            android:entries="@array/beds_right"
-            android:layout_marginStart="44dp" />
 
         <CheckBox
             android:text="CheckBox"
@@ -291,28 +215,16 @@
 
         <Spinner
             android:layout_height="wrap_content"
-            android:id="@+id/baths_left"
+            android:id="@+id/baths"
             android:layout_below="@+id/beds_row"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_width="wrap_content"
             android:layout_weight="1"
-            android:entries="@array/baths_left"
+            android:entries="@array/baths"
             android:prompt="@string/baths" />
 
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/baths_right"
-            android:prompt="@string/baths2"
-            android:layout_marginLeft="44dp"
-            android:layout_alignBaseline="@+id/baths_left"
-            android:layout_alignBottom="@+id/baths_left"
-            android:layout_toRightOf="@+id/baths_left"
-            android:layout_toEndOf="@+id/baths_left"
-            android:layout_weight="1"
-            android:entries="@array/baths_right"
-            android:layout_marginStart="44dp" />
+
 
         <CheckBox
             android:text="CheckBox"

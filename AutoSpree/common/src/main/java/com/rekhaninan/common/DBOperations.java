@@ -43,6 +43,7 @@ public class DBOperations {
         return INSTANCE;
     }
 
+
     public void initDb(String dbClass, Context ctxt) {
 
         try {
@@ -109,6 +110,22 @@ public class DBOperations {
             return null;
         }
 
+    }
+
+    public void setSortStr(String sortStr)
+    {
+        try {
+
+            java.lang.reflect.Method methd;
+            methd = dbi.getClass().getMethod("setSortString", String.class);
+            methd.invoke(dbi, sortStr);
+            return ;
+        }
+        catch (Exception e)
+        {
+            Log.d(getClass().getName(), "Cannot find reflection class name");
+            return ;
+        }
     }
 
     public java.util.List<Item>  getList(String name) {

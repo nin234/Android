@@ -49,6 +49,7 @@ public final class Constants {
     public static final int CHECK_LIST_EDIT=26;
     public static final int EASYGROC_TEMPL_NAME_ADD_ITEM=27;
     public static final int SHARE_TEMPL_MAINVW=28;
+    public static final int SORT_MAINVW=29;
 
 
     public static final int AUTOSPREE_NAME_ROW=0;
@@ -87,6 +88,7 @@ public final class Constants {
     public static final int ROW_ELEVEN=10;
     public static final int ROW_TWELVE=11;
     public static final int ROW_THIRTEEN=12;
+    public static final int ROW_FOURTEEN=13;
 
     public static final int SHARE_ITEM_MSG=9;
     public static final int PIC_METADATA_MSG=15;

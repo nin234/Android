@@ -30,6 +30,7 @@ public class OpenHousesDBIntf extends DBInterface {
     {
         Log.d(getClass().getSimpleName(), "In OpenHousesDBIntf constructor");
         easyGrocListDBIntf = new EasyGrocListDBIntf();
+        setSortString("album_name ASC");
 
     }
 
@@ -78,7 +79,12 @@ public class OpenHousesDBIntf extends DBInterface {
             } else if (key.equals("longitude")) {
                 double longitude = Double.parseDouble(value);
                 values.put(key, longitude);
-            } else {
+            }
+            else if (key.equals("ratings")) {
+                int ratings = Integer.parseInt(value);
+                values.put(key, ratings);
+            }
+            else {
 
                 values.put(key, value);
             }
@@ -112,11 +118,13 @@ public class OpenHousesDBIntf extends DBInterface {
         keyvals.put("album_name", itm.getAlbum_name());
         keyvals.put("notes", itm.getNotes());
         keyvals.put("street", itm.getStreet());
+        keyvals.put("ratings", String.valueOf(itm.getRating()));
         keyvals.put("city", itm.getCity());
         keyvals.put("state", itm.getState());
         keyvals.put("zip", itm.getZip());
         keyvals.put("latitude", Double.toString(itm.getLatitude()));
         keyvals.put("longitude", Double.toString(itm.getLongitude()));
+        keyvals.put("ratings", Integer.toString(itm.getRating()));
         return;
     }
 
@@ -161,7 +169,7 @@ public class OpenHousesDBIntf extends DBInterface {
 
             String column_names[] = {"name" , "street", "price", "area", "year", "beds", "baths",
                     "album_name", "notes", "latitude", "longitude",
-                    "street", "city", "state", "zip", "share_name", "share_id"
+                    "street", "city", "state", "zip", "share_name", "share_id", "ratings"
             };
             Cursor c = ophousesDB.query("Item", column_names, "share_name = ? and share_id = ?",
                     new String[]{itm.getShare_name(), Long.toString(itm.getShare_id())},
@@ -191,6 +199,7 @@ public class OpenHousesDBIntf extends DBInterface {
                     house.setZip(c.getString(c.getColumnIndexOrThrow("zip")));
                     house.setShare_name(c.getString(c.getColumnIndexOrThrow("share_name")));
                     house.setShare_id(c.getLong(c.getColumnIndexOrThrow("share_id")));
+                    house.setRating(c.getInt(c.getColumnIndexOrThrow("ratings")));
                     c.close();
                     return house;
                 }
@@ -239,9 +248,9 @@ public class OpenHousesDBIntf extends DBInterface {
 
             String column_names[] = {"name" , "street", "price", "area", "year", "beds", "baths",
                     "album_name", "notes", "latitude", "longitude",
-                    "street", "city", "state", "zip", "share_name", "share_id"
+                    "street", "city", "state", "zip", "share_name", "share_id", "ratings"
                            };
-            Cursor c =  ophousesDB.query("Item", column_names, null, null, null, null, null);
+            Cursor c =  ophousesDB.query("Item", column_names, null, null, null, null, getSortString());
             boolean suceed = c.moveToFirst();
             List<Item> mainVwLst =  new ArrayList<Item>();
             while (suceed)
@@ -264,6 +273,7 @@ public class OpenHousesDBIntf extends DBInterface {
                 house.setZip(c.getString(c.getColumnIndexOrThrow("zip")));
                 house.setShare_name(c.getString(c.getColumnIndexOrThrow("share_name")));
                 house.setShare_id(c.getLong(c.getColumnIndexOrThrow("share_id")));
+                house.setRating(c.getInt(c.getColumnIndexOrThrow("ratings")));
 
                 mainVwLst.add(house);
                 suceed = c.moveToNext();
@@ -286,7 +296,7 @@ public class OpenHousesDBIntf extends DBInterface {
         private static final String SQL_CREATE_ENTRIES = "CREATE TABLE Item (album_name TEXT PRIMARY KEY, area REAL, baths REAL, beds REAL," +
                 "city TEXT, country TEXT, latitude REAL, longitude REAL, name TEXT, notes TEXT, pic_cnt INTEGER, price REAL," +
                 "state TEXT, str1 TEXT, str2 TEXT, str3 TEXT, street TEXT, val1 REAL, val2 REAL, year INTEGER," +
-                "share_id INTEGER, share_name TEXT,  zip TEXT) ";
+                "share_id INTEGER, share_name TEXT,  zip TEXT, ratings INTEGER) ";
         private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS Item";
 
         public OpenHousesDbHelper(Context context) {

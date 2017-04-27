@@ -19,4 +19,12 @@
         android:icon="@drawable/ic_folder_shared_black_48dp"
         android:title="@string/share_item"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/sort"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_sort_black_48dp"
+        android:title="@string/sort"
+        app:showAsAction="ifRoom" />
+
     </menu>

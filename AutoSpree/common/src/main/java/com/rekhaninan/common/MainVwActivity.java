@@ -181,6 +181,15 @@ public class MainVwActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         }
+        else if (item.getItemId() == R.id.sort)
+        {
+            Log.d (TAG, "Starting share activity");
+            Intent intent = new Intent(this, SortActivity.class);
+            intent.putExtra("app_name", app_name);
+            intent.putExtra("ViewType", SORT_MAINVW);
+            startActivity(intent);
+            return true;
+        }
         else
         {
                 return super.onOptionsItemSelected(item);

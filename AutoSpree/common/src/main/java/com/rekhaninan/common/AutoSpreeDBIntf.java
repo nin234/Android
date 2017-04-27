@@ -34,6 +34,7 @@ public class AutoSpreeDBIntf extends DBInterface {
 
         Log.d(getClass().getSimpleName(), "In AutoSpreeDBIntf constructor");
         easyGrocListDBIntf= new EasyGrocListDBIntf();
+        setSortString("album_name ASC");
 
     }
 
@@ -83,7 +84,12 @@ public class AutoSpreeDBIntf extends DBInterface {
                } else if (key.equals("longitude")) {
                    double longitude = Double.parseDouble(value);
                    values.put(key, longitude);
-               } else {
+               }
+               else if (key.equals("ratings")) {
+                   int ratings = Integer.parseInt(value);
+                   values.put(key, ratings);
+               }
+               else {
                    values.put(key, value);
                }
            }
@@ -125,6 +131,7 @@ public class AutoSpreeDBIntf extends DBInterface {
         keyvals.put("model", itm.getModel());
         keyvals.put("name", itm.getName());
         keyvals.put("year", String.valueOf(itm.getYear()));
+        keyvals.put("ratings", String.valueOf(itm.getRating()));
         keyvals.put("price", String.valueOf(itm.getPrice()));
         keyvals.put("miles", String.valueOf(itm.getMiles()));
 
@@ -136,6 +143,7 @@ public class AutoSpreeDBIntf extends DBInterface {
         keyvals.put("zip", itm.getZip());
         keyvals.put("latitude", Double.toString(itm.getLatitude()));
         keyvals.put("longitude", Double.toString(itm.getLongitude()));
+        keyvals.put("ratings", Integer.toString(itm.getRating()));
         return;
     }
 
@@ -174,7 +182,7 @@ public class AutoSpreeDBIntf extends DBInterface {
 
             String column_names[] = {"name" , "color", "model", "make", "year", "price",
                     "miles", "album_name", "notes", "latitude", "longitude",
-                    "street", "city", "state", "zip", "share_name", "share_id" };
+                    "street", "city", "state", "zip", "share_name", "share_id", "ratings" };
             Cursor c = aspreeDB.query("Item", column_names, "share_name = ? and share_id = ?",
                     new String[]{itm.getShare_name(), Long.toString(itm.getShare_id())},
                     null, null, null);
@@ -202,6 +210,7 @@ public class AutoSpreeDBIntf extends DBInterface {
                     car.setZip(c.getString(c.getColumnIndexOrThrow("zip")));
                     car.setShare_name(c.getString(c.getColumnIndexOrThrow("share_name")));
                     car.setShare_id(c.getLong(c.getColumnIndexOrThrow("share_id")));
+                    car.setRating(c.getInt(c.getColumnIndexOrThrow("ratings")));
                     c.close();
                     return car;
                 }
@@ -246,8 +255,8 @@ public class AutoSpreeDBIntf extends DBInterface {
 
             String column_names[] = {"name" , "color", "model", "make", "year", "price",
                     "miles", "album_name", "notes", "latitude", "longitude",
-                    "street", "city", "state", "zip", "share_name", "share_id" };
-           Cursor c =  aspreeDB.query("Item", column_names, null, null, null, null, null);
+                    "street", "city", "state", "zip", "share_name", "share_id" , "ratings"};
+           Cursor c =  aspreeDB.query("Item", column_names, null, null, null, null, getSortString());
            boolean suceed = c.moveToFirst();
             List<Item> mainVwLst =  new ArrayList<Item>();
             while (suceed)
@@ -270,6 +279,7 @@ public class AutoSpreeDBIntf extends DBInterface {
                 car.setZip(c.getString(c.getColumnIndexOrThrow("zip")));
                 car.setShare_name(c.getString(c.getColumnIndexOrThrow("share_name")));
                 car.setShare_id(c.getLong(c.getColumnIndexOrThrow("share_id")));
+                car.setRating(c.getInt(c.getColumnIndexOrThrow("ratings")));
 
                 mainVwLst.add(car);
                 suceed = c.moveToNext();
@@ -292,7 +302,7 @@ public class AutoSpreeDBIntf extends DBInterface {
         private static final String SQL_CREATE_ENTRIES = "CREATE TABLE Item (album_name TEXT PRIMARY KEY, color TEXT, model TEXT, make TEXT," +
                 "city TEXT, country TEXT, latitude REAL, longitude REAL, name TEXT, notes TEXT, pic_cnt INTEGER, price REAL," +
                 "state TEXT, str1 TEXT, str2 TEXT, str3 TEXT, street TEXT, val1 REAL, val2 REAL, year INTEGER, miles INTEGER, " +
-                " share_id INTEGER, share_name TEXT, zip TEXT) ";
+                " share_id INTEGER, share_name TEXT, zip TEXT, ratings INTEGER) ";
         private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS Item";
 
         public AutoSpreeDbHelper(Context context) {

@@ -13,10 +13,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -29,7 +32,7 @@ import static com.rekhaninan.common.Constants.*;
 /**
  * Created by nin234 on 8/27/16.
  */
-public abstract class RowView {
+public abstract class RowView implements AdapterView.OnItemSelectedListener{
 
     protected int vwType;
     protected Context ctxt;
@@ -38,6 +41,16 @@ public abstract class RowView {
     protected View camera_row, map_row;
     protected ArrayAdapterMainVw adapter;
     private String app_name;
+    private int ratings;
+    private Spinner ratingsSpnr;
+
+    public int getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(int ratings) {
+        this.ratings = ratings;
+    }
 
     public ArrayAdapterMainVw getAdapter() {
         return adapter;
@@ -352,12 +365,11 @@ public abstract class RowView {
                            }
                        }
 
-
                        case ROW_NINE:
                        {
                            if (vwType == OPENHOUSES_DISPLAY_ITEM || vwType == AUTOSPREE_DISPLAY_ITEM)
                            {
-                               return getAddrRowView(parent, txtHeight, width, "Street:", itm.getStreet());
+                               return getRatingsView(parent, txtHeight, width, itm);
                            }
                            else
                            {
@@ -369,6 +381,20 @@ public abstract class RowView {
                        }
 
                        case ROW_TEN:
+                       {
+                           if (vwType == OPENHOUSES_DISPLAY_ITEM || vwType == AUTOSPREE_DISPLAY_ITEM)
+                           {
+                               return getAddrRowView(parent, txtHeight, width, "Street:", itm.getStreet());
+                           }
+                           else
+                           {
+                               return getRatingsView(parent, txtHeight, width, null);
+
+                           }
+
+                       }
+
+                       case ROW_ELEVEN:
                        {
                             if (vwType == OPENHOUSES_DISPLAY_ITEM || vwType == AUTOSPREE_DISPLAY_ITEM)
                             {
@@ -382,7 +408,7 @@ public abstract class RowView {
 
                        }
 
-                       case ROW_ELEVEN:
+                       case ROW_TWELVE:
                        {
                            if (vwType == OPENHOUSES_DISPLAY_ITEM || vwType == AUTOSPREE_DISPLAY_ITEM)
                            {
@@ -397,7 +423,7 @@ public abstract class RowView {
                        }
 
 
-                       case ROW_TWELVE:
+                       case ROW_THIRTEEN:
                        {
                            if (vwType == OPENHOUSES_DISPLAY_ITEM || vwType == AUTOSPREE_DISPLAY_ITEM)
                            {
@@ -411,7 +437,7 @@ public abstract class RowView {
                        }
 
 
-                       case ROW_THIRTEEN:
+                       case ROW_FOURTEEN:
                        {
                            if (!(vwType == OPENHOUSES_DISPLAY_ITEM || vwType == AUTOSPREE_DISPLAY_ITEM))
                            {
@@ -450,6 +476,49 @@ public abstract class RowView {
     }
 
        public  abstract void getKeyVals(Item itm);
+
+    public View getRatingsView(ViewGroup parent, int txtHeight, int width, Item itm)
+    {
+        if (itm != null)
+        {
+            LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View vw = inflater.inflate(R.layout.label_text, parent,false);
+            TextView name = (TextView) vw.findViewById(R.id.name);
+            name.setText("Ratings: ");
+            name.setHeight(txtHeight);
+            name.setWidth(width/4);
+            name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+            EditText name_value = (EditText) vw.findViewById(R.id.value);
+            name_value.setText(itm.getRating());
+            name_value.setKeyListener(null);
+            name_value.setHeight(txtHeight);
+            name_value.setWidth((width/4)*3);
+            name_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+            return vw;
+        }
+        else {
+        LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View vw = inflater.inflate(R.layout.ratings, parent,false);
+        TextView label = (TextView) vw.findViewById(R.id.ohaspree_ratings_text);
+        label.setText("Ratings: ");
+        label.setHeight(txtHeight);
+        label.setWidth(width/3);
+        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+
+            ratingsSpnr = (Spinner) vw.findViewById(R.id.ohaspree_ratings_spnr);
+            ArrayAdapter<CharSequence> ratingsAdapter = ArrayAdapter.createFromResource(ctxt,
+                    R.array.ratings_value, android.R.layout.simple_spinner_item);
+
+            ratingsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            ratingsSpnr.setAdapter(ratingsAdapter);
+            ratingsSpnr.setOnItemSelectedListener(this);
+            ratingsSpnr.setSelection(ratings);
+            ratingsSpnr.setMinimumHeight(txtHeight);
+
+            return vw;
+        }
+
+    }
 
     public View getCameraView(ViewGroup parent, int txtHeight, int width, String cameraTxt)
     {
@@ -564,6 +633,17 @@ public abstract class RowView {
 
             }
         });
+    }
+
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id)
+    {
+        ratings = pos+1;
+        return;
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Another interface callback
     }
 
     private void checkListRowSetOnClick(final Item item, final boolean displ)

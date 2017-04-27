@@ -483,6 +483,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
 // Apply the adapter to the spinner
                                        spinner1.setAdapter(adapter);
                                       spinner1.setOnItemSelectedListener(pEasyGrocRow);
+
                                        spinner1.setTag(1, itm);
                                        spinner1.setSelection(itm.getStart_month());
                                        Spinner spinner2 = (Spinner) seasonPickerView.findViewById(R.id.spinner2);

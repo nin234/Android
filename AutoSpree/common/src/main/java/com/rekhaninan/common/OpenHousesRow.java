@@ -43,6 +43,11 @@ public class OpenHousesRow extends RowView {
         return housename;
     }
 
+    OpenHousesRow()
+    {
+        setRatings(1);
+    }
+
     public  View getView(final Item itm, int position, ViewGroup parent)
     {
         View svw = super.getView(itm, position, parent);
@@ -273,7 +278,7 @@ public class OpenHousesRow extends RowView {
         String year = year_value.getText().toString();
         String price = price_value.getText().toString();
 
-
+        itm.setRating(getRatings());
 
         try
         {

@@ -53,6 +53,11 @@ public class AutoSpreeRow extends RowView
 
     private final String TAG = "AutoSpreeRow";
 
+    AutoSpreeRow()
+    {
+        setRatings(1);
+    }
+
     @Override
     public  String getItemName(Item itm)
     {
@@ -317,7 +322,7 @@ public class AutoSpreeRow extends RowView
             String price = price_value.getText().toString();
             String miles = miles_value.getText().toString();
 
-
+             itm.setRating(getRatings());
             try
             {
                 itm.setYear(Integer.parseInt(year));

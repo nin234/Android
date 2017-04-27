@@ -12,6 +12,16 @@ import java.util.List;
  */
 public abstract class DBInterface {
 
+    private String sortString;
+
+    public String getSortString() {
+        return sortString;
+    }
+
+    public void setSortString(String sortString) {
+        this.sortString = sortString;
+    }
+
     public abstract void initDb(Context ctxt);
 
     public abstract  List<Item> getMainViewLst();
