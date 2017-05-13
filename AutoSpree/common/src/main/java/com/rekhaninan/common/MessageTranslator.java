@@ -11,6 +11,7 @@ import static com.rekhaninan.common.Constants.PIC_METADATA_MSG;
 import static com.rekhaninan.common.Constants.PIC_MSG;
 import static com.rekhaninan.common.Constants.SHARE_ITEM_MSG;
 import static com.rekhaninan.common.Constants.SHARE_TEMPL_ITEM_MSG;
+import static com.rekhaninan.common.Constants.STORE_DEVICE_TKN_MSG;
 import static com.rekhaninan.common.Constants.STORE_FRIEND_LIST_MSG;
 
 /**
@@ -51,6 +52,38 @@ public class MessageTranslator {
 
     }
 
+    public static ByteBuffer shareDevicTknMsg(long shareId, String deviceTkn)
+    {
+        try
+        {
+            int devTknLen = deviceTkn.length();
+            String  os = "android";
+            int osLen = os.length();
+
+            int msglen = osLen + devTknLen + 16;
+            ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
+            byteBuffer.putInt(msglen);
+            byteBuffer.putInt(STORE_DEVICE_TKN_MSG);
+            byteBuffer.putLong(shareId);
+            byteBuffer.put(deviceTkn.getBytes("UTF-8"), 16, devTknLen);
+            byteBuffer.putChar('\0');
+            int osOffset = byteBuffer.position();
+            byteBuffer.put(os.getBytes("UTF-8"), osOffset, osLen);
+            byteBuffer.putChar('\0');
+            return byteBuffer;
+        }
+        catch (UnsupportedEncodingException excep)
+        {
+            Log.e(TAG, "Unsupported encoding UTF-8 " + excep.getMessage());
+
+        }
+        catch (Exception excp)
+        {
+            Log.e (TAG, "Caught exception " + excp.getMessage());
+        }
+        return null;
+    }
+
     public static ByteBuffer updateFriendListRequest (long shareId, String frndLst)
     {
         try
@@ -63,6 +96,7 @@ public class MessageTranslator {
         byteBuffer.putLong(8, shareId);
         byteBuffer.put(frndLst.getBytes("UTF-8"), 16, frndLen - 1);
         byteBuffer.putChar(16+frndLen-1, '\0');
+
         return byteBuffer;
         }
         catch (UnsupportedEncodingException excep)

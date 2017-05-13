@@ -3,6 +3,7 @@ package com.rekhaninan.common;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
@@ -20,6 +21,7 @@ import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
@@ -58,6 +60,9 @@ public class ShareMgr extends Thread {
     private FileOutputStream fos;
     private final int THUMBSIZE = 100;
     private File pictureFile;
+    private boolean bUpdateTkn;
+    private int failed_attempts;
+    private long backoff_time;
 
     private long share_id;
 
@@ -85,6 +90,7 @@ public class ShareMgr extends Thread {
         fos =null;
         picsofar = 0;
         pictureFile = null;
+        failed_attempts = 0;
 
     }
 
@@ -278,12 +284,19 @@ public class ShareMgr extends Thread {
         ntwIntf.setConnectionDetails(app_name);
         pDecoder.setApp_name(app_name);
         resp = ByteBuffer.allocate(RCV_BUF_LEN);
+        SharedPreferences sharing =  ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
+        bUpdateTkn = sharing.getBoolean("update", false);
 
         for (;;)
         {
             dataToSend.lock();
             try
             {
+                if (bUpdateTkn)
+                {
+                    shareDeviceTkn();
+                }
+
                 if (msgsToSend.size() == 0)
                 {
                     dataToSendCondn.await(5, TimeUnit.SECONDS);
@@ -348,7 +361,43 @@ public class ShareMgr extends Thread {
         if (frndList == null || frndList.length() <= 0)
          return;
         putMsgInQ(MessageTranslator.updateFriendListRequest(share_id, frndList));
-        return;
+
+    }
+
+    public void shareDeviceTkn()
+    {
+        SharedPreferences sharing =  ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
+        String devTkn = sharing.getString("token", "None");
+        if (devTkn.equals("None"))
+            return;
+        if (failed_attempts > 5)
+        {
+            Calendar c = new GregorianCalendar();
+            long time = c.getTimeInMillis();
+            if (time > (backoff_time + 60*30*1000))
+                failed_attempts = 0;
+            return;
+
+        }
+
+        if (ntwIntf.sendMsg(MessageTranslator.shareDevicTknMsg(share_id, devTkn)))
+        {
+            bUpdateTkn = false;
+            SharedPreferences.Editor editor = sharing.edit();
+            editor.putBoolean("update", false);
+            editor.commit();
+        }
+        else
+        {
+            ++failed_attempts;
+            if (failed_attempts > 5)
+            {
+                Calendar c = new GregorianCalendar();
+                backoff_time = c.getTimeInMillis();
+            }
+        }
+
+
     }
 
     public void sharePicture(String picUrl, String picMetaStr)

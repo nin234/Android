@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -334,8 +335,9 @@ public class EasyGrocListDBIntf extends DBInterface {
                 mainVwLst.add(list);
                 suceed = c.moveToNext();
             }
-            c.close();
 
+            c.close();
+            Collections.reverse(mainVwLst);
             return mainVwLst;
 
         }

@@ -100,6 +100,7 @@ public final class Constants {
     public static final int GET_EASYGROC_LIST_MSG=40;
     public static final int SHARE_TEMPL_ITEM_MSG=19;
     public static final int SHARE_TEMPL_ITEM_RPLY_MSG=20;
+    public static final int  STORE_DEVICE_TKN_MSG =11;
 
 
 

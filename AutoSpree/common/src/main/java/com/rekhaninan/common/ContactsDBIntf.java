@@ -83,7 +83,7 @@ public class ContactsDBIntf {
     {
 
         String dbName = "Contacts";
-        contactsDB.delete(dbName,  "share_id = ?" , new String[]{Integer.toString(itm.getShare_id())});
+        contactsDB.delete(dbName,  "share_id = ?" , new String[]{Long.toString(itm.getShare_id())});
         return true;
     }
 
