@@ -19,6 +19,8 @@ import android.widget.ArrayAdapter;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuInflater;
+
+import static com.google.android.gms.plus.PlusOneDummyView.TAG;
 import static com.rekhaninan.common.Constants.*;
 import android.widget.AdapterView;
 import android.view.View;
@@ -26,6 +28,8 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.support.v7.widget.Toolbar;
+
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class MainVwActivity extends AppCompatActivity {
     private static final String TAG="MainVwActivity";
@@ -50,6 +54,16 @@ public class MainVwActivity extends AppCompatActivity {
             app_name = message;
             setContentView(R.layout.activity_main_vw);
 
+            String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+            Log.d(TAG, "Refreshed token: " + refreshedToken);
+
+            // TODO: Implement this method to send any registration to your app's servers.
+            // sendRegistrationToServer(refreshedToken);
+            SharedPreferences sharing = getSharedPreferences("Sharing", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharing.edit();
+            editor.putString("token", refreshedToken);
+            editor.putBoolean("update", true);
+            editor.commit();
 
             ShareMgr.getInstance().start_thr(this, app_name);
 

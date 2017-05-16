@@ -337,7 +337,12 @@ public class ShareMgr extends Thread {
             if (!more)
                 break;
         }
-        return;
+
+    }
+
+    public void getItems()
+    {
+        putMsgInQ(MessageTranslator.getItemsMsg(share_id));
     }
 
     public void shareItem (String item, String itemName)
@@ -345,7 +350,7 @@ public class ShareMgr extends Thread {
         if (item == null || item.length() <= 0 || itemName == null || itemName.length() <= 0)
             return;
         putMsgInQ(MessageTranslator.shareItemMsg(share_id, itemName, item));
-        return;
+
     }
 
     public void shareTemplItem (String item, String itemName)

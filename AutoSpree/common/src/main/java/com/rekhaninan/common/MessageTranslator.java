@@ -5,6 +5,7 @@ import android.util.Log;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
+import static com.rekhaninan.common.Constants.GET_ITEMS_MSG;
 import static com.rekhaninan.common.Constants.GET_SHARE_ID_MSG;
 import static com.rekhaninan.common.Constants.LOCATION_DATA_EXTRA;
 import static com.rekhaninan.common.Constants.PIC_METADATA_MSG;
@@ -111,6 +112,32 @@ public class MessageTranslator {
         return null;
     }
 
+    public static ByteBuffer getItemsMsg(long shareId)
+    {
+        try
+        {
+            String uuid = "Android";
+            int uuidLen = uuid.length() + 1;
+            int msglen = uuidLen + 16;
+            ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
+            byteBuffer.putInt(0, msglen);
+            byteBuffer.putInt(4, GET_ITEMS_MSG);
+            byteBuffer.putLong(8, shareId);
+            byteBuffer.put(uuid.getBytes("UTF-8"), 16, uuidLen - 1);
+            byteBuffer.putChar(16+uuidLen-1, '\0');
+            return byteBuffer;
+        }
+        catch (UnsupportedEncodingException excep)
+        {
+            Log.e(TAG, "Unsupported encoding UTF-8 " + excep.getMessage());
+
+        }
+        catch (Exception excp)
+        {
+            Log.e (TAG, "Caught exception " + excp.getMessage());
+        }
+        return null;
+    }
 
 public static ByteBuffer sharePicMetaDataMsg(long shareId, String picUrl, int picLength, String picMetaStr)
 {
