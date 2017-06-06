@@ -47,6 +47,7 @@ public class DBOperations {
     public void initDb(String dbClass, Context ctxt) {
 
         try {
+            Log.d(getClass().getName(), "Creating dbi for class " +dbClass);
             dbi = Class.forName(dbClass).newInstance();
             java.lang.reflect.Method methd;
             methd = dbi.getClass().getMethod("initDb", Context.class);
@@ -56,7 +57,7 @@ public class DBOperations {
         }
         catch (Exception e)
         {
-            Log.d(getClass().getName(), "Cannot find reflection class name");
+            Log.d(getClass().getName(), "Exception initDb Cannot find reflection class name" +dbClass);
             return;
         }
     }
@@ -90,7 +91,7 @@ public class DBOperations {
         }
         catch (Exception e)
         {
-            Log.d(getClass().getName(), "Cannot find reflection class name");
+            Log.d(getClass().getName(), "Exception in getMainLst " + vwType);
             return null;
         }
 
@@ -106,7 +107,7 @@ public class DBOperations {
         }
         catch (Exception e)
         {
-            Log.d(getClass().getName(), "Cannot find reflection class name");
+            Log.d(getClass().getName(), "Exception in getTemplNameLst");
             return null;
         }
 

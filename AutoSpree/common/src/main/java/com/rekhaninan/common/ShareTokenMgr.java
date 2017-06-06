@@ -28,6 +28,7 @@ public class ShareTokenMgr extends FirebaseInstanceIdService {
         editor.putString("token", refreshedToken);
         editor.putBoolean("update", true);
         editor.commit();
+        ShareMgr.getInstance().setbUpdateTkn(true);
 
     }
 

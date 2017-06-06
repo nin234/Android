@@ -40,7 +40,7 @@ public class ContactsDBIntf {
     {
         try {
             String column_names[] = {"name" , "share_id", "nickname", "phoneno", "email"};
-            Cursor c =  contactsDB.query("Item", column_names, null, null, null, null, null);
+            Cursor c =  contactsDB.query("Contacts", column_names, null, null, null, null, null);
             boolean suceed = c.moveToFirst();
             List<Item> mainVwLst =  new ArrayList<Item>();
             while (suceed)

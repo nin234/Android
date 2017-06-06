@@ -2,6 +2,7 @@ package com.rekhaninan.common;
 
 import android.content.ContentValues;
 import android.content.Context;
+
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -11,6 +12,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,6 +31,9 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+
+
+
 import static com.rekhaninan.common.Constants.AUTOSPREE;
 import static com.rekhaninan.common.Constants.CONTACTS_MAINVW;
 import static com.rekhaninan.common.Constants.EASYGROC;
@@ -36,6 +42,7 @@ import static com.rekhaninan.common.Constants.MAINVW;
 import static com.rekhaninan.common.Constants.MAX_BUF;
 import static com.rekhaninan.common.Constants.OPENHOUSES;
 import static com.rekhaninan.common.Constants.RCV_BUF_LEN;
+
 
 /**
  * Created by ninanthomas on 2/12/17.
@@ -60,9 +67,13 @@ public class ShareMgr extends Thread {
     private FileOutputStream fos;
     private final int THUMBSIZE = 100;
     private File pictureFile;
+
+
+
     private boolean bUpdateTkn;
     private int failed_attempts;
     private long backoff_time;
+    private ShareTokenMgr shareTokenMgr;
 
     private long share_id;
 
@@ -80,10 +91,19 @@ public class ShareMgr extends Thread {
         this.share_id = share_id;
     }
 
+    public boolean isbUpdateTkn() {
+        return bUpdateTkn;
+    }
+
+    public void setbUpdateTkn(boolean bUpdateTkn) {
+        this.bUpdateTkn = bUpdateTkn;
+    }
 
     private ShareMgr ()
     {
-        msgsToSend = new ConcurrentLinkedQueue<ByteBuffer>();
+        msgsToSend = new ConcurrentLinkedQueue<>();
+        imgsToSend = new ConcurrentLinkedQueue<>();
+        imgsMetaData = new ConcurrentLinkedQueue<>();
         ntwIntf = new NtwIntf();
         piclen =0;
         picurl = null;
@@ -271,33 +291,68 @@ public class ShareMgr extends Thread {
     {
         if (share_id != 0)
             return;
-        putMsgInQ(MessageTranslator.createIdRequest());
+        Log.d(TAG, "Getting shareId");
+        if (ntwIntf.sendMsg(MessageTranslator.createIdRequest()))
+        {
+            Log.i(TAG, "Send share_id request");
+        }
+        else
+        {
+            Log.e(TAG, "Failed to send share_id request");
+        }
+
         return;
     }
 
     @Override
     public void run() {
 
-        getIdIfRequired();
+        shareTokenMgr = new ShareTokenMgr();
+        Log.d(TAG, "getting Firebase token token: ");
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        if (refreshedToken == null)
+        {
+            Log.d(TAG, "NULL pointer returned by FirebaseInstanceId getToken");
+        }
+
+            Log.d(TAG, "Refreshed token: " + refreshedToken);
+
+            // TODO: Implement this method to send any registration to your app's servers.
+            // sendRegistrationToServer(refreshedToken);
+            SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
+
+
+             String devTkn = sharing.getString("token", "None");
+            if (!devTkn.equals(refreshedToken)) {
+                SharedPreferences.Editor editor = sharing.edit();
+                editor.putString("token", refreshedToken);
+                editor.putBoolean("update", true);
+                editor.commit();
+            }
+
+
+
         ntwIntf = new NtwIntf();
         pDecoder = new MessageDecoder();
         ntwIntf.setConnectionDetails(app_name);
         pDecoder.setApp_name(app_name);
         resp = ByteBuffer.allocate(RCV_BUF_LEN);
-        SharedPreferences sharing =  ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
+
         bUpdateTkn = sharing.getBoolean("update", false);
+        getIdIfRequired();
+        if (bUpdateTkn)
+        {
+            shareDeviceTkn();
+        }
+
 
         for (;;)
         {
             dataToSend.lock();
             try
             {
-                if (bUpdateTkn)
-                {
-                    shareDeviceTkn();
-                }
 
-                if (msgsToSend.size() == 0)
+                if (msgsToSend.size() == 0 || imgsToSend.size() == 0)
                 {
                     dataToSendCondn.await(5, TimeUnit.SECONDS);
                 }
@@ -342,6 +397,7 @@ public class ShareMgr extends Thread {
 
     public void getItems()
     {
+        Log.d(TAG, "Putting getItemsMsg in Q");
         putMsgInQ(MessageTranslator.getItemsMsg(share_id));
     }
 
@@ -375,15 +431,6 @@ public class ShareMgr extends Thread {
         String devTkn = sharing.getString("token", "None");
         if (devTkn.equals("None"))
             return;
-        if (failed_attempts > 5)
-        {
-            Calendar c = new GregorianCalendar();
-            long time = c.getTimeInMillis();
-            if (time > (backoff_time + 60*30*1000))
-                failed_attempts = 0;
-            return;
-
-        }
 
         if (ntwIntf.sendMsg(MessageTranslator.shareDevicTknMsg(share_id, devTkn)))
         {
@@ -392,15 +439,7 @@ public class ShareMgr extends Thread {
             editor.putBoolean("update", false);
             editor.commit();
         }
-        else
-        {
-            ++failed_attempts;
-            if (failed_attempts > 5)
-            {
-                Calendar c = new GregorianCalendar();
-                backoff_time = c.getTimeInMillis();
-            }
-        }
+
 
 
     }
@@ -445,6 +484,7 @@ public class ShareMgr extends Thread {
         {
             return;
         }
+        Log.d(TAG, "putMsgInQ called");
         msgsToSend.add(msg);
        signalDataReady();
         return;
@@ -454,6 +494,14 @@ public class ShareMgr extends Thread {
     {
         try {
             while (msgsToSend.size() != 0 || imgsToSend.size() != 0) {
+
+                Log.d(TAG, "msgsToSend=" + msgsToSend.size() + " imsgToSend=" + imgsToSend.size());
+                getIdIfRequired();
+                if (bUpdateTkn)
+                {
+                    shareDeviceTkn();
+                }
+
                 ByteBuffer msg = msgsToSend.poll();
 
                 if (msg != null && ntwIntf.sendMsg(msg) == false)

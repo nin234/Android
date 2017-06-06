@@ -90,11 +90,11 @@ public class NtwIntf {
         }
         catch (IOException excp)
         {
-            Log.e (TAG, "Caught IOException" + excp.getMessage());
+            Log.e (TAG, "sendMsg Caught IOException" + excp.getMessage());
         }
         catch (Exception excp)
         {
-            Log.e (TAG, "Caught Exception" + excp.getMessage());
+            Log.e (TAG, "sendMsg Caught Exception" + excp.getMessage());
         }
 
 
@@ -119,11 +119,11 @@ public class NtwIntf {
         }
         catch (IOException excp)
         {
-            Log.e (TAG, "Caught IOException" + excp.getMessage());
+            Log.e (TAG, "getResp Caught IOException" + excp.getMessage());
         }
         catch (Exception excp)
         {
-            Log.e (TAG, "Caught Exception" + excp.getMessage());
+            Log.e (TAG, "getResp Caught Exception" + excp.getMessage());
         }
 
         return false;
@@ -152,15 +152,15 @@ public class NtwIntf {
         }
         catch (UnknownHostException excp)
         {
-            Log.e (TAG, "Caught UnknownHostException" + excp.getMessage());
+            Log.e (TAG, "connect Caught UnknownHostException" + excp.getMessage());
         }
         catch (IOException excp)
         {
-            Log.e (TAG, "Caught IOException" + excp.getMessage());
+            Log.e (TAG, "connect Caught IOException" + excp.getMessage());
         }
         catch (Exception excp)
         {
-            Log.e (TAG, "Caught Exception" + excp.getMessage());
+            Log.e (TAG, "connect Caught Exception" + excp.getMessage());
         }
 
         return false;

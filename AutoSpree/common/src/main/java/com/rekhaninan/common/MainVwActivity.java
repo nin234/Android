@@ -54,18 +54,8 @@ public class MainVwActivity extends AppCompatActivity {
             app_name = message;
             setContentView(R.layout.activity_main_vw);
 
-            String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-            Log.d(TAG, "Refreshed token: " + refreshedToken);
 
-            // TODO: Implement this method to send any registration to your app's servers.
-            // sendRegistrationToServer(refreshedToken);
-            SharedPreferences sharing = getSharedPreferences("Sharing", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharing.edit();
-            editor.putString("token", refreshedToken);
-            editor.putBoolean("update", true);
-            editor.commit();
 
-            ShareMgr.getInstance().start_thr(this, app_name);
 
             PermissionsManager.getInstance().requestPermissionIfReqd(getApplicationContext(), this);
             dbClassName = "com.rekhaninan.common.";
@@ -73,6 +63,8 @@ public class MainVwActivity extends AppCompatActivity {
             dbClassName += "DBIntf";
             Log.d(getClass().getSimpleName(), dbClassName);
             DBOperations.getInstance().initDb(dbClassName, this);
+            ShareMgr.getInstance().start_thr(this, app_name);
+            Log.d(TAG, "Getting main list from DB MAINVW=" + MAINVW);
             java.util.List<Item> mainLst = DBOperations.getInstance().getMainLst(MAINVW);
             if (mainLst == null)
             {
@@ -98,7 +90,7 @@ public class MainVwActivity extends AppCompatActivity {
 
         catch (Exception e)
         {
-            Log.d(getClass().getName(), "Cannot find reflection class name");
+            Log.d(getClass().getName(), "Exception in onCreate of MainVwActivity");
             return;
         }
 

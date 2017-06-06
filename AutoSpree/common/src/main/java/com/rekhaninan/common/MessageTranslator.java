@@ -28,14 +28,14 @@ public class MessageTranslator {
         try {
             int msglen = len + 8;
             ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
-            byteBuffer.putInt(0, msglen);
-            byteBuffer.putInt(4, PIC_MSG);
-            byteBuffer.put(msg, 0, len);
+            byteBuffer.putInt(msglen);
+            byteBuffer.putInt(PIC_MSG);
+            byteBuffer.put(msg);
             return byteBuffer;
         }
         catch (Exception excp)
         {
-            Log.e (TAG, "Caught exception " + excp.getMessage());
+            Log.e (TAG, "sharePicMsg Caught exception " + excp.getMessage());
         }
         return null;
     }
@@ -46,9 +46,9 @@ public class MessageTranslator {
         long trid = 1000;
         int msglen =  tridLen + 8;
         ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
-        byteBuffer.putInt(0, msglen);
-        byteBuffer.putInt(4, GET_SHARE_ID_MSG);
-        byteBuffer.putLong(8, trid);
+        byteBuffer.putInt( msglen);
+        byteBuffer.putInt(GET_SHARE_ID_MSG);
+        byteBuffer.putLong(trid);
         return byteBuffer;
 
     }
@@ -57,30 +57,29 @@ public class MessageTranslator {
     {
         try
         {
-            int devTknLen = deviceTkn.length();
+            int devTknLen = deviceTkn.getBytes("UTF-8").length;
             String  os = "android";
-            int osLen = os.length();
+            int osLen = os.getBytes("UTF-8").length;
 
             int msglen = osLen + devTknLen + 16;
+            Log.d(TAG, "SharedDevice token msg osLen=" + os.getBytes("UTF-8").length + " devTknLen=" + devTknLen + " msglen=" +msglen);
             ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
+
             byteBuffer.putInt(msglen);
             byteBuffer.putInt(STORE_DEVICE_TKN_MSG);
             byteBuffer.putLong(shareId);
-            byteBuffer.put(deviceTkn.getBytes("UTF-8"), 16, devTknLen);
-            byteBuffer.putChar('\0');
-            int osOffset = byteBuffer.position();
-            byteBuffer.put(os.getBytes("UTF-8"), osOffset, osLen);
-            byteBuffer.putChar('\0');
+            byteBuffer.put(deviceTkn.getBytes("UTF-8"));
+            byteBuffer.put(os.getBytes("UTF-8"));
             return byteBuffer;
         }
         catch (UnsupportedEncodingException excep)
         {
-            Log.e(TAG, "Unsupported encoding UTF-8 " + excep.getMessage());
+            Log.e(TAG, "shareDevicTknMsg Unsupported encoding UTF-8 " + excep.getMessage());
 
         }
         catch (Exception excp)
         {
-            Log.e (TAG, "Caught exception " + excp.getMessage());
+            Log.e (TAG, "shareDevicTknMsg Caught exception " + excp.getMessage());
         }
         return null;
     }
@@ -89,25 +88,23 @@ public class MessageTranslator {
     {
         try
         {
-        int frndLen = frndLst.length() +1;
+        int frndLen = frndLst.getBytes("UTF-8").length;
         int msglen = frndLen + 16;
         ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
-        byteBuffer.putInt(0, msglen);
-        byteBuffer.putInt(4, STORE_FRIEND_LIST_MSG);
-        byteBuffer.putLong(8, shareId);
-        byteBuffer.put(frndLst.getBytes("UTF-8"), 16, frndLen - 1);
-        byteBuffer.putChar(16+frndLen-1, '\0');
-
+        byteBuffer.putInt(msglen);
+        byteBuffer.putInt(STORE_FRIEND_LIST_MSG);
+        byteBuffer.putLong(shareId);
+        byteBuffer.put(frndLst.getBytes("UTF-8"));
         return byteBuffer;
         }
         catch (UnsupportedEncodingException excep)
         {
-            Log.e(TAG, "Unsupported encoding UTF-8 " + excep.getMessage());
+            Log.e(TAG, "updateFriendListRequest Unsupported encoding UTF-8 " + excep.getMessage());
 
         }
         catch (Exception excp)
         {
-            Log.e (TAG, "Caught exception " + excp.getMessage());
+            Log.e (TAG, "updateFriendListRequest Caught exception " + excp.getMessage());
         }
         return null;
     }
@@ -117,24 +114,23 @@ public class MessageTranslator {
         try
         {
             String uuid = "Android";
-            int uuidLen = uuid.length() + 1;
+            int uuidLen = uuid.getBytes("UTF-8").length;
             int msglen = uuidLen + 16;
             ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
-            byteBuffer.putInt(0, msglen);
-            byteBuffer.putInt(4, GET_ITEMS_MSG);
-            byteBuffer.putLong(8, shareId);
-            byteBuffer.put(uuid.getBytes("UTF-8"), 16, uuidLen - 1);
-            byteBuffer.putChar(16+uuidLen-1, '\0');
+            byteBuffer.putInt(msglen);
+            byteBuffer.putInt(GET_ITEMS_MSG);
+            byteBuffer.putLong(shareId);
+            byteBuffer.put(uuid.getBytes("UTF-8"));
             return byteBuffer;
         }
         catch (UnsupportedEncodingException excep)
         {
-            Log.e(TAG, "Unsupported encoding UTF-8 " + excep.getMessage());
+            Log.e(TAG, "getItemsMsg Unsupported encoding UTF-8 " + excep.getMessage());
 
         }
         catch (Exception excp)
         {
-            Log.e (TAG, "Caught exception " + excp.getMessage());
+            Log.e (TAG, "getItemsMsg Caught exception " + excp.getMessage());
         }
         return null;
     }
@@ -149,38 +145,32 @@ public static ByteBuffer sharePicMetaDataMsg(long shareId, String picUrl, int pi
             return null;
         picName += ";";
         picName += objName;
-        int nameLen = picName.length() +1;
+        int nameLen = picName.getBytes("UTF-8").length;
         String picMetaStr1 = picMetaStr.substring(0, picMetaStr.lastIndexOf(';')+1);
-        int metaStrLen = picMetaStr1.length() +1;
+        int metaStrLen = picMetaStr1.getBytes("UTF-8").length;
       //  int msglen = 5*sizeof(int) + nameLen  + sizeof(long long) + metaStrLen;
         int msglen = 28 + nameLen + metaStrLen;
         ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
-        byteBuffer.putInt(0, msglen);
-        byteBuffer.putInt(4, PIC_METADATA_MSG);
-        byteBuffer.putLong(8, shareId);
-        int namelenoffset = 16;
-        byteBuffer.putInt(namelenoffset, nameLen);
-        int nameoffset = namelenoffset + 4;
-        byteBuffer.put(picName.getBytes("UTF-8"), nameoffset, nameLen - 1);
-        byteBuffer.putChar(nameoffset+nameLen-1, '\0');
-        int lenghtoffset = nameoffset + nameLen;
-        byteBuffer.putInt(lenghtoffset, picLength);
-        int metastrlenoffset = lenghtoffset + 4;
-        byteBuffer.putInt(metastrlenoffset, metaStrLen);
-        int metastroffset = metastrlenoffset+4;
-        byteBuffer.put(picMetaStr1.getBytes("UTF-8"), metastroffset, metaStrLen - 1);
-        byteBuffer.putChar(metastroffset+metaStrLen-1, '\0');
+        byteBuffer.putInt(msglen);
+        byteBuffer.putInt(PIC_METADATA_MSG);
+        byteBuffer.putLong( shareId);
+
+        byteBuffer.putInt(nameLen);
+        byteBuffer.put(picName.getBytes("UTF-8"));
+        byteBuffer.putInt(picLength);
+        byteBuffer.putInt(metaStrLen);
+        byteBuffer.put(picMetaStr1.getBytes("UTF-8"));
         return byteBuffer;
 
     }
     catch (UnsupportedEncodingException excep)
     {
-        Log.e(TAG, "Unsupported encoding UTF-8 " + excep.getMessage());
+        Log.e(TAG, "sharePicMetaDataMsg Unsupported encoding UTF-8 " + excep.getMessage());
 
     }
     catch (Exception excp)
     {
-        Log.e (TAG, "Caught exception " + excp.getMessage());
+        Log.e (TAG, "sharePicMetaDataMsg Caught exception " + excp.getMessage());
     }
     return null;
 }
@@ -188,32 +178,26 @@ public static ByteBuffer sharePicMetaDataMsg(long shareId, String picUrl, int pi
     private static ByteBuffer shareCmnItemMsg (long shareId, String name, String item, int msgId)
     {
         try {
-            int nameLen = name.length() + 1;
-            int listLen = item.length() + 1;
+            int nameLen = name.getBytes("UTF-8").length;
+            int listLen = item.getBytes("UTF-8").length;
             int msglen = 16 + nameLen + listLen + 8;
             ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
-            byteBuffer.putInt(0, msglen);
-            byteBuffer.putInt(4, msgId);
-            byteBuffer.putLong(8, shareId);
-            int namelenoffset = 2 * 4 + 8;
-            byteBuffer.putInt(namelenoffset, nameLen);
-            int listlenoffset = namelenoffset + 4;
-            byteBuffer.putInt(listlenoffset, listLen);
-            int nameoffset = listlenoffset + 4;
-            byteBuffer.put(name.getBytes("UTF-8"), nameoffset, nameLen - 1);
-            byteBuffer.putChar(nameoffset+nameLen-1, '\0');
-            int shareoff = nameoffset+nameLen;
-            byteBuffer.put(item.getBytes("UTF-8"), shareoff, item.length());
-            byteBuffer.putChar(shareoff + item.length(), '\0');
+            byteBuffer.putInt(msglen);
+            byteBuffer.putInt(msgId);
+            byteBuffer.putLong(shareId);
+            byteBuffer.putInt(nameLen);;
+            byteBuffer.putInt(listLen);
+            byteBuffer.put(name.getBytes("UTF-8"));
+            byteBuffer.put(item.getBytes("UTF-8"));
             return byteBuffer;
         }catch (UnsupportedEncodingException excep)
         {
-            Log.e(TAG, "Unsupported encoding UTF-8 " + excep.getMessage());
+            Log.e(TAG, "shareCmnItemMsg Unsupported encoding UTF-8 " + excep.getMessage());
 
         }
         catch (Exception excp)
         {
-            Log.e (TAG, "Caught exception " + excp.getMessage());
+            Log.e (TAG, "shareCmnItemMsg Caught exception " + excp.getMessage());
         }
         return null;
     }
