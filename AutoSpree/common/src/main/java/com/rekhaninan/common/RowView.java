@@ -489,7 +489,8 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
             name.setWidth(width/4);
             name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
             EditText name_value = (EditText) vw.findViewById(R.id.value);
-            name_value.setText(itm.getRating());
+            //itm.getRating()
+            name_value.setText(Integer.toString(itm.getRating()));
             name_value.setKeyListener(null);
             name_value.setHeight(txtHeight);
             name_value.setWidth((width/4)*3);
@@ -655,36 +656,55 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
             {
                 return;
             }
-            else
-            {
-                Intent intent = new Intent(ctxt, SingleItemActivity.class);
-                intent.putExtra("ViewType", CHECK_LIST_DISPLAY);
-                intent.putExtra("item", item);
-                intent.putParcelableArrayListExtra("check_list", (ArrayList<Item>) adapter.getCheckList());
-                Activity itemAct = (Activity) ctxt;
-                itemAct.startActivity(intent);
+            else {
+                check_row.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(ctxt, SingleItemActivity.class);
+                        intent.putExtra("ViewType", CHECK_LIST_DISPLAY);
+                        intent.putExtra("item", item);
+                        intent.putParcelableArrayListExtra("check_list", (ArrayList<Item>) adapter.getCheckList());
+                        Activity itemAct = (Activity) ctxt;
+                        itemAct.startActivity(intent);
+                    }
+                });
+
             }
         }
         else
         {
             if (chklist.size() ==0)
             {
-                Intent intent = new Intent(ctxt, SingleItemActivity.class);
-                intent.putExtra("ViewType", CHECK_LIST_TEMPL_SELECTOR);
-                intent.putExtra("item", item);
-                intent.putExtra("check_list", true);
-                Activity itemAct = (Activity) ctxt;
-                itemAct.startActivityForResult(intent, ADD_CHECK_LIST_ACTIVITY_REQUEST);
+                check_row.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        Intent intent = new Intent(ctxt, SingleItemActivity.class);
+                        intent.putExtra("ViewType", CHECK_LIST_TEMPL_SELECTOR);
+                        intent.putExtra("item", item);
+                        intent.putExtra("check_list", true);
+                        Activity itemAct = (Activity) ctxt;
+                        itemAct.startActivityForResult(intent, ADD_CHECK_LIST_ACTIVITY_REQUEST);
+                    }
+                });
 
             }
             else
             {
-                Intent intent = new Intent(ctxt, SingleItemActivity.class);
-                intent.putExtra("ViewType", CHECK_LIST_EDIT);
-                intent.putExtra("item", item);
-                Activity itemAct = (Activity) ctxt;
-                intent.putParcelableArrayListExtra("check_list", (ArrayList<Item>) adapter.getCheckList());
-                itemAct.startActivityForResult(intent, EDIT_CHECK_LIST_ACTIVITY_REQUEST);
+                check_row.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                         Intent intent = new Intent(ctxt, SingleItemActivity.class);
+                         intent.putExtra("ViewType", CHECK_LIST_EDIT);
+                         intent.putExtra("item", item);
+                         Activity itemAct = (Activity) ctxt;
+                        intent.putParcelableArrayListExtra("check_list", (ArrayList<Item>) adapter.getCheckList());
+                        itemAct.startActivityForResult(intent, EDIT_CHECK_LIST_ACTIVITY_REQUEST);
+                    }
+                });
             }
 
         }

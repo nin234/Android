@@ -246,6 +246,7 @@ public class AutoSpreeDBIntf extends DBInterface {
         Log.d(getClass().getSimpleName(), "initDb");
         aspreeDbHelper = new AutoSpreeDbHelper(ctxt);
         aspreeDB = aspreeDbHelper.getWritableDatabase();
+        easyGrocListDBIntf.initDb(ctxt);
     }
 
    public List<Item> getMainViewLst()

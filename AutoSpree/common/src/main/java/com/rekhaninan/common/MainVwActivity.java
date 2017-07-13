@@ -55,8 +55,6 @@ public class MainVwActivity extends AppCompatActivity {
             setContentView(R.layout.activity_main_vw);
 
 
-
-
             PermissionsManager.getInstance().requestPermissionIfReqd(getApplicationContext(), this);
             dbClassName = "com.rekhaninan.common.";
             dbClassName +=   message;

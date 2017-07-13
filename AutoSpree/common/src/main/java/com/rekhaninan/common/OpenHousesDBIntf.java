@@ -239,6 +239,7 @@ public class OpenHousesDBIntf extends DBInterface {
     {
         ophousesDbHelper = new OpenHousesDbHelper(ctxt);
         ophousesDB = ophousesDbHelper.getWritableDatabase();
+        easyGrocListDBIntf.initDb(ctxt);
         return;
     }
 
