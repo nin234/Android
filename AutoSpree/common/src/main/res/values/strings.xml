@@ -76,10 +76,16 @@
     </string-array>
 
 
-    <string name="year"> Year new to old</string>
+    <string name="year">Year new to old</string>
     <string-array name="year">
         <item>Year new to old</item>
         <item>Year old to new</item>
+    </string-array>
+
+    <string name="make">Make A to Z</string>
+    <string-array name="make">
+        <item>Make A to Z</item>
+        <item>Make Z to A</item>
     </string-array>
 
 
@@ -96,11 +102,7 @@
         <item>Baths low to high</item>
     </string-array>
 
-    <string name="make"> Make A to Z</string>
-    <string-array name="make">
-        <item>Make A to Z</item>
-        <item>Make Z to A</item>
-    </string-array>
+
 
 
     <string name="model"> Model A to Z</string>

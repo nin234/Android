@@ -31,7 +31,7 @@
             android:layout_below="@+id/sort_header_aspree"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_weight="1"
             android:entries="@array/viewed"
             android:prompt="@string/viewed" />
@@ -39,8 +39,7 @@
 
 
         <CheckBox
-            android:text="CheckBox"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/viewed_check_aspree"
             android:checked="true"
@@ -59,12 +58,12 @@
         android:layout_marginTop="40dp">
 
         <Spinner
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/price_aspree"
             android:layout_below="@+id/viewed_row_aspree"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_width="wrap_content"
             android:layout_weight="1"
             android:entries="@array/price"
             android:prompt="@string/price" />
@@ -72,8 +71,7 @@
 
 
         <CheckBox
-            android:text="CheckBox"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/price_check_aspree"
             android:layout_weight=".5" />
@@ -91,20 +89,19 @@
         android:layout_marginTop="40dp">
 
         <Spinner
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/ratings_aspree"
             android:layout_below="@+id/price_row_aspree"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_width="wrap_content"
             android:layout_weight="1"
             android:entries="@array/ratings"
             android:prompt="@string/ratings" />
 
 
         <CheckBox
-            android:text="CheckBox"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/ratings_check_aspree"
             android:layout_weight=".5" />
@@ -112,6 +109,7 @@
     </LinearLayout>
 
     <LinearLayout
+
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -122,20 +120,19 @@
         android:layout_marginTop="40dp">
 
         <Spinner
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/model"
             android:layout_below="@+id/ratings_row_aspree"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_width="wrap_content"
             android:layout_weight="1"
             android:entries="@array/model"
             android:prompt="@string/model" />
 
 
         <CheckBox
-            android:text="CheckBox"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/model_check"
             android:layout_weight=".5" />
@@ -153,20 +150,19 @@
         android:layout_marginTop="40dp">
 
         <Spinner
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/year_aspree"
             android:layout_below="@+id/model_row"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_width="wrap_content"
             android:layout_weight="1"
             android:entries="@array/year"
             android:prompt="@string/year" />
 
 
         <CheckBox
-            android:text="CheckBox"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/year_check_aspree"
             android:layout_weight=".5" />
@@ -184,20 +180,19 @@
         android:layout_marginTop="40dp">
 
         <Spinner
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/make"
             android:layout_below="@+id/year_row_aspree"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_width="wrap_content"
             android:layout_weight="1"
             android:entries="@array/make"
             android:prompt="@string/make" />
 
 
         <CheckBox
-            android:text="CheckBox"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/make_check"
             android:layout_weight=".5" />
@@ -215,20 +210,19 @@
         android:layout_marginTop="40dp">
 
         <Spinner
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/color"
             android:layout_below="@+id/make_row"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_width="wrap_content"
             android:layout_weight="1"
             android:entries="@array/color"
             android:prompt="@string/color" />
 
 
         <CheckBox
-            android:text="CheckBox"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/color_check"
             android:layout_weight=".5" />

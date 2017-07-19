@@ -39,6 +39,16 @@ public class ArrayAdapterMainVw extends ArrayAdapter<Item> {
     private Stack<Integer> undo;
     private Stack<Integer> redo;
     private List<Item> checkList;
+    private boolean bCheckListChg;
+
+    public boolean isbCheckListChg() {
+        return bCheckListChg;
+    }
+
+    public void setbCheckListChg(boolean bCheckListChg) {
+        this.bCheckListChg = bCheckListChg;
+    }
+
 
 
     //Need an undo redo stack

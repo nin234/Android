@@ -15,6 +15,7 @@ import java.util.StringTokenizer;
 
 import static com.rekhaninan.common.Constants.EASYGROC_ADD_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_DISPLAY_ITEM;
+import static com.rekhaninan.common.Constants.EASYGROC_EDIT_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_ADD_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_DISPLAY_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_EDIT_ITEM;
@@ -114,6 +115,7 @@ public class AutoSpreeDBIntf extends DBInterface {
 
             case EASYGROC_TEMPL_DISPLAY_ITEM:
             case EASYGROC_TEMPL_EDIT_ITEM:
+            case EASYGROC_EDIT_ITEM:
                 return easyGrocListDBIntf.deleteDb(itm, vwType);
 
             default:
@@ -171,7 +173,10 @@ public class AutoSpreeDBIntf extends DBInterface {
 
     public  boolean itemExists (Item itm, int vwType)
     {
-
+        if (vwType == EASYGROC_TEMPL_ADD_ITEM)
+        {
+            return easyGrocListDBIntf.itemExists(itm, vwType);
+        }
         return true;
     }
 

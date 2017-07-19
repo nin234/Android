@@ -318,8 +318,14 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
                            }
                            else
                            {
-                               if (check_row != null)
+                               if (getAdapter().isbCheckListChg()) {
+                                   checkListRowSetOnClick(itm, false);
+                                   getAdapter().setbCheckListChg(false);
+                               }
+                               if (check_row != null) {
+
                                    return check_row;
+                               }
                                check_row = getNotesCheckView(parent, txtHeight, width, "Check List");
                                checkListRowSetOnClick(itm, false);
                                return check_row;

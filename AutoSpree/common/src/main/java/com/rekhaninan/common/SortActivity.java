@@ -2,6 +2,7 @@ package com.rekhaninan.common;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -95,7 +96,8 @@ public class SortActivity extends AppCompatActivity implements AdapterView.OnIte
         app_name = intent.getStringExtra("app_name");
         viewType = intent.getIntExtra("ViewType", 0);
         DBOperations.getInstance().setSortStr(orderBy);
-
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
         switch (app_name)
         {
             case OPENHOUSES:
@@ -241,6 +243,11 @@ public class SortActivity extends AppCompatActivity implements AdapterView.OnIte
         {
             case VIEWED_SPINNER_ID:
             {
+                boolean bChange =false;
+                if (orderBy.equals(orderByViewed))
+                {
+                    bChange = true;
+                }
                 if (pos == 0)
                 {
                     orderByViewed = "album_name ASC";
@@ -249,11 +256,19 @@ public class SortActivity extends AppCompatActivity implements AdapterView.OnIte
                 {
                     orderByViewed = "album_name DESC";
                 }
+                if (bChange) {
+                    orderBy = orderByViewed;
+                }
             }
             break;
 
             case PRICE_SPINNER_ID:
         {
+            boolean bChange =false;
+            if (orderBy.equals(orderByPrice))
+            {
+                bChange = true;
+            }
             if (pos == 0) {
                 orderByPrice = "price DESC";
             }
@@ -261,11 +276,19 @@ public class SortActivity extends AppCompatActivity implements AdapterView.OnIte
             {
                 orderByPrice = "price ASC";
             }
+            if (bChange) {
+                orderBy = orderByPrice;
+            }
         }
         break;
 
             case RATINGS_SPINNER_ID:
             {
+                boolean bChange =false;
+                if (orderBy.equals(orderByRatings))
+                {
+                    bChange = true;
+                }
                 if (pos == 0) {
                     orderByRatings = "ratings DESC";
                 }
@@ -273,11 +296,19 @@ public class SortActivity extends AppCompatActivity implements AdapterView.OnIte
                 {
                     orderByRatings = "ratings ASC";
                 }
+                if (bChange) {
+                    orderBy = orderByRatings;
+                }
             }
             break;
 
             case YEAR_SPINNER_ID:
             {
+                boolean bChange =false;
+                if (orderBy.equals(orderByYear))
+                {
+                    bChange = true;
+                }
                 if (pos == 0) {
                     orderByYear = "year DESC";
                 }
@@ -285,11 +316,19 @@ public class SortActivity extends AppCompatActivity implements AdapterView.OnIte
                 {
                     orderByYear = "year ASC";
                 }
+                if (bChange) {
+                    orderBy = orderByYear;
+                }
             }
             break;
 
             case BEDS_SPINNER_ID:
             {
+                boolean bChange =false;
+                if (orderBy.equals(orderByBeds))
+                {
+                    bChange = true;
+                }
                 if (pos == 0) {
                     orderByBeds = "beds DESC";
                 }
@@ -297,11 +336,19 @@ public class SortActivity extends AppCompatActivity implements AdapterView.OnIte
                 {
                     orderByBeds = "beds ASC";
                 }
+                if (bChange) {
+                    orderBy = orderByBeds;
+                }
             }
             break;
 
             case BATHS_SPINNER_ID:
             {
+                boolean bChange =false;
+                if (orderBy.equals(orderByBaths))
+                {
+                    bChange = true;
+                }
                 if (pos == 0) {
                     orderByBaths = "baths DESC";
                 }
@@ -309,11 +356,19 @@ public class SortActivity extends AppCompatActivity implements AdapterView.OnIte
                 {
                     orderByBaths = "baths ASC";
                 }
+                if (bChange) {
+                    orderBy = orderByBaths;
+                }
             }
             break;
 
             case AREA_SPINNER_ID:
             {
+                boolean bChange =false;
+                if (orderBy.equals(orderByArea))
+                {
+                    bChange = true;
+                }
                 if (pos == 0) {
                     orderByArea = "area DESC";
                 }
@@ -321,11 +376,19 @@ public class SortActivity extends AppCompatActivity implements AdapterView.OnIte
                 {
                     orderByArea = "area ASC";
                 }
+                if (bChange) {
+                    orderBy = orderByArea;
+                }
             }
             break;
 
             case MAKE_SPINNER_ID:
             {
+                boolean bChange =false;
+                if (orderBy.equals(orderByMake))
+                {
+                    bChange = true;
+                }
                 if (pos == 0) {
                     orderByMake = "make ASC";
                 }
@@ -333,11 +396,19 @@ public class SortActivity extends AppCompatActivity implements AdapterView.OnIte
                 {
                     orderByMake = "make DESC";
                 }
+                if (bChange) {
+                    orderBy = orderByMake;
+                }
             }
             break;
 
             case MODEL_SPINNER_ID:
             {
+                boolean bChange =false;
+                if (orderBy.equals(orderByModel))
+                {
+                    bChange = true;
+                }
                 if (pos == 0) {
                     orderByModel = "model ASC";
                 }
@@ -345,17 +416,28 @@ public class SortActivity extends AppCompatActivity implements AdapterView.OnIte
                 {
                     orderByModel = "model DESC";
                 }
+                if (bChange) {
+                    orderBy = orderByModel;
+                }
             }
             break;
 
             case COLOR_SPINNER_ID:
             {
+                boolean bChange =false;
+                if (orderBy.equals(orderByColor))
+                {
+                    bChange = true;
+                }
                 if (pos == 0) {
                     orderByColor = "color ASC";
                 }
                 else
                 {
                     orderByColor = "color DESC";
+                }
+                if (bChange) {
+                    orderBy = orderByColor;
                 }
             }
             break;
@@ -374,11 +456,15 @@ public class SortActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private void setCommonCbxAndSpinners()
     {
-        if (app_name.equals("AUTOSPREE")) {
+        if (app_name.equals("AutoSpree")) {
             viewedSpnr = (Spinner) findViewById(R.id.viewed_aspree);
+            viewedCbx   = (CheckBox) findViewById(R.id.viewed_check_aspree);
+            yearCbx  = (CheckBox) findViewById(R.id.year_check_aspree);
         }
         else {
             viewedSpnr = (Spinner) findViewById(R.id.viewed);
+            viewedCbx   = (CheckBox) findViewById(R.id.viewed_check);
+            yearCbx  = (CheckBox) findViewById(R.id.year_check);
         }
 
         ArrayAdapter<CharSequence> viewedadapter = ArrayAdapter.createFromResource(this,
@@ -401,7 +487,7 @@ public class SortActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
-        if (app_name.equals("AUTOSPREE")) {
+        if (app_name.equals("AutoSpree")) {
             yearSpnr = (Spinner) findViewById(R.id.year_aspree);
         }
         else {
@@ -426,7 +512,7 @@ public class SortActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
-        if (app_name.equals("AUTOSPREE")) {
+        if (app_name.equals("AutoSpree")) {
             ratingsSpnr = (Spinner) findViewById(R.id.ratings_aspree);
             ratingsCbx = (CheckBox)findViewById(R.id.ratings_check_aspree);
             priceSpnr = (Spinner) findViewById(R.id.price_aspree);

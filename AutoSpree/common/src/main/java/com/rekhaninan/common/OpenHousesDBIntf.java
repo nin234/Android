@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.rekhaninan.common.Constants.EASYGROC_ADD_ITEM;
+import static com.rekhaninan.common.Constants.EASYGROC_EDIT_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_ADD_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_DISPLAY_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_EDIT_ITEM;
@@ -153,6 +154,7 @@ public class OpenHousesDBIntf extends DBInterface {
 
             case EASYGROC_TEMPL_DISPLAY_ITEM:
             case EASYGROC_TEMPL_EDIT_ITEM:
+            case EASYGROC_EDIT_ITEM:
                 return easyGrocListDBIntf.deleteDb(itm, vwType);
 
             default:
@@ -218,7 +220,10 @@ public class OpenHousesDBIntf extends DBInterface {
 
     public  boolean itemExists (Item itm, int vwType)
     {
-
+        if (vwType == EASYGROC_TEMPL_ADD_ITEM)
+        {
+            return easyGrocListDBIntf.itemExists(itm, vwType);
+        }
         return true;
     }
 

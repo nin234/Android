@@ -192,6 +192,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                                                       intent.putExtra("item", itmInt);
                                                       Activity itemAct = (Activity) ctxt;
                                                       itemAct.startActivityForResult(intent, ADD_CHECK_LIST_ACTIVITY_REQUEST_2);
+                                                      //itemAct.finish();
                                                   }
                                               }
 
@@ -810,7 +811,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         }
         else
         {
-            label.setCheckMarkDrawable(0);
+           // label.setCheckMarkDrawable(0);
             label.setChecked(false);
         }
 
@@ -833,11 +834,11 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
             @Override
             public void onClick(View v) {
                 if (label.isChecked()) {
-                    label.setCheckMarkDrawable(0);
+                    label.setCheckMarkDrawable(R.drawable.ic_check_box_outline_blank_black_24dp);
                     label.setChecked(false);
                     itm.setSelected(false);
                 } else {
-                    label.setCheckMarkDrawable(R.drawable.ic_done_black_48dp);
+                    label.setCheckMarkDrawable(R.drawable.ic_check_box_black_24dp);
                     label.setChecked(true);
                     itm.setSelected(true);
                 }
@@ -845,12 +846,12 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         });
         if (itm.isSelected())
         {
-            label.setCheckMarkDrawable(R.drawable.ic_done_black_48dp);
+            label.setCheckMarkDrawable(R.drawable.ic_check_box_black_24dp);
             label.setChecked(true);
         }
         else
         {
-            label.setCheckMarkDrawable(0);
+            label.setCheckMarkDrawable(R.drawable.ic_check_box_outline_blank_black_24dp);
             label.setChecked(false);
         }
 

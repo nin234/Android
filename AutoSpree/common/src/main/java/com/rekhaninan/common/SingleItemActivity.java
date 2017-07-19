@@ -307,6 +307,7 @@ public class SingleItemActivity extends AppCompatActivity
 
             case CHECK_LIST_DISPLAY:
             {
+                setContentView(R.layout.activity_single_item);
                 checkLst = intent.getParcelableArrayListExtra("check_list");
                 mainLst.addAll(checkLst);
                 mListView = (ListView) findViewById(R.id.add_item_view);
@@ -505,6 +506,8 @@ public class SingleItemActivity extends AppCompatActivity
             case ADD_CHECK_LIST_ACTIVITY_REQUEST_2:
             {
                 processChkListActivityReq2(resultCode, data);
+                finish();
+
             }
             break;
 
@@ -512,6 +515,7 @@ public class SingleItemActivity extends AppCompatActivity
             case ADD_CHECK_LIST_ACTIVITY_REQUEST:
             {
                 processChkListActivityReq (resultCode, data);
+              //  finish();
             }
             break;
 
@@ -524,6 +528,9 @@ public class SingleItemActivity extends AppCompatActivity
     {
         if (resultCode == RESULT_OK) {
             checkLst = data.getParcelableArrayListExtra("check_list");
+            adapter.setCheckList(checkLst);
+            adapter.setbCheckListChg(true);
+            adapter.notifyDataSetChanged();
         }
     }
 
@@ -673,7 +680,8 @@ public class SingleItemActivity extends AppCompatActivity
         startDisplayActivity();
     }
 
-    private void ASpreeOHEditItemDone()
+    private void
+    ASpreeOHEditItemDone()
     {
         Log.d(TAG, "Updating Db ");
         DBOperations.getInstance().updateDb(itm, viewType);
@@ -737,7 +745,7 @@ public class SingleItemActivity extends AppCompatActivity
                     if (DBOperations.getInstance().itemExists(nameItem, EASYGROC_ADD_ITEM)) {
                         AlertDialog alertDialog = new AlertDialog.Builder(SingleItemActivity.this).create();
                         alertDialog.setTitle("Error");
-                        String err = "List " + nameItem.getName() + "exists. Choose different name";
+                        String err = "List " + nameItem.getName() + " exists. Choose different name";
                         alertDialog.setMessage(err);
                         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                                 new DialogInterface.OnClickListener() {
@@ -818,7 +826,7 @@ public class SingleItemActivity extends AppCompatActivity
                     if (DBOperations.getInstance().itemExists(nameItem, EASYGROC_TEMPL_ADD_ITEM)) {
                         AlertDialog alertDialog = new AlertDialog.Builder(SingleItemActivity.this).create();
                         alertDialog.setTitle("Error");
-                        String err = "Template List " + nameItem.getName() + "exists. Choose different name";
+                        String err = "Template List " + nameItem.getName() + " exists. Choose different name";
                         alertDialog.setMessage(err);
                         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                                 new DialogInterface.OnClickListener() {
@@ -917,7 +925,7 @@ public class SingleItemActivity extends AppCompatActivity
 
             finish();
         }
-        else if (item.getItemId() == R.id.add_item_easy_templ)
+        else if (item.getItemId() == R.id.add_item_easy_templ || item.getItemId() == R.id.add_new_item)
         {
             switch (viewType)
             {
