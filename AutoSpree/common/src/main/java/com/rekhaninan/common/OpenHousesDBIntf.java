@@ -134,6 +134,7 @@ public class OpenHousesDBIntf extends DBInterface {
         switch (vwType)
         {
             case EASYGROC_ADD_ITEM:
+            case EASYGROC_EDIT_ITEM:
             case EASYGROC_TEMPL_ADD_ITEM:
                     return easyGrocListDBIntf.insertDb(itm, vwType);
 

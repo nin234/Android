@@ -31,7 +31,7 @@
             android:layout_below="@+id/sort_header"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_weight="1"
             android:entries="@array/viewed"
             android:prompt="@string/viewed" />
@@ -39,7 +39,7 @@
 
         <CheckBox
             android:text="CheckBox"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/viewed_check"
             android:checked="true"
@@ -63,7 +63,7 @@
             android:layout_below="@+id/viewed_row"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_weight="1"
             android:entries="@array/price"
             android:prompt="@string/price" />
@@ -71,7 +71,7 @@
 
         <CheckBox
             android:text="CheckBox"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/price_check"
             android:layout_weight=".5" />
@@ -94,7 +94,7 @@
         android:layout_below="@+id/price_row"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_weight="1"
         android:entries="@array/ratings"
         android:prompt="@string/ratings" />
@@ -102,7 +102,7 @@
 
     <CheckBox
         android:text="CheckBox"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/ratings_check"
         android:layout_weight=".5" />
@@ -125,7 +125,7 @@
             android:layout_below="@+id/ratings_row"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_weight="1"
             android:entries="@array/area"
             android:prompt="@string/area" />
@@ -133,7 +133,7 @@
 
         <CheckBox
             android:text="CheckBox"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/area_check"
             android:layout_weight=".5" />
@@ -156,7 +156,7 @@
             android:layout_below="@+id/area_row"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_weight="1"
             android:entries="@array/year"
             android:prompt="@string/year" />
@@ -165,7 +165,7 @@
 
         <CheckBox
             android:text="CheckBox"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/year_check"
             android:layout_weight=".5" />
@@ -188,7 +188,7 @@
             android:layout_below="@+id/year_row"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_weight="1"
             android:entries="@array/beds"
             android:prompt="@string/beds" />
@@ -196,7 +196,7 @@
 
         <CheckBox
             android:text="CheckBox"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/beds_check"
             android:layout_weight=".5" />
@@ -219,7 +219,7 @@
             android:layout_below="@+id/beds_row"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_weight="1"
             android:entries="@array/baths"
             android:prompt="@string/baths" />
@@ -228,7 +228,7 @@
 
         <CheckBox
             android:text="CheckBox"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/baths_check"
             android:layout_weight=".5" />
