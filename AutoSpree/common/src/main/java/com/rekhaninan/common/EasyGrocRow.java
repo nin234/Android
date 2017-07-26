@@ -291,8 +291,10 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                 switch (position)
                 {
 
-                    case EASYGROC_NAME_ROW:
+                    case EASYGROC_NAME_ROW: {
                         return getNoLabelView(parent, txtHeight, width, itm.getName());
+
+                    }
 
 
                     default:
@@ -304,15 +306,40 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
             case EASYGROC_TEMPL_DISPLAY_ITEM:
             {
                 switch (position) {
-                    case EASYGROC_NAME_ROW:
-                        return getNoLabelView(parent, txtHeight, width, itm.getName());
+                    case EASYGROC_NAME_ROW: {
+                        if (itm.getName() != null && itm.getName().length() > 0)
+                        {
+                            String name_val;
+                            if (itm.getName().contains(":"))
+                            {
+                                name_val   = itm.getName().substring(0, itm.getName().lastIndexOf(':'));
+                            }
+                            else
+                            {
+                                name_val = itm.getName();
+                            }
+                            Log.i(TAG, "Template list name=" + name_val + " app_name=" + DBOperations.getInstance().getApp_name());
+                            return getNoLabelView(parent, txtHeight, width, name_val);
+                        }
+                        String invalid = "invalid";
+                        return getNoLabelView(parent, txtHeight, width, invalid);
+
+                    }
 
                     default: {
                         String app_name = DBOperations.getInstance().getApp_name();
-                        if (app_name.equals("EASYGROC"))
+                        if (app_name.equals("EasyGrocList"))
                         {
-                            return getLabelSwitchInventoryView(parent, txtHeight, width, itm, EASYGROC_TEMPL_DISPLAY_ITEM);
-                        }
+                            Item nameitem = getAdapter().getItem(0);
+                            if (nameitem.getName().endsWith(":INV")) {
+                                return getLabelSwitchInventoryView(parent, txtHeight, width, itm, EASYGROC_TEMPL_DISPLAY_ITEM);
+                            }
+                            else
+                            {
+                                return getNoLabelView(parent, txtHeight, width, itm.getItem());
+                            }
+
+                            }
                         else {
                             return getNoLabelView(parent, txtHeight, width, itm.getItem());
                         }
@@ -635,8 +662,19 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         EditText name_value = (EditText) vw.findViewById(R.id.value);
         if (itm.getName() != null && itm.getName().length() > 0)
         {
-            name_value.setText(itm.getName(), TextView.BufferType.EDITABLE);
+            String name_val;
+            if (itm.getName().contains(":"))
+            {
+                name_val   = itm.getName().substring(0, itm.getName().lastIndexOf(':'));
+            }
+           else
+            {
+                name_val = itm.getName();
+            }
+            Log.i(TAG, "Template list name=" + name_val);
+            name_value.setText(name_val, TextView.BufferType.NORMAL);
         }
+        /*
         name_value.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -655,6 +693,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
 
             }
         });
+        */
         name_value.setHeight(txtHeight);
         name_value.setWidth((width/4)*3);
         name_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
@@ -664,7 +703,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
     private View getLabelSwitchInventoryView(ViewGroup parent, int txtHeight, int width, final Item itm, final int vwType)
     {
         LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View vw = inflater.inflate(R.layout.label_switch, parent, false);
+        View vw = inflater.inflate(R.layout.label_switch_inv, parent, false);
         TextView label = (TextView) vw.findViewById(R.id.listItem_inv);
         if (itm != null && itm.getItem() != null) {
             label.setText(itm.getItem());
@@ -739,6 +778,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         {
             label.setText(" ");
         }
+        Log.d(TAG, "getLabelSwitchView text=" + itm.getItem());
         label.setHeight(txtHeight);
         label.setWidth((width / 10) * 8);
         label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);

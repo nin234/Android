@@ -151,7 +151,8 @@ public class EasyGrocListDBIntf extends DBInterface {
                     getListNameContentValues(nameValue, itm);
                     break;
                 case EASYGROC_TEMPL_NAME_ADD_ITEM:
-                    getListNameContentValues(nameValue, itm);
+                    getNameContentValues(nameValue, itm);
+                    Log.i(TAG, "Inserting into MasterListName in EasyGroc.db item=" +itm.getName());
                     egrocDB.insert("MasterListNames", null, nameValue);
                     return true;
 
@@ -272,12 +273,12 @@ public class EasyGrocListDBIntf extends DBInterface {
 
     public  boolean itemExists (Item itm, int vwType)
     {
-        String column_names[] = {"name"};
+        String column_names[] = {"name", "share_id"};
 
         switch (vwType) {
             case EASYGROC_TEMPL_ADD_ITEM:
             case EASYGROC_TEMPL_EDIT_ITEM: {
-                Cursor c = egrocDB.query("MasterListNames", column_names, "name = ?", new String[]{itm.getName()}, null, null, null);
+                Cursor c = egrocDB.query("MasterListNames", column_names, "name = ? and share_id = ?", new String[]{itm.getName(), Long.toString(itm.getShare_id())}, null, null, null);
                 if (c.getCount() == 0)
                     return false;
                 else
@@ -352,7 +353,7 @@ public class EasyGrocListDBIntf extends DBInterface {
     public List<Item> getTemplNameLst()
     {
         try {
-
+            Log.d(TAG, "Getting templName Lst");
             String column_names[] = {"name", "share_name", "share_id"};
             Cursor c =  egrocDB.query("MasterListNames", column_names, null, null, null, null, null);
             boolean suceed = c.moveToFirst();
@@ -363,6 +364,7 @@ public class EasyGrocListDBIntf extends DBInterface {
                 list.setName(c.getString(c.getColumnIndexOrThrow("name")));
                 list.setShare_name(c.getString(c.getColumnIndexOrThrow("share_name")));
                 list.setShare_id(c.getLong(c.getColumnIndexOrThrow("share_id")));
+                Log.d(TAG, "Inserting to templNameLst item name=" + list.getName());
                 templNameLst.add(list);
                 suceed = c.moveToNext();
             }

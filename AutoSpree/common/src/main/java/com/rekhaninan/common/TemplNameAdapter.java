@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.TranslateAnimation;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
@@ -112,17 +113,19 @@ public class TemplNameAdapter extends BaseExpandableListAdapter {
         TextView expandedListTextView = (TextView) convertView
                 .findViewById(R.id.templNameItem);
         expandedListTextView.setText(expandedListText);
-
-        itm.setName(name);
-        convertView.setTag(itm);
+        Log.d(getClass().getName(), "Setting templ name=" +name + " groupPosition " + groupPosition + " childPosn=" + childPosition);
+        //itm.setName(name);
+        Item itmadj = new Item();
+        itmadj.setName(name);
+        convertView.setTag(itmadj);
         convertView.setOnClickListener(new View.OnClickListener()
                                        {
                                            @Override
                                            public void onClick(View view) {
 
-                                               TextView tv = (TextView) view;
+                                               TextView tv = (TextView) view.findViewById(R.id.templNameItem);
 
-                                               Item itm = (Item) tv.getTag();
+                                               Item itm = (Item) view.getTag();
                                                Log.d(getClass().getName(), "Clicked row " + tv.getText());
 
                                                Intent intent = new Intent(ctxt, SingleItemActivity.class);

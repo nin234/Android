@@ -101,7 +101,7 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
            int width = size.x;
            int height = size.y;
            int txtHeight = height / 12;
-           Log.d(getClass().getName(), "In Super getView position=" + position);
+          // Log.d(getClass().getName(), "In Super getView position=" + position);
            switch (vwType) {
 
                case CONTACTS_ITEM_ADD:

@@ -248,7 +248,7 @@ public class SingleItemActivity extends AppCompatActivity
                         }
                     }
 
-                    mListView = (ListView) findViewById(R.id.add_item_view);
+                    mListView = (ListView) findViewById(R.id.listview);
                     adapter = new ArrayAdapterMainVw(this, R.layout.simple_list_1, mainLst);
                     adapter.setParams(EASYGROC, CHECK_LIST_TEMPL_SELECTOR);
                     mListView.setAdapter(adapter);
@@ -393,6 +393,7 @@ public class SingleItemActivity extends AppCompatActivity
             case EASYGROC_TEMPL_ADD_ITEM:
             {
                 setContentView(R.layout.dynamic_list);
+                mainLst.add(itm);
                 for (int i=0; i <12; ++i) {
                     Item templItm = new Item();
                     templItm.setRowno(i);
@@ -423,6 +424,7 @@ public class SingleItemActivity extends AppCompatActivity
             case EASYGROC: {
                 setContentView(R.layout.templ_name_layout);
                List<Item>  mainLst = DBOperations.getInstance().getTemplNameLst();
+                Log.i(TAG, "No of elements in Templ name list=" + mainLst.size());
                 mTemplNameView = (ExpandableListView) findViewById(R.id.templName);
                 templNameAdapter = new TemplNameAdapter(mainLst, this);
                 mTemplNameView.setAdapter(templNameAdapter);
@@ -823,21 +825,7 @@ public class SingleItemActivity extends AppCompatActivity
                         return true;
                     }
 
-                    if (DBOperations.getInstance().itemExists(nameItem, EASYGROC_TEMPL_ADD_ITEM)) {
-                        AlertDialog alertDialog = new AlertDialog.Builder(SingleItemActivity.this).create();
-                        alertDialog.setTitle("Error");
-                        String err = "Template List " + nameItem.getName() + " exists. Choose different name";
-                        alertDialog.setMessage(err);
-                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                        return;
-                                    }
-                                });
-                        alertDialog.show();
-                        return true;
-                    }
+
 
                     String name = nameItem.getName();
                     int i=0;
@@ -932,8 +920,9 @@ public class SingleItemActivity extends AppCompatActivity
                 case EASYGROC_TEMPL_LISTS:
                 {
                     startEasyGrocTemplListAddActivity();
+                    return true;
                 }
-                break;
+
 
                 default:
                     break;
@@ -1251,11 +1240,35 @@ public class SingleItemActivity extends AppCompatActivity
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
 
+                                String name = input.getText().toString();
+                                Item nameItem = new Item();
+                                nameItem.setName(name);
+                                nameItem.setShare_id(ShareMgr.getInstance().getShare_id());
+
+                                if (DBOperations.getInstance().itemExists(nameItem, EASYGROC_TEMPL_ADD_ITEM)) {
+                                    AlertDialog alertDialog = new AlertDialog.Builder(SingleItemActivity.this).create();
+                                    alertDialog.setTitle("Error");
+                                    String err = "Template List " + nameItem.getName() + " exists. Choose different name";
+                                    alertDialog.setMessage(err);
+                                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                    return;
+                                                }
+                                            });
+                                    alertDialog.show();
+                                    return;
+                                }
+
                                 m_TemplateName = input.getText().toString();
                                 dialog.cancel();
                                 Item templNameItm = new Item();
                                 templNameItm.setName(m_TemplateName);
                                 DBOperations.getInstance().insertDb(templNameItm, EASYGROC_TEMPL_NAME_ADD_ITEM);
+                                List<Item>  mainLst = DBOperations.getInstance().getTemplNameLst();
+                                templNameAdapter.setGroupItem(mainLst);
+                                templNameAdapter.notifyDataSetChanged();
 
                             }
                         });
