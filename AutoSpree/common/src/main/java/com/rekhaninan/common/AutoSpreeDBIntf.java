@@ -44,6 +44,11 @@ public class AutoSpreeDBIntf extends DBInterface {
         return easyGrocListDBIntf.getTemplNameLst();
     }
 
+    public void setAppName(String appName)
+    {
+        setApp_name(appName);
+        easyGrocListDBIntf.setApp_name(appName);
+    }
     public List<Item> getTemplList(String name)
     {
         return easyGrocListDBIntf.getTemplList(name);

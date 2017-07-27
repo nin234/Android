@@ -234,7 +234,7 @@ public class SingleItemActivity extends AppCompatActivity
 
                     }
 
-                    if (app_name.equals("EASYGROC")) {
+                    if (app_name.equals(EASYGROC)) {
 
                         java.util.List<Item> templInvList = DBOperations.getInstance().getTemplList(itm.getName() + ":INV");
                         for (Item invItem : templInvList) {

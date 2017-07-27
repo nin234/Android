@@ -129,6 +129,12 @@ public class OpenHousesDBIntf extends DBInterface {
         return;
     }
 
+    public void setAppName(String appName)
+    {
+        setApp_name(appName);
+        easyGrocListDBIntf.setApp_name(appName);
+    }
+
     public  boolean insertDb (Item itm, int vwType)
     {
         switch (vwType)

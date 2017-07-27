@@ -13,6 +13,17 @@ import java.util.List;
 public abstract class DBInterface {
 
     private String sortString;
+    private String app_name;
+
+    public String getApp_name() {
+        return app_name;
+    }
+
+    public void setApp_name(String app_name) {
+        this.app_name = app_name;
+    }
+
+
 
     public String getSortString() {
         return sortString;
@@ -27,6 +38,8 @@ public abstract class DBInterface {
     public abstract  List<Item> getMainViewLst();
 
     public abstract boolean insertDb (Item itm, int vwType);
+    public abstract void setAppName(String appName);
+
 
     public abstract boolean updateDb (Item itm, int vwType);
 
