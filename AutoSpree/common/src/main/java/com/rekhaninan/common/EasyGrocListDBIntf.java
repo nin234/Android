@@ -318,7 +318,7 @@ public class EasyGrocListDBIntf extends DBInterface {
             default:
                 break;
         }
-        egrocDB.update(dbName, values, "name = ?", new String[]{itm.getName()});
+        egrocDB.update(dbName, values, "name = ? and rowno = ?", new String[]{itm.getName(), Integer.toString(itm.getRowno())});
         return true;
     }
 

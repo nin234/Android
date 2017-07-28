@@ -730,7 +730,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         // do something, the isChecked will be
                         // true if the switch is in the On position
-                        Log.d(TAG, "Toggled inventory in " + itm.getItem() + " inv=" + itm.getInventory());
+                        Log.d(TAG, "Toggled inventory in " + itm.getItem() + " inv=" + itm.getInventory() + " isChecked=" + isChecked );
                         if (isChecked)
                         {
                             if (itm.getInventory() > 0)

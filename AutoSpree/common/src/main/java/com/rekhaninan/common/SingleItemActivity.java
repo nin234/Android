@@ -208,13 +208,14 @@ public class SingleItemActivity extends AppCompatActivity
                 if (itm.getName() != null && itm.getName().length() > 0)
                 {
                     java.util.List<Item> templList = DBOperations.getInstance().getTemplList(itm.getName());
-                    itm.setName(itm.getName() + " " + formattedDate);
-                    mainLst.add(itm);
+                    Item titleItem = new Item();
+                    titleItem.setName(itm.getName() + " " + formattedDate);
+                    mainLst.add(titleItem);
                     int month = c.get(Calendar.MONTH);
                     for (Item litm : templList)
                     {
                         boolean bContinue = false;
-                        if (app_name.equals("EASYGROC")) {
+                        if (app_name.equals(EASYGROC)) {
                             if (litm.getEnd_month() > litm.getStart_month()) {
                                 if (month > litm.getEnd_month() || month < litm.getStart_month())
                                     bContinue = true;
@@ -237,6 +238,7 @@ public class SingleItemActivity extends AppCompatActivity
                     if (app_name.equals(EASYGROC)) {
 
                         java.util.List<Item> templInvList = DBOperations.getInstance().getTemplList(itm.getName() + ":INV");
+                        Log.i(TAG, "No of elements in inventory list for " +itm.getName() + ":INV for=" + templInvList.size() );
                         for (Item invItem : templInvList) {
                             if (invItem.getInventory() > 0)
                                 continue;
@@ -782,7 +784,7 @@ public class SingleItemActivity extends AppCompatActivity
                         ++i;
                     }
                     String app_name = DBOperations.getInstance().getApp_name();
-                    if (app_name.equals("EASYGROC"))
+                    if (app_name.equals(EASYGROC))
                     {
                         if (itm.getName() != null && itm.getName().length() > 0)
                         {
