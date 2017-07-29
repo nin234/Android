@@ -13,5 +13,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/toggle_inv"
         android:theme="@style/SCBSwitch"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentRight="true"
+        android:switchMinWidth="56dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="15dp"
+         />
 </RelativeLayout>
