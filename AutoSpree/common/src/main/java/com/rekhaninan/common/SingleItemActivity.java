@@ -360,6 +360,8 @@ public class SingleItemActivity extends AppCompatActivity
                 mListView = (ListView) findViewById(R.id.add_item_view);
                 adapter = new ArrayAdapterMainVw(this, R.layout.simple_list_1, mainLst);
                 adapter.setParams(EASYGROC, EASYGROC_TEMPL_DISPLAY_ITEM);
+                if (!itm.getName().endsWith(":INV") && !itm.getName().endsWith(":SCRTCH"))
+                    adapter.setRecrLst(true);
                 mListView.setAdapter(adapter);
             }
             break;
@@ -373,6 +375,8 @@ public class SingleItemActivity extends AppCompatActivity
                 mListView = (ListView) findViewById(R.id.add_item_view);
                 adapter = new ArrayAdapterMainVw(this, R.layout.simple_list_1, mainLst);
                 adapter.setParams(EASYGROC, EASYGROC_TEMPL_EDIT_ITEM);
+                if (!itm.getName().endsWith(":INV") && !itm.getName().endsWith(":SCRTCH"))
+                    adapter.setRecrLst(true);
                 mListView.setAdapter(adapter);
 
             }
@@ -406,6 +410,8 @@ public class SingleItemActivity extends AppCompatActivity
                     mListView = (ListView) findViewById(R.id.add_item_view);
                     adapter = new ArrayAdapterMainVw(this, R.layout.simple_list_1, mainLst);
                     adapter.setParams(EASYGROC, EASYGROC_TEMPL_ADD_ITEM);
+                  if (!itm.getName().endsWith(":INV") && !itm.getName().endsWith(":SCRTCH"))
+                        adapter.setRecrLst(true);
                     mListView.setAdapter(adapter);
 
             }

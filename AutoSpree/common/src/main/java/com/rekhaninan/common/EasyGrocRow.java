@@ -356,8 +356,9 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                         return getNameRowView(parent, txtHeight, width, itm);
 
                     default: {
+                        Log.i(TAG, "Returning view for item name=" + itm.getName() + " item=" + itm.getItem());
                         String app_name = DBOperations.getInstance().getApp_name();
-                        if (app_name.equals(EASYGROC))
+                        if (app_name.equals(EASYGROC) && adapter.isRecrLst())
                         {
                             return getAddEditViewWithSeasonPicker(parent, txtHeight, width, itm);
                         }
@@ -403,7 +404,8 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                         return getName2RowView(parent, txtHeight, width, itm);
                     default: {
                         String app_name = DBOperations.getInstance().getApp_name();
-                        if (app_name.equals(EASYGROC))
+                        Log.i(TAG, "Returning view for item name=" + itm.getName() + " item=" + itm.getItem());
+                        if (app_name.equals(EASYGROC) && adapter.isRecrLst())
                         {
                             return getAddEditViewWithSeasonPicker(parent, txtHeight, width, itm);
                         }

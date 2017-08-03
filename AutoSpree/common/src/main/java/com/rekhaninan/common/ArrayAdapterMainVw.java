@@ -40,6 +40,17 @@ public class ArrayAdapterMainVw extends ArrayAdapter<Item> {
     private Stack<Integer> redo;
     private List<Item> checkList;
     private boolean bCheckListChg;
+    private boolean recrLst;
+
+    public boolean isRecrLst() {
+        return recrLst;
+    }
+
+    public void setRecrLst(boolean recrLst) {
+        this.recrLst = recrLst;
+    }
+
+
 
     public boolean isbCheckListChg() {
         return bCheckListChg;
@@ -71,6 +82,7 @@ public class ArrayAdapterMainVw extends ArrayAdapter<Item> {
        checkList = new ArrayList<>();
        undo = new Stack<>();
        redo = new Stack<>();
+       recrLst = false;
 
    }
 
