@@ -49,6 +49,17 @@ public class Item implements Parcelable  {
     private int inventory;
     private CheckBox cbx;
     private int rating;
+    private boolean showSeasonPicker;
+
+    public boolean isShowSeasonPicker() {
+        return showSeasonPicker;
+    }
+
+    public void setShowSeasonPicker(boolean showSeasonPicker) {
+        this.showSeasonPicker = showSeasonPicker;
+    }
+
+
 
     public int getRating() {
         return rating;
@@ -202,6 +213,7 @@ public class Item implements Parcelable  {
         start_month = 0;
         end_month = 11;
         inventory = 10;
+        showSeasonPicker = false;
     }
 
     public Item (Parcel source)

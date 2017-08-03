@@ -3,53 +3,45 @@
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <Button
-        android:id="@+id/add_btn_season"
+        android:id="@+id/delete_btn_season"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/list_item_string"
-        android:layout_marginRight="10dp"
-        android:drawableLeft="@drawable/ic_add_black_48dp"
-        android:layout_alignTop="@+id/list_item_string" />
+        android:drawableLeft="@drawable/ic_delete_black_48dp"
+        android:layout_alignParentLeft="true"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="3dp" />
 
     <EditText
         android:id="@+id/list_item_string_season"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/delete_btn"
-        android:layout_alignParentLeft="true"
+        android:layout_toRightOf="@id/delete_btn_season"
         android:paddingLeft="8dp"
         android:textSize="18sp"
         android:textStyle="bold" />
 
 
-    <ImageView
-        android:id="@+id/row_move_season"
-        android:layout_marginBottom="5dp"
-        android:layout_width="50dp"
-        android:layout_toRightOf="@id/delete_btn"
-        android:layout_height="50dp"
-        android:src="@drawable/ic_import_export_black_48dp" />
+    <Button
+        android:id="@+id/add_btn_season"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_add_black_48dp"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_toLeftOf="@+id/season_picker_btn_season"
+         />
+
 
     <Button
         android:id="@+id/season_picker_btn_season"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_flip_to_front_black_48dp"
-        android:layout_alignBaseline="@+id/list_item_string"
-        android:layout_alignBottom="@+id/list_item_string"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <Button
-        android:id="@+id/delete_btn_season"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_delete_black_48dp"
-        android:layout_marginRight="85dp"
-        android:layout_marginEnd="85dp"
-        android:layout_alignBaseline="@+id/season_picker_btn_season"
-        android:layout_alignBottom="@+id/season_picker_btn_season"
+        android:layout_alignBaseline="@+id/add_btn_season"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_alignBottom="@+id/add_btn_season"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 </RelativeLayout>

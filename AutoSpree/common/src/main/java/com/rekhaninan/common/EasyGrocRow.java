@@ -69,14 +69,14 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                                int pos, long id) {
         // An item was selected. You can retrieve the selected item using
         Spinner spinner = (Spinner) parent;
-        Item seasonChgItem = (Item)spinner.getTag(1);
+        Item seasonChgItem = (Item)spinner.getTag(R.id.START_MONTH_SPINNER);
         if (seasonChgItem != null)
         {
             seasonChgItem.setStart_month(pos);
         }
         else
         {
-            seasonChgItem = (Item)spinner.getTag(2);
+            seasonChgItem = (Item)spinner.getTag(R.id.END_MONTH_SPINNER);
             if (seasonChgItem != null)
             {
                 seasonChgItem.setEnd_month(pos);
@@ -328,7 +328,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
 
                     default: {
                         String app_name = DBOperations.getInstance().getApp_name();
-                        if (app_name.equals("EasyGrocList"))
+                        if (app_name.equals(EASYGROC))
                         {
                             Item nameitem = getAdapter().getItem(0);
                             if (nameitem.getName().endsWith(":INV")) {
@@ -357,7 +357,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
 
                     default: {
                         String app_name = DBOperations.getInstance().getApp_name();
-                        if (app_name.equals("EASYGROC"))
+                        if (app_name.equals(EASYGROC))
                         {
                             return getAddEditViewWithSeasonPicker(parent, txtHeight, width, itm);
                         }
@@ -376,6 +376,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                     case EASYGROC_NAME_ROW:
                         return getName1RowView(parent, txtHeight, width, itm);
 
+
                     default:
                         return getAddEditView(parent, txtHeight, width, itm);
                 }
@@ -389,14 +390,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                         return getName2RowView(parent, txtHeight, width, itm);
 
                     default:
-                        String app_name = DBOperations.getInstance().getApp_name();
-                        if (app_name.equals("EASYGROC"))
-                        {
-                            return getAddEditViewWithSeasonPicker(parent, txtHeight, width, itm);
-                        }
-                        else {
-                            return getAddEditView(parent, txtHeight, width, itm);
-                        }
+                        return getAddEditView(parent, txtHeight, width, itm);
 
                 }
             }
@@ -407,9 +401,16 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                 {
                     case EASYGROC_NAME_ROW:
                         return getName2RowView(parent, txtHeight, width, itm);
-
-                    default:
-                        return getAddEditView(parent, txtHeight, width, itm);
+                    default: {
+                        String app_name = DBOperations.getInstance().getApp_name();
+                        if (app_name.equals(EASYGROC))
+                        {
+                            return getAddEditViewWithSeasonPicker(parent, txtHeight, width, itm);
+                        }
+                        else {
+                            return getAddEditView(parent, txtHeight, width, itm);
+                        }
+                    }
                 }
             }
 
@@ -420,14 +421,60 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         return null;
     }
 
-    private View getAddEditViewWithSeasonPicker(final ViewGroup parent, int txtHeight, int width, final Item itm)
+    private View getAddEditViewWithSeasonPicker(final ViewGroup parent, final int txtHeight, final int width, final Item itm)
     {
         LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View vw = inflater.inflate(R.layout.easygroc_main_season, parent,false);
+         View vw = inflater.inflate(R.layout.easygroc_main_season, parent,false);
         final EditText item = (EditText) vw.findViewById(R.id.list_item_string_season);
         item.setHeight(txtHeight);
         item.setWidth((width/10)*6);
         item.setTag(itm);
+
+        if (itm.isShowSeasonPicker())
+        {
+
+            View seasonPickerView = inflater.inflate(R.layout.season_picker, parent, false);
+            seasonPickerView.setMinimumHeight(txtHeight);
+            seasonPickerView.setMinimumWidth(width);
+            Button doneBtn =  (Button) seasonPickerView.findViewById(R.id.btnSubmit);
+            doneBtn.setHeight(txtHeight);
+            doneBtn.setWidth(width/5);
+            Spinner spinner1 = (Spinner) seasonPickerView.findViewById(R.id.spinner1);
+
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(ctxt,
+                    R.array.months, android.R.layout.simple_spinner_item);
+// Specify the layout to use when the list of choices appears
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+            spinner1.setAdapter(adapter);
+            spinner1.setOnItemSelectedListener(this);
+
+            spinner1.setTag(R.id.START_MONTH_SPINNER, itm);
+            spinner1.setSelection(itm.getStart_month());
+            spinner1.setMinimumHeight(txtHeight);
+           // spinner1.setMinimumWidth((width*2)/5);
+            Spinner spinner2 = (Spinner) seasonPickerView.findViewById(R.id.spinner2);
+            spinner2.setAdapter(adapter);
+            spinner2.setOnItemSelectedListener(this);
+            spinner2.setTag(R.id.END_MONTH_SPINNER, itm);
+            spinner2.setSelection(itm.getEnd_month());
+            Log.i(TAG, "Setting selections spinner1=" + itm.getStart_month() + " spinner2=" +itm.getEnd_month());
+
+            spinner2.setMinimumHeight(txtHeight);
+           // spinner2.setMinimumWidth((width*2)/5);
+            Button btnDismiss = (Button)seasonPickerView.findViewById(R.id.btnSubmit);
+            btnDismiss.setOnClickListener(new Button.OnClickListener(){
+
+                @Override
+                public void onClick(View v) {
+                    // TODO Auto-generated method stub
+
+                    itm.setShowSeasonPicker(false);
+                    getAdapter().notifyDataSetChanged();
+
+                }});
+            return seasonPickerView;
+        }
 
         if (itm.getItem() != null && itm.getItem().length() > 0)
         {
@@ -500,41 +547,8 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                                    @Override
                                    public void onClick(View view) {
 
-
-                                       LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                                        View seasonPickerView = inflater.inflate(R.layout.season_picker, parent, false);
-                                       Spinner spinner1 = (Spinner) seasonPickerView.findViewById(R.id.spinner1);
-                                       ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(ctxt,
-                                               R.array.months, android.R.layout.simple_spinner_item);
-// Specify the layout to use when the list of choices appears
-                                       adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-// Apply the adapter to the spinner
-                                       spinner1.setAdapter(adapter);
-                                      spinner1.setOnItemSelectedListener(pEasyGrocRow);
-
-                                       spinner1.setTag(1, itm);
-                                       spinner1.setSelection(itm.getStart_month());
-                                       Spinner spinner2 = (Spinner) seasonPickerView.findViewById(R.id.spinner2);
-                                       spinner2.setAdapter(adapter);
-                                       spinner2.setOnItemSelectedListener(pEasyGrocRow);
-                                       spinner2.setTag(2, itm);
-                                       spinner2.setSelection(itm.getEnd_month());
-
-                                       final PopupWindow popupWindow = new PopupWindow(
-                                               seasonPickerView,
-                                               ViewGroup.LayoutParams.WRAP_CONTENT,
-                                               ViewGroup.LayoutParams.WRAP_CONTENT);
-
-                                       Button btnDismiss = (Button)seasonPickerView.findViewById(R.id.btnSubmit);
-                                       btnDismiss.setOnClickListener(new Button.OnClickListener(){
-
-                                           @Override
-                                           public void onClick(View v) {
-                                               // TODO Auto-generated method stub
-                                               popupWindow.dismiss();
-                                           }});
-
-                                       popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+                                       itm.setShowSeasonPicker(true);
+                                        adapter.notifyDataSetChanged();
 
                                    }
                                }
@@ -580,11 +594,12 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         Button delet = (Button) vw.findViewById(R.id.delete_btn);
         delet.setHeight(txtHeight);
         delet.setWidth(width/10);
+        delet.setTag(itm);
         delet.setOnClickListener(new View.OnClickListener() {
                                      @Override
                                      public void onClick(View view) {
 
-                                         TextView tv = (TextView) view;
+                                         Button tv = (Button) view;
                                          Item itm = (Item) tv.getTag();
                                          Log.d(getClass().getName(), "Clicked row " + itm.getRowno());
                                          adapter.removeItem(itm);
@@ -597,12 +612,13 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
 
         Button add = (Button) vw.findViewById(R.id.add_btn);
         add.setHeight(txtHeight);
+        add.setTag(itm);
         add.setWidth(width/10);
         add.setOnClickListener(new View.OnClickListener() {
                                      @Override
                                      public void onClick(View view) {
 
-                                         TextView tv = (TextView) view;
+                                         Button tv = (Button) view;
                                          Item itm = (Item) tv.getTag();
                                          Log.d(getClass().getName(), "Clicked row " + itm.getRowno());
                                          Item newItm = new Item();

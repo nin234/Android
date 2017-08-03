@@ -203,7 +203,7 @@ public class SingleItemActivity extends AppCompatActivity
                 Calendar c = new GregorianCalendar();
                 String formattedDate = df.format(c.getTime());
 
-                setContentView(R.layout.dynamic_list);
+                setContentView(R.layout.activity_single_item);
                 String app_name = DBOperations.getInstance().getApp_name();
                 if (itm.getName() != null && itm.getName().length() > 0)
                 {
@@ -250,7 +250,7 @@ public class SingleItemActivity extends AppCompatActivity
                         }
                     }
 
-                    mListView = (ListView) findViewById(R.id.listview);
+                    mListView = (ListView) findViewById(R.id.add_item_view);
                     adapter = new ArrayAdapterMainVw(this, R.layout.simple_list_1, mainLst);
                     adapter.setParams(EASYGROC, CHECK_LIST_TEMPL_SELECTOR);
                     mListView.setAdapter(adapter);
@@ -266,10 +266,10 @@ public class SingleItemActivity extends AppCompatActivity
                         mainLst.add(templItm);
                     }
                 }
-                mListViewDynmic = (DynamicListView) findViewById(R.id.listview);
+                mListView = (ListView) findViewById(R.id.add_item_view);
                 adapter = new ArrayAdapterMainVw(this, R.layout.simple_list_1, mainLst);
                 adapter.setParams(EASYGROC, EASYGROC_ADD_ITEM);
-                mListViewDynmic.setAdapter(adapter);
+                mListView.setAdapter(adapter);
             }
             break;
 
@@ -366,45 +366,47 @@ public class SingleItemActivity extends AppCompatActivity
 
             case EASYGROC_TEMPL_EDIT_ITEM:
             {
-                setContentView(R.layout.dynamic_list);
+                setContentView(R.layout.activity_single_item);
                 mainLst.add(itm);
                 java.util.List<Item> list = DBOperations.getInstance().getTemplList(itm.getName());
                 mainLst.addAll(list);
-                mListViewDynmic = (DynamicListView) findViewById(R.id.listview);
+                mListView = (ListView) findViewById(R.id.add_item_view);
                 adapter = new ArrayAdapterMainVw(this, R.layout.simple_list_1, mainLst);
                 adapter.setParams(EASYGROC, EASYGROC_TEMPL_EDIT_ITEM);
-                mListViewDynmic.setAdapter(adapter);
+                mListView.setAdapter(adapter);
 
             }
             break;
 
             case EASYGROC_EDIT_ITEM:
             {
-                setContentView(R.layout.dynamic_list);
+                Log.i(TAG, "In EASYGROC_EDIT_ITEM");
+                setContentView(R.layout.activity_single_item);
                 mainLst.add(itm);
                 java.util.List<Item> list = DBOperations.getInstance().getList(itm.getName());
                 mainLst.addAll(list);
-                mListViewDynmic = (DynamicListView) findViewById(R.id.listview);
+                mListView = (ListView) findViewById(R.id.add_item_view);
                 adapter = new ArrayAdapterMainVw(this, R.layout.simple_list_1, mainLst);
                 adapter.setParams(EASYGROC, EASYGROC_EDIT_ITEM);
-                mListViewDynmic.setAdapter(adapter);
+                mListView.setAdapter(adapter);
+
 
             }
             break;
 
             case EASYGROC_TEMPL_ADD_ITEM:
             {
-                setContentView(R.layout.dynamic_list);
+                setContentView(R.layout.activity_single_item);
                 mainLst.add(itm);
                 for (int i=0; i <12; ++i) {
                     Item templItm = new Item();
                     templItm.setRowno(i);
                     mainLst.add(templItm);
                 }
-                    mListViewDynmic = (DynamicListView) findViewById(R.id.listview);
+                    mListView = (ListView) findViewById(R.id.add_item_view);
                     adapter = new ArrayAdapterMainVw(this, R.layout.simple_list_1, mainLst);
                     adapter.setParams(EASYGROC, EASYGROC_TEMPL_ADD_ITEM);
-                    mListViewDynmic.setAdapter(adapter);
+                    mListView.setAdapter(adapter);
 
             }
             break;
@@ -727,7 +729,7 @@ public class SingleItemActivity extends AppCompatActivity
 
                 case EASYGROC_ADD_ITEM:
                 {
-                    ArrayAdapterMainVw adapterMainVw = (ArrayAdapterMainVw) mListViewDynmic.getAdapter();
+                    ArrayAdapterMainVw adapterMainVw = (ArrayAdapterMainVw) mListView.getAdapter();
                     List<Item> arryEl = adapterMainVw.getArryElems();
                     Item nameItem = arryEl.get(0);
 
@@ -808,7 +810,7 @@ public class SingleItemActivity extends AppCompatActivity
 
                 case EASYGROC_TEMPL_ADD_ITEM:
                 {
-                    ArrayAdapterMainVw adapterMainVw = (ArrayAdapterMainVw) mListViewDynmic.getAdapter();
+                    ArrayAdapterMainVw adapterMainVw = (ArrayAdapterMainVw) mListView.getAdapter();
                     List<Item> arryEl = adapterMainVw.getArryElems();
                     Item nameItem = arryEl.get(0);
 
@@ -858,7 +860,7 @@ public class SingleItemActivity extends AppCompatActivity
                 case EASYGROC_EDIT_ITEM:
                 case EASYGROC_TEMPL_EDIT_ITEM:
                 {
-                    ArrayAdapterMainVw adapterMainVw = (ArrayAdapterMainVw) mListViewDynmic.getAdapter();
+                    ArrayAdapterMainVw adapterMainVw = (ArrayAdapterMainVw) mListView.getAdapter();
                     List<Item> arryEl = adapterMainVw.getArryElems();
                     Item nameItem = arryEl.get(0);
                     String name = nameItem.getName();
@@ -1068,7 +1070,7 @@ public class SingleItemActivity extends AppCompatActivity
 
     private void easyGrocShowAll()
     {
-        ArrayAdapterMainVw adapterMainVw = (ArrayAdapterMainVw) mListViewDynmic.getAdapter();
+        ArrayAdapterMainVw adapterMainVw = (ArrayAdapterMainVw) mListView.getAdapter();
         List<Item> arryEl = adapterMainVw.getArryElems();
         for (Item showItm : arryEl)
         {
@@ -1080,8 +1082,10 @@ public class SingleItemActivity extends AppCompatActivity
 
     private void easyGrocUndo()
     {
-        ArrayAdapterMainVw adapterMainVw = (ArrayAdapterMainVw) mListViewDynmic.getAdapter();
+        ArrayAdapterMainVw adapterMainVw = (ArrayAdapterMainVw) mListView.getAdapter();
         int indx = adapterMainVw.undoPop();
+        if (indx == -1)
+            return;
         List<Item> arryEl = adapterMainVw.getArryElems();
         Item itm = arryEl.get(indx);
         itm.setHidden(!itm.isHidden());
@@ -1092,8 +1096,10 @@ public class SingleItemActivity extends AppCompatActivity
 
     private void easyGrocRedo()
     {
-        ArrayAdapterMainVw adapterMainVw = (ArrayAdapterMainVw) mListViewDynmic.getAdapter();
+        ArrayAdapterMainVw adapterMainVw = (ArrayAdapterMainVw) mListView.getAdapter();
         int indx = adapterMainVw.redoPop();
+        if (indx == -1)
+            return;
         List<Item> arryEl = adapterMainVw.getArryElems();
         Item itm = arryEl.get(indx);
         itm.setHidden(!itm.isHidden());

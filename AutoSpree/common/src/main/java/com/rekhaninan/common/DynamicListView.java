@@ -31,6 +31,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -67,7 +68,7 @@ public class DynamicListView extends ListView {
     private final int MOVE_DURATION = 150;
     private final int LINE_THICKNESS = 15;
 
-
+    public final String TAG="DynamicListView";
     private int mLastEventY = -1;
 
     private int mDownY = -1;
@@ -127,7 +128,7 @@ public class DynamicListView extends ListView {
 
                     int position = pointToPosition(mDownX, mDownY);
                     int itemNum = position - getFirstVisiblePosition();
-
+                    Log.d(TAG, "GetChild at " + itemNum + " position="  + position + " mDownX=" +mDownX + " mDownY=" + mDownY);
                     View selectedView = getChildAt(itemNum);
                     mMobileItemId = getAdapter().getItemId(position);
                     mHoverCell = getAndAddHoverView(selectedView);

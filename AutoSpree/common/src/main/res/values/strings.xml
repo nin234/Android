@@ -119,4 +119,7 @@
         <item>Color Z to A</item>
     </string-array>
 
+    <item name="START_MONTH_SPINNER" type="id"/>
+    <item name="END_MONTH_SPINNER" type="id"/>
+
 </resources>

@@ -69,6 +69,8 @@ public class ArrayAdapterMainVw extends ArrayAdapter<Item> {
         super(context, resource, objects);
         arryElems = objects;
        checkList = new ArrayList<>();
+       undo = new Stack<>();
+       redo = new Stack<>();
 
    }
 
@@ -107,6 +109,8 @@ public class ArrayAdapterMainVw extends ArrayAdapter<Item> {
 
     public int undoPop()
     {
+        if (undo.size() == 0)
+            return -1;
         return undo.pop();
     }
 
@@ -118,6 +122,8 @@ public class ArrayAdapterMainVw extends ArrayAdapter<Item> {
 
     public int redoPop()
     {
+        if (redo.size() == 0)
+            return -1;
         return redo.pop();
     }
 
