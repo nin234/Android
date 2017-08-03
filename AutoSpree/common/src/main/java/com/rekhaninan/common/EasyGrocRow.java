@@ -643,7 +643,18 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         EditText name_value = (EditText) vw.findViewById(R.id.name);
         if (itm.getName() != null && itm.getName().length() > 0)
         {
-            name_value.setText(itm.getName());
+            String name_val;
+            if (itm.getName().contains(":"))
+            {
+                name_val   = itm.getName().substring(0, itm.getName().lastIndexOf(':'));
+            }
+            else
+            {
+                name_val = itm.getName();
+            }
+            Log.i(TAG, "Template list name=" + name_val);
+            name_value.setText(name_val, TextView.BufferType.NORMAL);
+
         }
         name_value.setHeight(txtHeight);
         name_value.setWidth(width);
@@ -658,7 +669,18 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         EditText name_value = (EditText) vw.findViewById(R.id.name);
         if (itm.getName() != null && itm.getName().length() > 0)
         {
-            name_value.setText(itm.getName(), TextView.BufferType.EDITABLE);
+            String name_val;
+            if (itm.getName().contains(":"))
+            {
+                name_val   = itm.getName().substring(0, itm.getName().lastIndexOf(':'));
+            }
+            else
+            {
+                name_val = itm.getName();
+            }
+            Log.i(TAG, "Template list name=" + name_val);
+            name_value.setText(name_val, TextView.BufferType.NORMAL);
+
         }
         name_value.setHeight(txtHeight);
         name_value.setWidth(width);
