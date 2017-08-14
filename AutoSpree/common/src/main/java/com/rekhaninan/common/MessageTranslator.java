@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import static com.rekhaninan.common.Constants.GET_ITEMS_MSG;
 import static com.rekhaninan.common.Constants.GET_SHARE_ID_MSG;
@@ -46,9 +47,12 @@ public class MessageTranslator {
         long trid = 1000;
         int msglen =  tridLen + 8;
         ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
+
+        byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
         byteBuffer.putInt( msglen);
         byteBuffer.putInt(GET_SHARE_ID_MSG);
         byteBuffer.putLong(trid);
+        Log.i(TAG, "Created id request of length=" + msglen);
         return byteBuffer;
 
     }

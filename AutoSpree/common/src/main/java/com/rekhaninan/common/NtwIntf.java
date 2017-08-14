@@ -31,6 +31,7 @@ public class NtwIntf {
 
     public void setConnectionDetails (String  app_name)
     {
+
         switch (app_name)
         {
             case EASYGROC:
@@ -45,19 +46,20 @@ public class NtwIntf {
 
             case AUTOSPREE:
                 connectAddr = "autospree.ddns.net";
-                connectPort = 16971;
+                connectPort = 16790;
                 break;
 
             default:
                 break;
         }
+        Log.i(TAG, "Setting connection details for app=" + app_name + " connectAddr=" + connectAddr + " connectPort=" + connectPort);
     }
 
     public NtwIntf ()
     {
         try {
             socket = SocketChannel.open();
-            socket.configureBlocking(false);
+            socket.configureBlocking(true);
         }
         catch (IOException excp)
         {
@@ -83,18 +85,20 @@ public class NtwIntf {
         }
 
         try {
-
-            socket.write(msg);
+            msg.flip();
+            Log.i(TAG, "Number of bytes to write to socket=" + msg.remaining());
+           int n= socket.write(msg);
+            Log.i(TAG, "Wrote to socket buffer bytes=" + n);
             return true;
 
         }
         catch (IOException excp)
         {
-            Log.e (TAG, "sendMsg Caught IOException" + excp.getMessage());
+            Log.e (TAG, "sendMsg Caught IOException=" + excp.getMessage());
         }
         catch (Exception excp)
         {
-            Log.e (TAG, "sendMsg Caught Exception" + excp.getMessage());
+            Log.e (TAG, "sendMsg Caught Exception=" + excp.getMessage());
         }
 
 
@@ -112,8 +116,10 @@ public class NtwIntf {
         }
 
         int bytesRead = socket.read(resp);
-            if (bytesRead > 0)
-                    return true;
+            if (bytesRead > 0) {
+                Log.d(TAG, "Received response of bytes=" + bytesRead);
+                return true;
+            }
             else
                 return false;
         }
@@ -133,34 +139,25 @@ public class NtwIntf {
     boolean connect()
     {
         try {
+            Log.i(TAG, "Connecting to socket");
              boolean isConnected =  socket.connect (new InetSocketAddress( connectAddr, connectPort));
-            long startTime = System.nanoTime();
 
-            while (!isConnected &&  !socket.finishConnect())
-            {
-                long estimatedTime = System.nanoTime() - startTime;
-                wait(1000);
-                if (estimatedTime > 60000000000L)
-                {
-                    return false;
-                }
-            }
-
+            Log.i(TAG, "Connected to socket");
             return true;
 
 
         }
         catch (UnknownHostException excp)
         {
-            Log.e (TAG, "connect Caught UnknownHostException" + excp.getMessage());
+            Log.e (TAG, "connect Caught UnknownHostException " + excp.getMessage());
         }
         catch (IOException excp)
         {
-            Log.e (TAG, "connect Caught IOException" + excp.getMessage());
+            Log.e (TAG, "connect Caught IOException " + excp.getMessage());
         }
         catch (Exception excp)
         {
-            Log.e (TAG, "connect Caught Exception" + excp.getMessage());
+            Log.e (TAG, "connect Caught Exception " + excp.getMessage());
         }
 
         return false;

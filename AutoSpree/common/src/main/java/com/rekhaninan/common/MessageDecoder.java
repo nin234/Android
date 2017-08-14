@@ -3,6 +3,7 @@ package com.rekhaninan.common;
 import android.util.Log;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -76,10 +77,12 @@ public class MessageDecoder {
                 break;
             }
             int len = buffer.getInt(0);
-
+            int mtyp = buffer.getInt(4);
+            Log.d(TAG, "Received message of length=" + len + " remaining=" + remaining + " msgTyp=" + mtyp);
             if (remaining == len)
             {
                 decodebuf.clear();
+                decodebuf.order(ByteOrder.LITTLE_ENDIAN);
                 decodebuf.put(buffer.array(), buffer.position()-remaining, remaining);
                 decodeMessage(decodebuf,  remaining);
                 break;
@@ -97,6 +100,7 @@ public class MessageDecoder {
             else
             {
                 decodebuf.clear();
+                decodebuf.order(ByteOrder.LITTLE_ENDIAN);
                 decodebuf.put(buffer.array(), buffer.position()-remaining, len);
                 decodeMessage (decodebuf, len);
                 remaining -= len;
@@ -110,7 +114,7 @@ public class MessageDecoder {
     {
         int offset = 8;
         int shareId =0;
-        shareId = buffer.getInt(offset);
+        shareId = (int) buffer.getLong(offset);
         ShareMgr.getInstance().setShare_id(shareId);
         return true;
     }
@@ -459,7 +463,9 @@ public class MessageDecoder {
 
             boolean bRet = true;
             int msgTyp;
-            msgTyp = buffer.getInt(0);
+            msgTyp = buffer.getInt(4);
+
+            Log.i(TAG, "Decoding received message of type=" + msgTyp);
             switch (msgTyp)
             {
 

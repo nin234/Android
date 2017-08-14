@@ -21,6 +21,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -35,7 +36,10 @@ import java.util.concurrent.locks.ReentrantLock;
 
 
 import static com.rekhaninan.common.Constants.AUTOSPREE;
+import static com.rekhaninan.common.Constants.CONTACTS_ITEM_ADD;
 import static com.rekhaninan.common.Constants.CONTACTS_MAINVW;
+import static com.rekhaninan.common.Constants.CONTACTS_NAME_ROW;
+import static com.rekhaninan.common.Constants.CONTACTS_SHARE_ID_ROW;
 import static com.rekhaninan.common.Constants.EASYGROC;
 import static com.rekhaninan.common.Constants.EASYGROC_ADD_ITEM;
 import static com.rekhaninan.common.Constants.MAINVW;
@@ -89,6 +93,11 @@ public class ShareMgr extends Thread {
 
     public void setShare_id(long share_id) {
         this.share_id = share_id;
+        Item newContact = new Item();
+        newContact.setName("ME");
+        newContact.setShare_id(share_id);
+        Log.i(TAG, "Setting share_id=" + share_id);
+        DBOperations.getInstance().insertDb(newContact, CONTACTS_ITEM_ADD);
     }
 
     public boolean isbUpdateTkn() {
@@ -383,6 +392,7 @@ public class ShareMgr extends Thread {
         boolean more = true;
         for(;;) {
             resp.clear();
+            resp.order(ByteOrder.LITTLE_ENDIAN);
             boolean gotResp = ntwIntf.getResp(resp);
 
             if (!gotResp)

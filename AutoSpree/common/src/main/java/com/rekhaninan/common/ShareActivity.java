@@ -58,6 +58,8 @@ public class ShareActivity extends AppCompatActivity {
 
             case SHARE_MAINVW:
             {
+
+                setContentView(R.layout.activity_main_vw);
                 java.util.List<Item> mainLst = DBOperations.getInstance().getMainLst(SHARE_MAINVW);
                 if (mainLst == null) {
                     Log.d(TAG, "NULL main list");
@@ -118,6 +120,7 @@ public class ShareActivity extends AppCompatActivity {
 
             case CONTACTS_MAINVW:
             {
+                setContentView(R.layout.activity_main_vw);
                 java.util.List<Item> mainLst = DBOperations.getInstance().getMainLst(CONTACTS_MAINVW);
                 mListView = (ListView) findViewById(R.id.recipe_list_view);
                 ArrayAdapterMainVw adapter = new ArrayAdapterMainVw(this, R.layout.simple_list_1, mainLst);
@@ -553,7 +556,7 @@ public class ShareActivity extends AppCompatActivity {
                     {
                         AlertDialog alertDialog = new AlertDialog.Builder(ShareActivity.this).create();
                         alertDialog.setTitle("Error");
-                        String err = "Set the Share Id of the contact. Share Id of contact is in the ME field";
+                        String err = "Set the Share Id of the contact";
                         alertDialog.setMessage(err);
                         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                                 new DialogInterface.OnClickListener() {
@@ -579,6 +582,7 @@ public class ShareActivity extends AppCompatActivity {
         }
         else if (item.getItemId() == R.id.manage_contacts)
         {
+            Log.i(TAG, "Selected menu item manage contacts");
             Intent intent = new Intent(this, ShareActivity.class);
             intent.putExtra("app_name", app_name);
             intent.putExtra("ViewType", CONTACTS_MAINVW);
