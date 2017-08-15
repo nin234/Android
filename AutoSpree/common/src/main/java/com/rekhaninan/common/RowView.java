@@ -157,7 +157,7 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
                    {
                        itemname = Long.toString(itm.getShare_id());
                    }
-                   Log.d(TAG, "Setting item name=" + itemname);
+                   Log.d(TAG, "Setting item name=" + itemname + " in CONTACTS_MAINVW");
                    tv.setText(itemname);
                    tv.setTag(itm);
                    tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
@@ -754,7 +754,7 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
         name.setText("Name: ");
         name.setHeight(txtHeight);
         name.setWidth(width/4);
-        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 3);
         EditText name_value = (EditText) vw.findViewById(R.id.value);
         if (edit && (itm.getName() != null && itm.getName().length() > 0))
         {
@@ -801,7 +801,7 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
         name.setText("Share Id: ");
         name.setHeight(txtHeight);
         name.setWidth(width/4);
-        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 3);
         EditText name_value = (EditText) vw.findViewById(R.id.value_ints);
 
         if (edit && (itm.getShare_id() != 0))

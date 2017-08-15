@@ -3,6 +3,7 @@ package com.rekhaninan.common;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import static com.rekhaninan.common.Constants.AUTOSPREE;
+import static com.rekhaninan.common.Constants.CHECK_LIST_ADD;
+import static com.rekhaninan.common.Constants.CHECK_LIST_EDIT;
 import static com.rekhaninan.common.Constants.CONTACTS_ITEM_ADD;
 import static com.rekhaninan.common.Constants.CONTACTS_ITEM_DISPLAY;
 import static com.rekhaninan.common.Constants.CONTACTS_MAINVW;
@@ -53,6 +56,9 @@ public class ShareActivity extends AppCompatActivity {
         Intent intent = getIntent();
         app_name = intent.getStringExtra("app_name");
         viewType = intent.getIntExtra("ViewType", 0);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         switch (viewType) {
 
@@ -131,11 +137,13 @@ public class ShareActivity extends AppCompatActivity {
 
             case CONTACTS_ITEM_ADD:
             {
+                setContentView(R.layout.activity_main_vw);
                 java.util.List<Item> mainLst = new ArrayList<Item>();
                 Item itm = new Item();
                 itm.setShare_id(0);
                 for (int i=0; i < 5; ++i)
                     mainLst.add(itm);
+                mListView = (ListView) findViewById(R.id.recipe_list_view);
                 ArrayAdapterMainVw adapter = new ArrayAdapterMainVw(this, R.layout.simple_list_1, mainLst);
                 adapter.setParams(app_name, CONTACTS_ITEM_ADD);
                 mListView.setAdapter(adapter);
@@ -144,10 +152,13 @@ public class ShareActivity extends AppCompatActivity {
 
             case CONTACTS_ITEM_DISPLAY:
             {
+                setContentView(R.layout.activity_main_vw);
                 java.util.List<Item> mainLst = new ArrayList<Item>();
                 Item itm = intent.getParcelableExtra("item");
+                Log.i(TAG, "Displaying contact item name=" + itm.getName() + " share_id=" + itm.getShare_id());
                 for (int i=0; i < 5; ++i)
                     mainLst.add(itm);
+                mListView = (ListView) findViewById(R.id.recipe_list_view);
                 ArrayAdapterMainVw adapter = new ArrayAdapterMainVw(this, R.layout.simple_list_1, mainLst);
                 adapter.setParams(app_name, CONTACTS_ITEM_DISPLAY);
                 mListView.setAdapter(adapter);
@@ -623,6 +634,11 @@ public class ShareActivity extends AppCompatActivity {
                         }
                     });
             alertDialog.show();
+        }
+        else if (item.getItemId() == android.R.id.home)
+        {
+            Log.d(getClass().getName(), "Back button pressed");
+            finish();
         }
         else
         {
