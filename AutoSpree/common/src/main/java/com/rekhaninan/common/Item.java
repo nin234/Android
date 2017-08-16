@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+import android.view.View;
 import android.widget.CheckBox;
 
 /**
@@ -50,6 +51,9 @@ public class Item implements Parcelable  {
     private CheckBox cbx;
     private int rating;
     private boolean showSeasonPicker;
+
+
+
 
     public boolean isShowSeasonPicker() {
         return showSeasonPicker;
@@ -151,6 +155,7 @@ public class Item implements Parcelable  {
 
     public void resetChkBox()
     {
+
         cbx.setChecked(false);
     }
 

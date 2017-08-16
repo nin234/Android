@@ -242,6 +242,7 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
                    final CheckBox cbx = (CheckBox) vw.findViewById(R.id.share_main_chkbox);
                    cbx.setTag(itm);
                    itm.setCbx(cbx);
+                   itm.setRowno(position);
 
                    cbx.setOnClickListener(new View.OnClickListener() {
                                               @Override
@@ -249,9 +250,9 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
 
                                                   CheckBox cbxi = (CheckBox) view;
                                                   Item itm = (Item) cbxi.getTag();
-                                                  Log.d(TAG, "Toggling checkbok " + itm.isSelected());
-                                                  itm.setSelected(cbxi.isSelected());
-                                                  if (cbxi.isSelected())
+                                                  Log.d(TAG, "Toggling checkbok " + itm.isSelected() + " cbx=" + cbxi.isChecked());
+                                                  itm.setSelected(cbxi.isChecked());
+                                                  if (cbxi.isChecked())
                                                   {
                                                       adapter.resetSelected(itm.getRowno());
                                                   }

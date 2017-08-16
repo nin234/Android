@@ -537,6 +537,7 @@ public class ShareActivity extends AppCompatActivity {
                     selectedItem = adapter.getSelectedItem();
                     if (selectedItem == null)
                     {
+                        Log.i(TAG, "No item selected for sharing");
                         return true;
                     }
                     Intent intent = new Intent(this, PhotoRoll.class);

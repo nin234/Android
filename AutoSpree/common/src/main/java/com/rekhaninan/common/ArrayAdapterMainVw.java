@@ -1,6 +1,7 @@
 package com.rekhaninan.common;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.content.Context;
 
@@ -41,6 +42,7 @@ public class ArrayAdapterMainVw extends ArrayAdapter<Item> {
     private List<Item> checkList;
     private boolean bCheckListChg;
     private boolean recrLst;
+    private final String TAG = "ArrayAdapterMainVw";
 
     public boolean isRecrLst() {
         return recrLst;
@@ -103,6 +105,7 @@ public class ArrayAdapterMainVw extends ArrayAdapter<Item> {
 
     public void resetSelected (int i)
     {
+
         for (Item itmElem : arryElems)
         {
             if (itmElem.getRowno() == i)
