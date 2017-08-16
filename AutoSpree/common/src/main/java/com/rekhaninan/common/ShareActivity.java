@@ -576,26 +576,16 @@ public class ShareActivity extends AppCompatActivity {
                 {
                     ArrayAdapterMainVw  adapter = (ArrayAdapterMainVw)mListView.getAdapter();
                     Item newContact = adapter.getNewContact();
-                    if (newContact.getShare_id() == 0)
+                    if (newContact.getShare_id() != 0)
                     {
-                        AlertDialog alertDialog = new AlertDialog.Builder(ShareActivity.this).create();
-                        alertDialog.setTitle("Error");
-                        String err = "Set the Share Id of the contact";
-                        alertDialog.setMessage(err);
-                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                        finish();
-                                        return;
-                                    }
-                                });
-                        alertDialog.show();
-                        finish();
-
+                        if (newContact.getName() == null || newContact.getName().equals(""))
+                        {
+                            newContact.setName(Long.toString(newContact.getShare_id()));
+                        }
+                        DBOperations.getInstance().insertDb(newContact, CONTACTS_ITEM_ADD);
+                        updateFriendList();
                     }
-                    DBOperations.getInstance().insertDb(newContact, CONTACTS_ITEM_ADD);
-                    updateFriendList();
+
                     Intent intent = new Intent();
                     intent.putExtra("contact_name", newContact.getName());
                     setResult(RESULT_OK, intent);
