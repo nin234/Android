@@ -599,8 +599,9 @@ public class ShareActivity extends AppCompatActivity {
             intent.putExtra("ViewType", CONTACTS_MAINVW);
             startActivity(intent);
         }
-        else if (item.getItemId() == R.id.add_item)
+        else if (item.getItemId() == R.id.add_new_item)
         {
+            Log.i(TAG, "Add contact menu item selected");
             Intent intent = new Intent(this, ShareActivity.class);
             intent.putExtra("app_name", app_name);
             intent.putExtra("ViewType", CONTACTS_ITEM_ADD);
