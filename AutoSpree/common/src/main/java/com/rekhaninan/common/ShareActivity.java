@@ -101,6 +101,7 @@ public class ShareActivity extends AppCompatActivity {
 
             case CONTACTS_VW:
             {
+                setContentView(R.layout.activity_main_vw);
                 java.util.List<Item> mainLst = DBOperations.getInstance().getMainLst(CONTACTS_VW);
                 if (mainLst == null)
                 {
@@ -506,6 +507,49 @@ public class ShareActivity extends AppCompatActivity {
         return;
     }
 
+    private void OnOHASpreeItemSelected()
+    {
+        ArrayAdapterMainVw  adapter = (ArrayAdapterMainVw)mListView.getAdapter();
+        selectedItem = adapter.getSelectedItem();
+        if (selectedItem == null)
+        {
+            Log.i(TAG, "No item selected for sharing");
+            return;
+        }
+        File dir = getFilesDir();
+        String thumbDir = selectedItem.getAlbum_name() + File.separator + "thumbnails";
+        File thumbNailsDir = new File(dir, thumbDir);
+        boolean startContactActivity = false;
+        if (!thumbNailsDir.exists())
+        {
+            Log.i(TAG, "Starting contacts activity in sharing as no thumbnail directory found");
+            startContactActivity = true;
+        }
+
+        if (!startContactActivity) {
+            File[] files = thumbNailsDir.listFiles();
+            if (files.length == 0) {
+                Log.i(TAG, "Starting contacts activity in sharing as no thumbnail images found");
+                startContactActivity = true;
+            }
+        }
+
+        if (startContactActivity)
+        {
+            Intent intent = new Intent(this, ShareActivity.class);
+            intent.putExtra("app_name", app_name);
+            intent.putExtra("ViewType", CONTACTS_VW);
+            startActivityForResult(intent, GET_CONTACTS_ACTIVITY_REQUEST);
+            return;
+        }
+
+        Intent intent = new Intent(this, PhotoRoll.class);
+        intent.putExtra("app_name", app_name);
+        intent.putExtra("ViewType", SHARE_PICTURE_VW);
+        intent.putExtra("album_name", selectedItem.getAlbum_name());
+        startActivityForResult(intent, SHARE_PICTURE_ACTIVITY_REQUEST);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
@@ -533,18 +577,7 @@ public class ShareActivity extends AppCompatActivity {
                 case OPENHOUSES:
                 case AUTOSPREE:
                 {
-                    ArrayAdapterMainVw  adapter = (ArrayAdapterMainVw)mListView.getAdapter();
-                    selectedItem = adapter.getSelectedItem();
-                    if (selectedItem == null)
-                    {
-                        Log.i(TAG, "No item selected for sharing");
-                        return true;
-                    }
-                    Intent intent = new Intent(this, PhotoRoll.class);
-                    intent.putExtra("app_name", app_name);
-                    intent.putExtra("ViewType", SHARE_PICTURE_VW);
-                    intent.putExtra("album_name", selectedItem.getAlbum_name());
-                    startActivityForResult(intent, SHARE_PICTURE_ACTIVITY_REQUEST);
+                    OnOHASpreeItemSelected();
                 }
                 break;
 
