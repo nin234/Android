@@ -18,6 +18,8 @@ public final class Constants {
     public static final int ADD_CHECK_LIST_ACTIVITY_REQUEST=6;
     public static final int EDIT_CHECK_LIST_ACTIVITY_REQUEST=7;
     public static final int ADD_CHECK_LIST_ACTIVITY_REQUEST_2=8;
+    public static final int ADD_CONTACT_ITEM_ACTIVITY_REQUEST=9;
+    public static final int DELETE_CONTACT_ITEM_ACTIVITY_REQUEST=10;
 
 
 

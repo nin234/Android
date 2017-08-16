@@ -17,6 +17,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import static com.rekhaninan.common.Constants.ADD_CONTACT_ITEM_ACTIVITY_REQUEST;
 import static com.rekhaninan.common.Constants.AUTOSPREE;
 import static com.rekhaninan.common.Constants.CHECK_LIST_ADD;
 import static com.rekhaninan.common.Constants.CHECK_LIST_EDIT;
@@ -25,6 +26,7 @@ import static com.rekhaninan.common.Constants.CONTACTS_ITEM_DISPLAY;
 import static com.rekhaninan.common.Constants.CONTACTS_MAINVW;
 import static com.rekhaninan.common.Constants.CONTACTS_NAME_ROW;
 import static com.rekhaninan.common.Constants.CONTACTS_VW;
+import static com.rekhaninan.common.Constants.DELETE_CONTACT_ITEM_ACTIVITY_REQUEST;
 import static com.rekhaninan.common.Constants.EASYGROC;
 import static com.rekhaninan.common.Constants.EASYGROC_DISPLAY_ITEM;
 import static com.rekhaninan.common.Constants.GET_CONTACTS_ACTIVITY_REQUEST;
@@ -257,6 +259,17 @@ public class ShareActivity extends AppCompatActivity {
                 startActivityForResult(intent, GET_CONTACTS_ACTIVITY_REQUEST);
             }
         }
+        else if (requestCode == ADD_CONTACT_ITEM_ACTIVITY_REQUEST)
+        {
+            finish();
+        }
+        else if (requestCode == DELETE_CONTACT_ITEM_ACTIVITY_REQUEST)
+        {
+            if (resultCode == RESULT_OK)
+            {
+                finish();
+            }
+        }
 
     }
 
@@ -304,7 +317,7 @@ public class ShareActivity extends AppCompatActivity {
         String shrMsg = new String();
         for (Item contact : contactsLst)
         {
-            if (contact.getName() == "ME")
+            if (contact.getName().equals("ME"))
                 continue;
             shrMsg += Long.toString(contact.getShare_id());
             shrMsg += ";";
@@ -583,6 +596,10 @@ public class ShareActivity extends AppCompatActivity {
                     }
                     DBOperations.getInstance().insertDb(newContact, CONTACTS_ITEM_ADD);
                     updateFriendList();
+                    Intent intent = new Intent();
+                    intent.putExtra("contact_name", newContact.getName());
+                    setResult(RESULT_OK, intent);
+                    finish();
 
                 }
                 break;
@@ -605,7 +622,7 @@ public class ShareActivity extends AppCompatActivity {
             Intent intent = new Intent(this, ShareActivity.class);
             intent.putExtra("app_name", app_name);
             intent.putExtra("ViewType", CONTACTS_ITEM_ADD);
-            startActivity(intent);
+            startActivityForResult(intent, ADD_CONTACT_ITEM_ACTIVITY_REQUEST);
         }
         else if (item.getItemId() == R.id.delete_item_item)
         {
@@ -627,6 +644,9 @@ public class ShareActivity extends AppCompatActivity {
 
                             DBOperations.getInstance().deleteDb(newContact, viewType);
                             updateFriendList();
+                            Intent intent = new Intent();
+                            intent.putExtra("contact_name", newContact.getName());
+                            setResult(RESULT_OK, intent);
                             finish();
                             return;
                         }

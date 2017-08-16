@@ -172,7 +172,9 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
                                                  intent.putExtra("ViewType", CONTACTS_ITEM_DISPLAY);
                                                  intent.putExtra("app_name", app_name);
                                                  intent.putExtra("item", itm);
-                                                 ctxt.startActivity(intent);
+                                                 Activity itemAct = (Activity) ctxt;
+                                                 itemAct.startActivityForResult(intent, DELETE_CONTACT_ITEM_ACTIVITY_REQUEST);
+
                                              }
                                          }
 
