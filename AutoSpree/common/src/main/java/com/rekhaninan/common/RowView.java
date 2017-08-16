@@ -821,7 +821,14 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    itm.setShare_id(Integer.parseInt(s.toString()) );
+                    String shId = s.toString();
+                    if (shId.equals(""))
+                    {
+                        itm.setShare_id(0);
+                    }
+                    else {
+                        itm.setShare_id(Integer.parseInt(shId));
+                    }
                 }
 
                 @Override
