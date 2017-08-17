@@ -503,6 +503,7 @@ public class ShareMgr extends Thread {
     void sendMsgs()
     {
         try {
+            //shareDeviceTkn();
             while (msgsToSend.size() != 0 || imgsToSend.size() != 0) {
 
                 Log.d(TAG, "msgsToSend=" + msgsToSend.size() + " imsgToSend=" + imgsToSend.size());
