@@ -348,13 +348,13 @@ public class ShareActivity extends AppCompatActivity {
         shrMsg += getCheckList(selectedItem);
 
         ShareMgr.getInstance().shareItem(shrMsg, selectedItem.getName());
-        for (String selectedImage : selectedImages)
-        {
-            String picMetaStr = picMetaCommon + selectedItem.getName();
-            ShareMgr.getInstance().sharePicture(selectedImage, picMetaStr);
+        if (selectedImages != null) {
+            for (String selectedImage : selectedImages) {
+                String picMetaStr = picMetaCommon + selectedItem.getName();
+                ShareMgr.getInstance().sharePicture(selectedImage, picMetaStr);
 
+            }
         }
-
         return;
     }
 
@@ -594,6 +594,7 @@ public class ShareActivity extends AppCompatActivity {
                         java.util.ArrayList<Item> contactsLst = adapter.getSelectedList();
                         Intent intent = new Intent();
                         if (contactsLst.size() > 0) {
+                            Log.i(TAG, "Setting contacts no=" + contactsLst.size());
                             intent.putParcelableArrayListExtra("contactslist", contactsLst);
                             setResult(RESULT_OK, intent);
                         }
@@ -602,9 +603,9 @@ public class ShareActivity extends AppCompatActivity {
                             setResult(RESULT_CANCELED, intent);
                         }
 
-
+                    finish();
                 }
-                    break;
+                break;
 
                 case CONTACTS_ITEM_ADD:
                 {
