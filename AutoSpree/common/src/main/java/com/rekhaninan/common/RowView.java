@@ -202,8 +202,25 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
                    //tv.setText(Item, TextView.BufferType.EDITABLE);
                    tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
 
+                   tv.setOnClickListener(new View.OnClickListener() {
+
+                       @Override
+                       public void onClick(View view) {
+
+                           TextView tv = (TextView) view;
+                           Item itm = (Item) tv.getTag();
+                           CheckBox cbxi = itm.getCbx();
+                           cbxi.setChecked(!cbxi.isChecked());
+                           Log.d(TAG, "Toggling checkbok " + itm.isSelected() + " cbx=" + cbxi.isChecked());
+                           itm.setSelected(cbxi.isChecked());
+                       }
+                   }
+                   );
+
                    final CheckBox cbx = (CheckBox) vw.findViewById(R.id.share_main_chkbox);
                    cbx.setTag(itm);
+                   itm.setCbx(cbx);
+                   itm.setRowno(position);
 
                    cbx.setOnClickListener(new View.OnClickListener() {
                                               @Override
@@ -212,7 +229,7 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
                                                   CheckBox cbxi = (CheckBox) view;
                                                   Item itm = (Item) cbxi.getTag();
                                                   Log.d(TAG, "Toggling checkbok " + itm.isSelected());
-                                                  itm.setSelected(cbxi.isSelected());
+                                                  itm.setSelected(cbxi.isChecked());
                                               }
                                           }
 
@@ -238,6 +255,26 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
 
                    //tv.setText(Item, TextView.BufferType.EDITABLE);
                    tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+                   tv.setOnClickListener(new View.OnClickListener() {
+
+                                             @Override
+                                             public void onClick(View view) {
+
+                                                 TextView tv = (TextView) view;
+                                                 Item itm = (Item) tv.getTag();
+                                                 CheckBox cbxi = itm.getCbx();
+                                                 cbxi.setChecked(!cbxi.isChecked());
+                                                 Log.d(TAG, "Toggling checkbok " + itm.isSelected() + " cbx=" + cbxi.isChecked());
+                                                 itm.setSelected(cbxi.isChecked());
+                                                 if (cbxi.isChecked())
+                                                 {
+                                                     adapter.resetSelected(itm.getRowno());
+                                                 }
+
+                                             }
+                   }
+
+                   );
 
                    final CheckBox cbx = (CheckBox) vw.findViewById(R.id.share_main_chkbox);
                    cbx.setTag(itm);

@@ -18,6 +18,7 @@ android:padding="6dip" >
     android:layout_height="wrap_content"
     android:layout_alignBaseline="@+id/share_main_chkbox"
     android:layout_alignBottom="@+id/share_main_chkbox"
+    android:layout_alignParentRight="true"
     android:layout_toRightOf="@+id/share_main_chkbox"/>
 
 </RelativeLayout>
