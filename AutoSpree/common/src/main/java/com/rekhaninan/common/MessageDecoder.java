@@ -191,14 +191,21 @@ public class MessageDecoder {
 
     boolean processShareItemMessage (ByteBuffer buffer, int mlen)
     {
-        int namelen = buffer.getInt(8); // 8== 2*sizeof(int)
-        int nameoffset = 16; // 4 * sizeof(int)
-        String name = new String (buffer.array(), nameoffset, namelen-1);
+
+        boolean bRet = false;
+        try {
+
+            String utf8 = new  String("UTF-8");
+        int namelen = buffer.getInt(16); // 8== 2*sizeof(int)
+        int nameoffset = 24; // 4 * sizeof(int)
+        String name = new String (buffer.array(), nameoffset, namelen-1, utf8);
         int listlenoffset = 20;
         int listlen = buffer.getInt(listlenoffset);
         int listoffset = namelen + 24;
-        String list = new String(buffer.array(), listoffset, listlen-1);
-        boolean bRet = false;
+        String list = new String(buffer.array(), listoffset, listlen-1, utf8);
+        Log.i(TAG, "ShareItem details namelen=" + namelen + " listlen=" + listlen + " nameoffset=" + nameoffset + " listoffset=" + listoffset);
+        Log.i(TAG, "Processing shareItem msg name=" + name + " list=" + list + " app_name=" + app_name);
+
         switch (app_name)
         {
             case OPENHOUSES:
@@ -219,6 +226,16 @@ public class MessageDecoder {
         }
         if (bRet)
             ShareMgr.getInstance().refreshMainVw();
+        }
+        catch (java.io.UnsupportedEncodingException excp)
+        {
+            Log.e(TAG, "processShareItemMsg UnsupportedEncodingException " + excp.getMessage());
+        }
+        catch (Exception excp)
+        {
+            Log.e(TAG, "processShareItemMsg exception  " + excp.getMessage());
+        }
+
         return bRet;
     }
 
@@ -320,17 +337,21 @@ public class MessageDecoder {
     boolean decodeAndStoreASpreeItem(String list)
     {
 
-        String[] pMainArr = list.split("::]}]::");
+        String[] pMainArr = list.split("::]\\}]::");
         String[] pArr = pMainArr[0].split("]:;");
+        Log.i(TAG, "list pMainArr[0]=" + pMainArr[0]);
         int cnt = pArr.length;
         int mcnt = pMainArr.length;
+        Log.i(TAG, "cnt=" + cnt + " mcnt=" + mcnt);
         HashMap<String, String> keyvals = new HashMap<>();
         for (int i=0; i < cnt; ++i)
         {
-            String[] kvarr = pArr[i].split(":|:");
+            String[] kvarr = pArr[i].split(":\\|:");
+            for (int j=0; j < kvarr.length; ++j)
             if (kvarr.length != 2)
                 continue;
             keyvals.put(kvarr[0], kvarr[1]);
+
 
         }
         Item itm = new Item();
@@ -348,6 +369,7 @@ public class MessageDecoder {
         if (nameval != null)
             itm.setMiles(Integer.parseInt(nameval));
 
+        Log.i(TAG, " Item=" + itm.itmStr());
         Item existItem = DBOperations.getInstance().shareItemExists(itm, AUTOSPREE_EDIT_ITEM);
         if (existItem == null)
         {

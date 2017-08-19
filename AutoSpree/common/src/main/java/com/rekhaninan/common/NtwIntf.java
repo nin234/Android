@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketOption;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
@@ -14,6 +15,7 @@ import java.util.Locale;
 
 import static com.rekhaninan.common.Constants.AUTOSPREE;
 import static com.rekhaninan.common.Constants.EASYGROC;
+import static com.rekhaninan.common.Constants.MAX_BUF;
 import static com.rekhaninan.common.Constants.OPENHOUSES;
 import static com.rekhaninan.common.Constants.RCV_BUF_LEN;
 
@@ -59,7 +61,9 @@ public class NtwIntf {
     {
         try {
             socket = SocketChannel.open();
-            socket.configureBlocking(true);
+            socket.configureBlocking(false);
+            socket.socket().setReceiveBufferSize(MAX_BUF);
+            socket.socket().setTcpNoDelay(true);
         }
         catch (IOException excp)
         {
@@ -87,8 +91,10 @@ public class NtwIntf {
         try {
             msg.flip();
             Log.i(TAG, "Number of bytes to write to socket=" + msg.remaining());
-           int n= socket.write(msg);
-            Log.i(TAG, "Wrote to socket buffer bytes=" + n);
+            while (msg.hasRemaining()) {
+                int n = socket.write(msg);
+                Log.i(TAG, "Wrote to socket buffer bytes=" + n);
+            }
             return true;
 
         }
@@ -112,16 +118,21 @@ public class NtwIntf {
 
         if (!socket.isConnected())
         {
+            Log.e(TAG, "Socket not connected");
             return false;
         }
 
+           Log.i(TAG, "reading nbytes=" + resp.remaining() + " from socket");
         int bytesRead = socket.read(resp);
             if (bytesRead > 0) {
                 Log.d(TAG, "Received response of bytes=" + bytesRead);
+                //resp.flip();
                 return true;
             }
-            else
+            else {
+                Log.e(TAG, "Bytes read=" + bytesRead);
                 return false;
+            }
         }
         catch (IOException excp)
         {
@@ -141,6 +152,7 @@ public class NtwIntf {
         try {
             Log.i(TAG, "Connecting to socket");
              boolean isConnected =  socket.connect (new InetSocketAddress( connectAddr, connectPort));
+            while (!socket.finishConnect());
 
             Log.i(TAG, "Connected to socket");
             return true;

@@ -349,6 +349,7 @@ public class ShareMgr extends Thread {
 
         bUpdateTkn = sharing.getBoolean("update", false);
         getIdIfRequired();
+        bUpdateTkn = true;
         if (bUpdateTkn)
         {
             shareDeviceTkn();
@@ -363,7 +364,7 @@ public class ShareMgr extends Thread {
 
                 if (msgsToSend.size() == 0 || imgsToSend.size() == 0)
                 {
-                    dataToSendCondn.await(5, TimeUnit.SECONDS);
+                    dataToSendCondn.await(3, TimeUnit.SECONDS);
                 }
                 dataToSend.unlock();
                 sendMsgs();
@@ -389,20 +390,21 @@ public class ShareMgr extends Thread {
 
     private void processResponse()
     {
+        Log.i(TAG, "In processResponse");
         boolean more = true;
         for(;;) {
             resp.clear();
             resp.order(ByteOrder.LITTLE_ENDIAN);
             boolean gotResp = ntwIntf.getResp(resp);
-
+            Log.i(TAG, "In processResponse gotResp=" + gotResp);
             if (!gotResp)
                 break;
             more = pDecoder.processMessage(resp);
-
+            Log.i(TAG, "In processResponse more=" + gotResp);
             if (!more)
                 break;
         }
-
+        Log.i(TAG, "Finished processResponse ");
     }
 
     public void getItems()
@@ -441,7 +443,7 @@ public class ShareMgr extends Thread {
         String devTkn = sharing.getString("token", "None");
         if (devTkn.equals("None"))
             return;
-
+        Log.i(TAG, "Sharing device token");
         if (ntwIntf.sendMsg(MessageTranslator.shareDevicTknMsg(share_id, devTkn)))
         {
             bUpdateTkn = false;
@@ -502,8 +504,9 @@ public class ShareMgr extends Thread {
 
     void sendMsgs()
     {
+        Log.i(TAG, "In sendMsgs");
         try {
-            //shareDeviceTkn();
+
             while (msgsToSend.size() != 0 || imgsToSend.size() != 0) {
 
                 Log.d(TAG, "msgsToSend=" + msgsToSend.size() + " imsgToSend=" + imgsToSend.size());

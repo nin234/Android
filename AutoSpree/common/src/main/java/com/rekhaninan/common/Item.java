@@ -275,6 +275,25 @@ public class Item implements Parcelable  {
         }
     };
 
+    public String itmStr()
+    {
+        String str = new String();
+        str = "name=";
+        str += name;
+        str += " shareId=";
+        str += Long.toString(share_id);
+        str += " make=";
+        str += make;
+        str += " model=";
+        str += model;
+        str += " price=";
+        str += price;
+        str += " year=";
+        str += year;
+        str += " city=";
+        str += city;
+        return str;
+    }
     public void writeToParcel(Parcel dest, int flags) {
         Log.d(TAG, "Parcelling item");
         dest.writeString(name);
