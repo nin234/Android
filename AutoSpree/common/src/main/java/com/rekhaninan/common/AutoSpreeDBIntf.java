@@ -95,6 +95,10 @@ public class AutoSpreeDBIntf extends DBInterface {
                    int ratings = Integer.parseInt(value);
                    values.put(key, ratings);
                }
+               else if (key.equals("share_id")) {
+                   long share_id = Long.parseLong(value);
+                   values.put(key, share_id);
+               }
                else {
                    values.put(key, value);
                }
@@ -148,6 +152,7 @@ public class AutoSpreeDBIntf extends DBInterface {
         keyvals.put("street", itm.getStreet());
         keyvals.put("city", itm.getCity());
         keyvals.put("state", itm.getState());
+        keyvals.put("share_id", Long.toString(itm.getShare_id()));
         keyvals.put("zip", itm.getZip());
         keyvals.put("latitude", Double.toString(itm.getLatitude()));
         keyvals.put("longitude", Double.toString(itm.getLongitude()));

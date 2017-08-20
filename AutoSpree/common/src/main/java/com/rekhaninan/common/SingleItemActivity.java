@@ -531,6 +531,13 @@ public class SingleItemActivity extends AppCompatActivity
             }
             break;
 
+            case DELETE_TEMPL_CHECKLIST_ACTIVITY_REQUEST:
+            case ADD_TEMPL_CHECKLIST_ACTIVITY_REQUEST:
+            {
+                finish();
+            }
+            break;
+
             default:
                 break;
         }
@@ -858,7 +865,16 @@ public class SingleItemActivity extends AppCompatActivity
 
                         ++i;
                     }
-                    startEasyGrocTemplDisplayActivity(nameItem);
+                    String app_name = DBOperations.getInstance().getApp_name();
+                    if (app_name.equals(EASYGROC)) {
+                        startEasyGrocTemplDisplayActivity(nameItem);
+                    }
+                    else
+                    {
+                        Intent intent = new Intent();
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
 
                 }
                 break;
@@ -1185,8 +1201,25 @@ public class SingleItemActivity extends AppCompatActivity
                             File thumbFile = new File(thumbnailsDir, picFile.getName());
                             thumbFile.delete();
                         }
+                        String app_name = DBOperations.getInstance().getApp_name();
                         DBOperations.getInstance().deleteDb(itm, viewType);
+                    if (app_name.equals(EASYGROC)) {
                         finish();
+                    }
+                    else
+                    {
+                        if (viewType == EASYGROC_TEMPL_DISPLAY_ITEM)
+                        {
+                            Intent intent = new Intent();
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
+                        else
+                        {
+                            finish();
+                        }
+                    }
+
 
                     }
                 });
@@ -1310,7 +1343,9 @@ public class SingleItemActivity extends AppCompatActivity
                 name += Integer.toString(mainLst.size()+1);
                 easyItem.setName(name);
                 intent.putExtra("item", easyItem);
-                 startActivity(intent);
+                Activity itemAct = (Activity) this;
+                itemAct.startActivityForResult(intent, ADD_TEMPL_CHECKLIST_ACTIVITY_REQUEST);
+
             }
             break;
 

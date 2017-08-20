@@ -116,7 +116,7 @@ public class OpenHousesDBIntf extends DBInterface {
         keyvals.put("year", String.valueOf(itm.getYear()));
         keyvals.put("price", String.valueOf(itm.getPrice()));
 
-
+        keyvals.put("share_id", Long.toString(itm.getShare_id()));
         keyvals.put("album_name", itm.getAlbum_name());
         keyvals.put("notes", itm.getNotes());
         keyvals.put("street", itm.getStreet());

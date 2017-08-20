@@ -39,6 +39,7 @@ import static com.rekhaninan.common.Constants.CHECK_LIST_ADD;
 import static com.rekhaninan.common.Constants.CHECK_LIST_DISPLAY;
 import static com.rekhaninan.common.Constants.CHECK_LIST_EDIT;
 import static com.rekhaninan.common.Constants.CHECK_LIST_TEMPL_SELECTOR;
+import static com.rekhaninan.common.Constants.DELETE_TEMPL_CHECKLIST_ACTIVITY_REQUEST;
 import static com.rekhaninan.common.Constants.EASYGROC;
 import static com.rekhaninan.common.Constants.EASYGROC_ADD_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_ADD_ITEM_OPTIONS;
@@ -137,7 +138,24 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                                                   intent.putExtra("ViewType", EASYGROC_TEMPL_DISPLAY_ITEM);
                                               }
                                               intent.putExtra("item", itm);
-                                              ctxt.startActivity(intent);
+
+                                              String app_name = DBOperations.getInstance().getApp_name();
+                                              if (app_name.equals(EASYGROC))
+                                              {
+                                                  ctxt.startActivity(intent);
+                                              }
+                                              else
+                                              {
+                                                  if (vwType == EASYGROC_TEMPL_LISTS)
+                                                  {
+                                                      Activity itemAct = (Activity) ctxt;
+                                                      itemAct.startActivityForResult(intent, DELETE_TEMPL_CHECKLIST_ACTIVITY_REQUEST);
+                                                  }
+                                                  else
+                                                  {
+                                                      ctxt.startActivity(intent);
+                                                  }
+                                              }
                                           }
                                       }
 

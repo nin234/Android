@@ -167,13 +167,13 @@ public class EasyGrocListDBIntf extends DBInterface {
             egrocDB.insert(dbName, null, values);
             if (!itemExists(itm, vwType)) {
                 if (!(itm.getName().endsWith(":INV") || itm.getName().endsWith(":SCRTCH"))) {
-                    Log.d (TAG, "Inserting into " + dbName1 + itm.getName());
+                    Log.d (TAG, "Inserting into " + dbName1 + " " + itm.getName());
                     egrocDB.insert(dbName1, null, nameValue);
                 }
             }
 
             Log.i (TAG, "Inserting to dbs " + dbName + " " + dbName1 + " Item name=" + itm.getName() + " item=" + itm.getItem()
-                    + " rowno=" + itm.getRowno());
+                    + " rowno=" + itm.getRowno() + " share_id=" + itm.getShare_id());
         }
         catch(Exception e)
         {
