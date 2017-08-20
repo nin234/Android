@@ -29,6 +29,7 @@ public class MessageTranslator {
         try {
             int msglen = len + 8;
             ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
+            byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
             byteBuffer.putInt(msglen);
             byteBuffer.putInt(PIC_MSG);
             byteBuffer.put(msg);

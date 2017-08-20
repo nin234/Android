@@ -76,8 +76,8 @@ public class MessageDecoder {
                 start = false;
                 break;
             }
-            int len = buffer.getInt(0);
-            int mtyp = buffer.getInt(4);
+            int len = buffer.getInt(buffer.position()-remaining);
+            int mtyp = buffer.getInt(buffer.position()-remaining+4);
             Log.d(TAG, "Received message of length=" + len + " remaining=" + remaining + " msgTyp=" + mtyp);
             if (remaining == len)
             {
@@ -594,19 +594,20 @@ public class MessageDecoder {
     {
         boolean bMore = false;
         boolean next =true;
+	int msglen = len;
         while (next)
         {
-            if (remaining == len-aggrbuf.position())
+            if (remaining == msglen-aggrbuf.position())
             {
                 if(bufferOverFlowCheck(remaining))
                 break;
                 aggrbuf.put(buffer.array(), mlen-remaining, remaining);
-                decodeMessage(aggrbuf, len);
+                decodeMessage(aggrbuf, msglen);
                 aggrbuf.clear();
                 start = true;
                 break;
             }
-            else if (remaining < (len - aggrbuf.position()))
+            else if (remaining < (msglen - aggrbuf.position()))
             {
                 if(bufferOverFlowCheck(remaining))
                     break;
@@ -617,12 +618,22 @@ public class MessageDecoder {
             }
             else
             {
-                if(bufferOverFlowCheck(len-aggrbuf.position()))
+                if(bufferOverFlowCheck(msglen-aggrbuf.position()))
                     break;
-                aggrbuf.put(buffer.array(), mlen-remaining, len-aggrbuf.position());
-                decodeMessage(aggrbuf, len);
+                aggrbuf.put(buffer.array(), mlen-remaining, msglen-aggrbuf.position());
+                decodeMessage(aggrbuf, msglen);
                 remaining -= len - aggrbuf.position();
                 aggrbuf.clear();
+		if (remaining > 4)
+		{
+			msglen = buffer.getInt(mlen-remaining);
+		}
+		else
+		{
+			aggrbuf.put(buffer.array(), mlen-remaining, remaining);
+			bMore = true;
+			break;
+		}
             }
         }
 
