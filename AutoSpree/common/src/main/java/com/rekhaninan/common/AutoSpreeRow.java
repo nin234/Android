@@ -122,7 +122,7 @@ public class AutoSpreeRow extends RowView
                                               Intent intent = new Intent(ctxt, SingleItemActivity.class);
                                               intent.putExtra("ViewType", AUTOSPREE_DISPLAY_ITEM);
                                               intent.putExtra("item", itm);
-                                              java.util.List<Item> list = DBOperations.getInstance().getList(itm.getName());
+                                              java.util.List<Item> list = DBOperations.getInstance().getList(itm.getName(), itm.getShare_id());
                                               if (list == null)
                                                   list = new ArrayList<Item>();
                                               intent.putParcelableArrayListExtra("check_list", (ArrayList<Item>)list);

@@ -63,13 +63,14 @@ public class MainVwActivity extends AppCompatActivity {
             DBOperations.getInstance().initDb(dbClassName, this);
             ShareMgr.getInstance().start_thr(this, app_name);
             Log.d(TAG, "Getting main list from DB MAINVW=" + MAINVW);
+            DBOperations.getInstance().setApp_name(app_name);
             java.util.List<Item> mainLst = DBOperations.getInstance().getMainLst(MAINVW);
             if (mainLst == null)
             {
                 Log.d(getClass().getSimpleName(), "NULL main list");
                 return;
             }
-            DBOperations.getInstance().setApp_name(app_name);
+
 
             no_items = mainLst.size();
 
@@ -202,6 +203,7 @@ public class MainVwActivity extends AppCompatActivity {
 
     public void refreshVw()
     {
+        setContentView(R.layout.activity_main_vw);
         Log.d(getClass().getSimpleName(), "Refreshing MainVw");
         java.util.List<Item> mainLst = DBOperations.getInstance().getMainLst(MAINVW);
         if (mainLst == null)
@@ -213,7 +215,7 @@ public class MainVwActivity extends AppCompatActivity {
         no_items = mainLst.size();
 
         ArrayAdapterMainVw adapter = new ArrayAdapterMainVw(this, R.layout.simple_list_1, mainLst);
-
+        mListView = (ListView) findViewById(R.id.recipe_list_view);
         adapter.setParams(message, MAINVW);
         mListView.setAdapter(adapter);
         return;

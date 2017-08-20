@@ -28,8 +28,8 @@ public class DBOperations {
         return app_name;
     }
 
-    public void setApp_name(String app_name) {
-        this.app_name = app_name;
+    public void setApp_name(String aname) {
+        app_name = aname;
     }
 
     private DBOperations()
@@ -57,7 +57,7 @@ public class DBOperations {
         }
         catch (Exception e)
         {
-            Log.d(getClass().getName(), "Exception initDb Cannot find reflection class name" +dbClass);
+            Log.d(getClass().getName(), "Exception initDb Cannot find reflection class name " +dbClass);
             return;
         }
     }
@@ -129,12 +129,12 @@ public class DBOperations {
         }
     }
 
-    public java.util.List<Item>  getList(String name) {
+    public java.util.List<Item>  getList(String name, long share_id) {
         try {
 
             java.lang.reflect.Method methd;
-            methd = dbi.getClass().getMethod("getList", String.class);
-            java.util.List<Item> mainLst = (java.util.List<Item>) methd.invoke(dbi, name);
+            methd = dbi.getClass().getMethod("getList", String.class, long.class);
+            java.util.List<Item> mainLst = (java.util.List<Item>) methd.invoke(dbi, name, share_id);
             return mainLst;
         }
         catch (Exception e)
@@ -145,12 +145,12 @@ public class DBOperations {
 
     }
 
-    public java.util.List<Item>  getTemplList(String name) {
+    public java.util.List<Item>  getTemplList(String name, long share_id) {
         try {
 
             java.lang.reflect.Method methd;
-            methd = dbi.getClass().getMethod("getTemplList", String.class);
-            java.util.List<Item> mainLst = (java.util.List<Item>) methd.invoke(dbi, name);
+            methd = dbi.getClass().getMethod("getTemplList", String.class, long.class);
+            java.util.List<Item> mainLst = (java.util.List<Item>) methd.invoke(dbi, name, share_id);
             return mainLst;
         }
         catch (Exception e)

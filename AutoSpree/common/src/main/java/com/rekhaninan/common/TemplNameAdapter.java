@@ -129,7 +129,7 @@ public class TemplNameAdapter extends BaseExpandableListAdapter {
                                                Log.d(getClass().getName(), "Clicked row " + tv.getText());
 
                                                Intent intent = new Intent(ctxt, SingleItemActivity.class);
-                                               java.util.List<Item> list = DBOperations.getInstance().getTemplList(itm.getName());
+                                               java.util.List<Item> list = DBOperations.getInstance().getTemplList(itm.getName(), itm.getShare_id());
                                                if (list.size() ==0) {
                                                    intent.putExtra("ViewType", EASYGROC_TEMPL_ADD_ITEM);
                                                }

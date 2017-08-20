@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.rekhaninan.common.Constants.EASYGROC_ADD_ITEM;
+import static com.rekhaninan.common.Constants.EASYGROC_DISPLAY_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_EDIT_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_ADD_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_DISPLAY_ITEM;
@@ -40,14 +41,14 @@ public class OpenHousesDBIntf extends DBInterface {
         return easyGrocListDBIntf.getTemplNameLst();
     }
 
-    public List<Item> getTemplList(String name)
+    public List<Item> getTemplList(String name, long share_id)
     {
-        return easyGrocListDBIntf.getTemplList(name);
+        return easyGrocListDBIntf.getTemplList(name, share_id);
     }
 
-    public List<Item> getList(String name)
+    public List<Item> getList(String name, long share_id)
     {
-        return easyGrocListDBIntf.getList(name);
+        return easyGrocListDBIntf.getList(name, share_id);
     }
 
     private void getContentValues(HashMap<String, String> keyvals, ContentValues values)
@@ -162,6 +163,7 @@ public class OpenHousesDBIntf extends DBInterface {
             case EASYGROC_TEMPL_DISPLAY_ITEM:
             case EASYGROC_TEMPL_EDIT_ITEM:
             case EASYGROC_EDIT_ITEM:
+            case   EASYGROC_DISPLAY_ITEM:
                 return easyGrocListDBIntf.deleteDb(itm, vwType);
 
             default:
@@ -174,6 +176,11 @@ public class OpenHousesDBIntf extends DBInterface {
 
     public  Item shareItemExists (Item itm, int vwType)
     {
+        if (vwType == EASYGROC_ADD_ITEM)
+        {
+            return easyGrocListDBIntf.shareItemExists(itm, vwType);
+        }
+
         try {
 
             String column_names[] = {"name" , "street", "price", "area", "year", "beds", "baths",
@@ -306,10 +313,10 @@ public class OpenHousesDBIntf extends DBInterface {
         // If you change the database schema, you must increment the database version.
         public static final int DATABASE_VERSION = 1;
         public static final String DATABASE_NAME = "OpenHouses.db";
-        private static final String SQL_CREATE_ENTRIES = "CREATE TABLE Item (album_name TEXT PRIMARY KEY, area REAL, baths REAL, beds REAL," +
+        private static final String SQL_CREATE_ENTRIES = "CREATE TABLE Item (album_name TEXT, area REAL, baths REAL, beds REAL," +
                 "city TEXT, country TEXT, latitude REAL, longitude REAL, name TEXT, notes TEXT, pic_cnt INTEGER, price REAL," +
                 "state TEXT, str1 TEXT, str2 TEXT, str3 TEXT, street TEXT, val1 REAL, val2 REAL, year INTEGER," +
-                "share_id INTEGER, share_name TEXT,  zip TEXT, ratings INTEGER) ";
+                "share_id INTEGER, share_name TEXT,  zip TEXT, ratings INTEGER, PRIMARY KEY (name, share_id))";
         private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS Item";
 
         public OpenHousesDbHelper(Context context) {

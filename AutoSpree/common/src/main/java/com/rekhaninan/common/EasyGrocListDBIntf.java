@@ -50,6 +50,7 @@ public class EasyGrocListDBIntf extends DBInterface {
     {
         try {
             values.put("name", itm.getName());
+            values.put("share_id", itm.getShare_id());
             values.put("rowno", itm.getRowno());
             values.put ("item", itm.getItem());
             values.put("start_month", itm.getStart_month());
@@ -108,6 +109,7 @@ public class EasyGrocListDBIntf extends DBInterface {
     {
         try {
             values.put("name", itm.getName());
+            values.put("share_id", itm.getShare_id());
             values.put("rowno", itm.getRowno());
             values.put ("item", itm.getItem());
             int hidden=0;
@@ -204,8 +206,8 @@ public class EasyGrocListDBIntf extends DBInterface {
             default:
                 break;
         }
-        egrocDB.delete(dbName,  "name = ?" , new String[]{itm.getName()});
-        egrocDB.delete(dbName1,  "name = ?" , new String[]{itm.getName()});
+        egrocDB.delete(dbName,  "name = ? and share_id = ?" , new String[]{itm.getName(), Long.toString(itm.getShare_id())});
+        egrocDB.delete(dbName1,  "name = ? and share_id = ?" , new String[]{itm.getName(), Long.toString(itm.getShare_id())});
 
         return true;
     }
@@ -290,7 +292,7 @@ public class EasyGrocListDBIntf extends DBInterface {
 
             case EASYGROC_ADD_ITEM:
             case EASYGROC_EDIT_ITEM: {
-                Cursor c = egrocDB.query("ListNames", column_names, "name = ?", new String[]{itm.getName()}, null, null, null);
+                Cursor c = egrocDB.query("ListNames", column_names, "name = ? and share_id = ?", new String[]{itm.getName(), Long.toString(itm.getShare_id())}, null, null, null);
                 if (c.getCount() == 0)
                     return false;
                 else
@@ -318,7 +320,7 @@ public class EasyGrocListDBIntf extends DBInterface {
             default:
                 break;
         }
-        egrocDB.update(dbName, values, "name = ? and rowno = ?", new String[]{itm.getName(), Integer.toString(itm.getRowno())});
+        egrocDB.update(dbName, values, "name = ? and share_id = ? and rowno = ?", new String[]{itm.getName(),  Long.toString(itm.getShare_id()), Integer.toString(itm.getRowno())});
         return true;
     }
 
@@ -389,18 +391,19 @@ public class EasyGrocListDBIntf extends DBInterface {
         return null;
     }
 
-    public List<Item> getList(String name)
+    public List<Item> getList(String name, long share_id)
     {
         try {
 
             String column_names[] = {"rowno", "item", "hidden", "date"};
-            Cursor c =  egrocDB.query("List", column_names, "name = ?" , new String[]{name}, null, null, null);
+            Cursor c =  egrocDB.query("List", column_names, "name = ? and share_id = ?" , new String[]{name, Long.toString(share_id)}, null, null, null);
             boolean suceed = c.moveToFirst();
             List<Item> list =  new ArrayList<Item>();
             while (suceed)
             {
                 Item itm = new Item();
                 itm.setName(name);
+                itm.setShare_id(share_id);
                 itm.setRowno(c.getInt(c.getColumnIndexOrThrow("rowno")));
                 itm.setItem(c.getString(c.getColumnIndexOrThrow("item")));
                 int hidden = c.getInt(c.getColumnIndexOrThrow("hidden"));
@@ -422,19 +425,20 @@ public class EasyGrocListDBIntf extends DBInterface {
     }
 
 
-    public List<Item> getTemplList(String name)
+    public List<Item> getTemplList(String name, long share_id)
     {
         try {
 
             String column_names[] = {"rowno", "item", "start_month", "end_month", "inventory"};
             String orderBy = "rowno" + " DESC";
-            Cursor c =  egrocDB.query("MasterList", column_names, "name = ?" , new String[]{name}, null, null, orderBy);
+            Cursor c =  egrocDB.query("MasterList", column_names, "name = ? and share_id=?" , new String[]{name, Long.toString(share_id)}, null, null, orderBy);
             boolean suceed = c.moveToFirst();
             List<Item> list =  new ArrayList<Item>();
             while (suceed)
             {
                 Item itm = new Item();
                 itm.setName(name);
+                itm.setShare_id(share_id);
                 itm.setRowno(c.getInt(c.getColumnIndexOrThrow("rowno")));
                 itm.setItem(c.getString(c.getColumnIndexOrThrow("item")));
                 itm.setStart_month(c.getInt(c.getColumnIndexOrThrow("start_month")));
@@ -460,13 +464,13 @@ public class EasyGrocListDBIntf extends DBInterface {
         // If you change the database schema, you must increment the database version.
         public static final int DATABASE_VERSION = 1;
         public static final String DATABASE_NAME = "EasyGroc.db";
-        private static final String SQL_CREATE_ENTRIES = "CREATE TABLE ListNames (picurl TEXT, name TEXT PRIMARY KEY, share_name TEXT, share_id INTEGER, date INTEGER, current INTEGER)";
+        private static final String SQL_CREATE_ENTRIES = "CREATE TABLE ListNames (picurl TEXT, name TEXT, share_name TEXT, share_id INTEGER, date INTEGER, current INTEGER, PRIMARY KEY (name, share_id))";
         private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS ListNames";
-        private static final String SQL_CREATE_ENTRIES_1 = "CREATE TABLE List (name TEXT, rowno INTEGER, item TEXT, hidden INTEGER, date INTEGER)";
+        private static final String SQL_CREATE_ENTRIES_1 = "CREATE TABLE List (name TEXT, share_id INTEGER, rowno INTEGER, item TEXT, hidden INTEGER, date INTEGER)";
         private static final String SQL_DELETE_ENTRIES_1 = "DROP TABLE IF EXISTS List";
-        private static final String SQL_CREATE_ENTRIES_2 = "CREATE TABLE MasterListNames (name TEXT PRIMARY KEY, share_name TEXT, share_id INTEGER)";
+        private static final String SQL_CREATE_ENTRIES_2 = "CREATE TABLE MasterListNames (name TEXT,  share_name TEXT, share_id INTEGER, PRIMARY KEY (name, share_id))";
         private static final String SQL_DELETE_ENTRIES_2 = "DROP TABLE IF EXISTS MasterListNames";
-        private static final String SQL_CREATE_ENTRIES_3 = "CREATE TABLE MasterList (name TEXT, rowno INTEGER, item TEXT, start_month INTEGER, end_month INTEGER, inventory INTEGER)";
+        private static final String SQL_CREATE_ENTRIES_3 = "CREATE TABLE MasterList (name TEXT, share_id INTEGER ,rowno INTEGER, item TEXT, start_month INTEGER, end_month INTEGER, inventory INTEGER)";
         private static final String SQL_DELETE_ENTRIES_3 = "DROP TABLE IF EXISTS MasterList";
 
         public EasyGrocDbHelper(Context context)
@@ -476,7 +480,7 @@ public class EasyGrocListDBIntf extends DBInterface {
 
         public void onCreate(SQLiteDatabase db)
         {
-            db.execSQL(SQL_CREATE_ENTRIES);
+           db.execSQL(SQL_CREATE_ENTRIES);
             db.execSQL(SQL_CREATE_ENTRIES_1);
             db.execSQL(SQL_CREATE_ENTRIES_2);
             db.execSQL(SQL_CREATE_ENTRIES_3);

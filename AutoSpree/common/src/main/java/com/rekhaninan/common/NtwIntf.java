@@ -122,7 +122,7 @@ public class NtwIntf {
             return false;
         }
 
-           Log.i(TAG, "reading nbytes=" + resp.remaining() + " from socket");
+           //Log.i(TAG, "reading nbytes=" + resp.remaining() + " from socket");
         int bytesRead = socket.read(resp);
             if (bytesRead > 0) {
                 Log.d(TAG, "Received response of bytes=" + bytesRead);
@@ -130,7 +130,7 @@ public class NtwIntf {
                 return true;
             }
             else {
-                Log.e(TAG, "Bytes read=" + bytesRead);
+               // Log.e(TAG, "Bytes read=" + bytesRead);
                 return false;
             }
         }

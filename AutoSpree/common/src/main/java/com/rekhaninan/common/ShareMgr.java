@@ -390,13 +390,13 @@ public class ShareMgr extends Thread {
 
     private void processResponse()
     {
-        Log.i(TAG, "In processResponse");
+        //Log.i(TAG, "In processResponse");
         boolean more = true;
         for(;;) {
             resp.clear();
             resp.order(ByteOrder.LITTLE_ENDIAN);
             boolean gotResp = ntwIntf.getResp(resp);
-            Log.i(TAG, "In processResponse gotResp=" + gotResp);
+           // Log.i(TAG, "In processResponse gotResp=" + gotResp);
             if (!gotResp)
                 break;
             more = pDecoder.processMessage(resp);
@@ -404,7 +404,7 @@ public class ShareMgr extends Thread {
             if (!more)
                 break;
         }
-        Log.i(TAG, "Finished processResponse ");
+
     }
 
     public void getItems()
@@ -504,7 +504,7 @@ public class ShareMgr extends Thread {
 
     void sendMsgs()
     {
-        Log.i(TAG, "In sendMsgs");
+
         try {
 
             while (msgsToSend.size() != 0 || imgsToSend.size() != 0) {

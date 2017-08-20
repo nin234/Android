@@ -401,12 +401,21 @@ public class ShareActivity extends AppCompatActivity {
     private String getCheckList(Item itm)
     {
         String chkLstMsg = "::]}]::"; //separator
-        java.util.List<Item> list = DBOperations.getInstance().getList(itm.getName());
+        java.util.List<Item> list = DBOperations.getInstance().getList(itm.getName(), itm.getShare_id());
 
         for (Item selItem : list)
         {
             chkLstMsg += Integer.toString(selItem.getRowno());
-            chkLstMsg += ":";
+            chkLstMsg += ":|:";
+            if (selItem.isSelected())
+            {
+                chkLstMsg += Integer.toString(1);
+            }
+            else
+            {
+                chkLstMsg += Integer.toString(0);
+            }
+            chkLstMsg += ":|:";
             chkLstMsg += selItem.getItem();
             chkLstMsg += "]:;";
         }
@@ -445,7 +454,7 @@ public class ShareActivity extends AppCompatActivity {
                 name += ":SCRTCH";
             }
 
-            java.util.List<Item> list = DBOperations.getInstance().getTemplList(name);
+            java.util.List<Item> list = DBOperations.getInstance().getTemplList(name, selectedItem.getShare_id());
             for (Item selItem : list) {
                 shrMsg += Integer.toString(selItem.getRowno());
                 shrMsg += ":";
@@ -489,7 +498,7 @@ public class ShareActivity extends AppCompatActivity {
         }
         else {
             shrMsg += ":::";
-            java.util.List<Item> list = DBOperations.getInstance().getList(selectedItem.getName());
+            java.util.List<Item> list = DBOperations.getInstance().getList(selectedItem.getName(), selectedItem.getShare_id());
             shrMsg += Long.toString(ShareMgr.getInstance().getShare_id());
             shrMsg += ":";
             shrMsg += Long.toString(ShareMgr.getInstance().getShare_id());

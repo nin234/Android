@@ -49,14 +49,14 @@ public class AutoSpreeDBIntf extends DBInterface {
         setApp_name(appName);
         easyGrocListDBIntf.setApp_name(appName);
     }
-    public List<Item> getTemplList(String name)
+    public List<Item> getTemplList(String name, long share_id)
     {
-        return easyGrocListDBIntf.getTemplList(name);
+        return easyGrocListDBIntf.getTemplList(name, share_id);
     }
 
-    public List<Item> getList(String name)
+    public List<Item> getList(String name, long share_id)
     {
-        return easyGrocListDBIntf.getList(name);
+        return easyGrocListDBIntf.getList(name, share_id);
     }
 
     private void getContentValues(HashMap<String, String> keyvals, ContentValues values)
@@ -121,6 +121,7 @@ public class AutoSpreeDBIntf extends DBInterface {
             case EASYGROC_TEMPL_DISPLAY_ITEM:
             case EASYGROC_TEMPL_EDIT_ITEM:
             case EASYGROC_EDIT_ITEM:
+            case   EASYGROC_DISPLAY_ITEM:
                 return easyGrocListDBIntf.deleteDb(itm, vwType);
 
             default:
@@ -188,6 +189,10 @@ public class AutoSpreeDBIntf extends DBInterface {
 
     public  Item shareItemExists (Item itm, int vwType)
     {
+        if (vwType == EASYGROC_ADD_ITEM)
+        {
+            return easyGrocListDBIntf.shareItemExists(itm, vwType);
+        }
 
         try {
 
@@ -311,10 +316,10 @@ public class AutoSpreeDBIntf extends DBInterface {
         // If you change the database schema, you must increment the database version.
         public static final int DATABASE_VERSION = 1;
         public static final String DATABASE_NAME = "AutoSpree.db";
-        private static final String SQL_CREATE_ENTRIES = "CREATE TABLE Item (album_name TEXT PRIMARY KEY, color TEXT, model TEXT, make TEXT," +
+        private static final String SQL_CREATE_ENTRIES = "CREATE TABLE Item (album_name TEXT, color TEXT, model TEXT, make TEXT," +
                 "city TEXT, country TEXT, latitude REAL, longitude REAL, name TEXT, notes TEXT, pic_cnt INTEGER, price REAL," +
                 "state TEXT, str1 TEXT, str2 TEXT, str3 TEXT, street TEXT, val1 REAL, val2 REAL, year INTEGER, miles INTEGER, " +
-                " share_id INTEGER, share_name TEXT, zip TEXT, ratings INTEGER) ";
+                " share_id INTEGER, share_name TEXT, zip TEXT, ratings INTEGER, PRIMARY KEY (name, share_id)) ";
         private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS Item";
 
         public AutoSpreeDbHelper(Context context) {

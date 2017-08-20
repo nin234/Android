@@ -170,7 +170,7 @@ public class SingleItemActivity extends AppCompatActivity
                 setContentView(R.layout.activity_single_item);
                 if (itm.getName() != null && itm.getName().length() > 0)
                 {
-                    java.util.List<Item> templList = DBOperations.getInstance().getTemplList(itm.getName());
+                    java.util.List<Item> templList = DBOperations.getInstance().getTemplList(itm.getName(), itm.getShare_id());
                     if (templList != null)
                         mainLst.addAll(templList);
 
@@ -207,7 +207,7 @@ public class SingleItemActivity extends AppCompatActivity
                 String app_name = DBOperations.getInstance().getApp_name();
                 if (itm.getName() != null && itm.getName().length() > 0)
                 {
-                    java.util.List<Item> templList = DBOperations.getInstance().getTemplList(itm.getName());
+                    java.util.List<Item> templList = DBOperations.getInstance().getTemplList(itm.getName(), itm.getShare_id());
                     Item titleItem = new Item();
                     titleItem.setName(itm.getName() + " " + formattedDate);
                     mainLst.add(titleItem);
@@ -237,14 +237,14 @@ public class SingleItemActivity extends AppCompatActivity
 
                     if (app_name.equals(EASYGROC)) {
 
-                        java.util.List<Item> templInvList = DBOperations.getInstance().getTemplList(itm.getName() + ":INV");
+                        java.util.List<Item> templInvList = DBOperations.getInstance().getTemplList(itm.getName() + ":INV", itm.getShare_id());
                         Log.i(TAG, "No of elements in inventory list for " +itm.getName() + ":INV for=" + templInvList.size() );
                         for (Item invItem : templInvList) {
                             if (invItem.getInventory() > 0)
                                 continue;
                             mainLst.add(invItem);
                         }
-                        java.util.List<Item> templScrList = DBOperations.getInstance().getTemplList(itm.getName() + ":SCRTCH");
+                        java.util.List<Item> templScrList = DBOperations.getInstance().getTemplList(itm.getName() + ":SCRTCH", itm.getShare_id());
                         for (Item scrItem : templScrList) {
                             mainLst.add(scrItem);
                         }
@@ -335,7 +335,7 @@ public class SingleItemActivity extends AppCompatActivity
                 else {
                     setContentView(R.layout.activity_single_item);
                     mainLst.add(itm);
-                    java.util.List<Item> list = DBOperations.getInstance().getList(itm.getName());
+                    java.util.List<Item> list = DBOperations.getInstance().getList(itm.getName(), itm.getShare_id());
                     mainLst.addAll(list);
                     mListView = (ListView) findViewById(R.id.add_item_view);
                     adapter = new ArrayAdapterMainVw(this, R.layout.simple_list_1, mainLst);
@@ -355,7 +355,7 @@ public class SingleItemActivity extends AppCompatActivity
             {
                 setContentView(R.layout.activity_single_item);
                 mainLst.add(itm);
-                java.util.List<Item> list = DBOperations.getInstance().getTemplList(itm.getName());
+                java.util.List<Item> list = DBOperations.getInstance().getTemplList(itm.getName(), itm.getShare_id());
                 mainLst.addAll(list);
                 mListView = (ListView) findViewById(R.id.add_item_view);
                 adapter = new ArrayAdapterMainVw(this, R.layout.simple_list_1, mainLst);
@@ -370,7 +370,7 @@ public class SingleItemActivity extends AppCompatActivity
             {
                 setContentView(R.layout.activity_single_item);
                 mainLst.add(itm);
-                java.util.List<Item> list = DBOperations.getInstance().getTemplList(itm.getName());
+                java.util.List<Item> list = DBOperations.getInstance().getTemplList(itm.getName(), itm.getShare_id());
                 mainLst.addAll(list);
                 mListView = (ListView) findViewById(R.id.add_item_view);
                 adapter = new ArrayAdapterMainVw(this, R.layout.simple_list_1, mainLst);
@@ -387,7 +387,7 @@ public class SingleItemActivity extends AppCompatActivity
                 Log.i(TAG, "In EASYGROC_EDIT_ITEM");
                 setContentView(R.layout.activity_single_item);
                 mainLst.add(itm);
-                java.util.List<Item> list = DBOperations.getInstance().getList(itm.getName());
+                java.util.List<Item> list = DBOperations.getInstance().getList(itm.getName(), itm.getShare_id());
                 mainLst.addAll(list);
                 mListView = (ListView) findViewById(R.id.add_item_view);
                 adapter = new ArrayAdapterMainVw(this, R.layout.simple_list_1, mainLst);
@@ -410,7 +410,7 @@ public class SingleItemActivity extends AppCompatActivity
                     mListView = (ListView) findViewById(R.id.add_item_view);
                     adapter = new ArrayAdapterMainVw(this, R.layout.simple_list_1, mainLst);
                     adapter.setParams(EASYGROC, EASYGROC_TEMPL_ADD_ITEM);
-                  if (!itm.getName().endsWith(":INV") && !itm.getName().endsWith(":SCRTCH"))
+                  if (itm.getName() != null && !itm.getName().endsWith(":INV") && !itm.getName().endsWith(":SCRTCH"))
                         adapter.setRecrLst(true);
                     mListView.setAdapter(adapter);
 
@@ -800,7 +800,7 @@ public class SingleItemActivity extends AppCompatActivity
                             Item scrtchItem = new Item();
                             scrtchItem.setName(itm.getName() + ":SCRTCH");
                             DBOperations.getInstance().deleteDb(scrtchItem, viewType);
-                            java.util.List<Item> templInvList = DBOperations.getInstance().getTemplList(itm.getName() + ":INV");
+                            java.util.List<Item> templInvList = DBOperations.getInstance().getTemplList(itm.getName() + ":INV", itm.getShare_id());
                             for (Item invItem : templInvList) {
                                 if (invItem.getInventory() > 0)
                                     continue;
@@ -1304,7 +1304,12 @@ public class SingleItemActivity extends AppCompatActivity
                 Intent intent = new Intent(this, SingleItemActivity.class);
                  intent.putExtra("ViewType", EASYGROC_TEMPL_ADD_ITEM);
                  Item easyItem = new Item();
-                 intent.putExtra("item", easyItem);
+
+                List<Item>  mainLst = DBOperations.getInstance().getTemplNameLst();
+                String name = "Check List ";
+                name += Integer.toString(mainLst.size()+1);
+                easyItem.setName(name);
+                intent.putExtra("item", easyItem);
                  startActivity(intent);
             }
             break;

@@ -292,6 +292,48 @@ public class MessageDecoder {
         }
         return true;
     }
+
+    boolean decodeAndStoreCheckList(String share_name, String list , long share_id)
+    {
+        Item nameItem = new Item();
+        nameItem.setShare_id(share_id);
+        nameItem.setShare_name(share_name);
+        nameItem.setName(share_name);
+        Item shareItem = DBOperations.getInstance().shareItemExists(nameItem, EASYGROC_ADD_ITEM);
+        if (shareItem != null)
+        {
+
+            DBOperations.getInstance().deleteDb(shareItem, EASYGROC_DISPLAY_ITEM);
+        }
+
+        String[] pArr = list.split("]:;");
+        int cnt = pArr.length;
+
+        for (int i=0; i < cnt; ++i) {
+            String[] kvarr = pArr[i].split(":\\|:");
+            if (kvarr.length != 3)
+                continue;
+            Item itm = new Item();
+            itm.setName(share_name);
+            itm.setShare_name(share_name);
+            itm.setShare_id(share_id);
+            itm.setItem(kvarr[2]);
+            int selected = Integer.parseInt(kvarr[1]);
+            if (selected ==1)
+            {
+                itm.setSelected(true);
+            }
+            else
+            {
+                itm.setSelected(false);
+            }
+            itm.setRowno(Integer.parseInt(kvarr[0]));
+            DBOperations.getInstance().insertDb(itm, EASYGROC_ADD_ITEM);
+        }
+
+        return true;
+    }
+
     boolean decodeAndStoreEasyGrocItem(String share_name, String list, boolean bEasy)
     {
         String[] pArr = list.split("]:;");
@@ -382,7 +424,8 @@ public class MessageDecoder {
 
         if (mcnt == 2 && pMainArr[1] != null && pMainArr[1].length() > 0)
         {
-            decodeAndStoreEasyGrocItem(itm.getName(), pMainArr[1], false);
+            decodeAndStoreCheckList(itm.getName(), pMainArr[1], itm.getShare_id());
+
         }
 
         return true;
@@ -390,7 +433,7 @@ public class MessageDecoder {
 
     boolean decodeAndStoreOHItem(String list)
     {
-        String[] pMainArr = list.split("::]}]::");
+        String[] pMainArr = list.split("::]\\}]::");
         String[] pArr = pMainArr[0].split("]:;");
         int cnt = pArr.length;
         int mcnt = pMainArr.length;
@@ -398,7 +441,7 @@ public class MessageDecoder {
         HashMap<String, String> keyvals = new HashMap<>();
         for (int i=0; i < cnt; ++i)
         {
-            String[] kvarr = pArr[i].split(":|:");
+            String[] kvarr = pArr[i].split(":\\|:");
             if (kvarr.length != 2)
                 continue;
             keyvals.put(kvarr[0], kvarr[1]);
@@ -434,7 +477,8 @@ public class MessageDecoder {
         }
         if (mcnt == 2 && pMainArr[1] != null && pMainArr[1].length() > 0)
         {
-            decodeAndStoreEasyGrocItem(itm.getName(), pMainArr[1], false);
+            decodeAndStoreCheckList(itm.getName(), pMainArr[1], itm.getShare_id());
+
         }
 
         return true;

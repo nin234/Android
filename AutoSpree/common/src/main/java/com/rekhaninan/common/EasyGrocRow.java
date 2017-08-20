@@ -697,43 +697,50 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         TextView name = (TextView) vw.findViewById(R.id.name);
         name.setText("Name:");
         name.setHeight(txtHeight);
-        name.setWidth(width/4);
+        //name.setWidth(width/4);
         name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
-        EditText name_value = (EditText) vw.findViewById(R.id.value);
-        if (itm.getName() != null && itm.getName().length() > 0)
-        {
-            String name_val;
-            if (itm.getName().contains(":"))
-            {
-                name_val   = itm.getName().substring(0, itm.getName().lastIndexOf(':'));
+        final EditText name_value = (EditText) vw.findViewById(R.id.value);
+        String app_name = DBOperations.getInstance().getApp_name();
+        if (app_name.equals(EASYGROC)) {
+            if (itm.getName() != null && itm.getName().length() > 0) {
+                String name_val;
+                if (itm.getName().contains(":")) {
+                    name_val = itm.getName().substring(0, itm.getName().lastIndexOf(':'));
+                } else {
+                    name_val = itm.getName();
+                }
+                Log.i(TAG, "Template list name=" + name_val);
+
+                name_value.setText(name_val, TextView.BufferType.NORMAL);
+
+
             }
-           else
-            {
-                name_val = itm.getName();
-            }
-            Log.i(TAG, "Template list name=" + name_val);
-            name_value.setText(name_val, TextView.BufferType.NORMAL);
+
         }
-        /*
-        name_value.addTextChangedListener(new TextWatcher() {
+        else {
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                itm.setName(s.toString());
-            }
+           name_value.setText(itm.getName(), TextView.BufferType.EDITABLE); /*// May be unecessary... */
+          //  name_value.getText().clear();
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start,
-                                          int count, int after) {
-            }
+            name_value.addTextChangedListener(new TextWatcher() {
 
-            @Override
-            public void onTextChanged(CharSequence s, int start,
-                                      int before, int count) {
+                @Override
+                public void afterTextChanged(Editable s) {
+                    itm.setName(s.toString());
+                }
 
-            }
-        });
-        */
+                @Override
+                public void beforeTextChanged(CharSequence s, int start,
+                                              int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start,
+                                          int before, int count) {
+
+                }
+            });
+        }
         name_value.setHeight(txtHeight);
         name_value.setWidth((width/4)*3);
         name_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
