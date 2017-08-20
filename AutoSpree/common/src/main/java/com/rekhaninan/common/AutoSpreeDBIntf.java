@@ -132,7 +132,8 @@ public class AutoSpreeDBIntf extends DBInterface {
                 break;
         }
         String dbName = "Item";
-        aspreeDB.delete(dbName,  "album_name = ?" , new String[]{itm.getAlbum_name()});
+        Log.i(TAG, "Deleting db row from Item name=" + itm.getName() + " share_id=" + itm.getShare_id());
+        aspreeDB.delete(dbName,  "name = ? and share_id = ?" , new String[]{itm.getName(), Long.toString(itm.getShare_id())});
         return true;
     }
 

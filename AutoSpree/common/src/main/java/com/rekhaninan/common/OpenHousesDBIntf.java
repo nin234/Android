@@ -170,7 +170,9 @@ public class OpenHousesDBIntf extends DBInterface {
                 break;
         }
         String dbName = "Item";
-        ophousesDB.delete(dbName,  "album_name = ?" , new String[]{itm.getAlbum_name()});
+        Log.i(TAG, "Deleting db row from Item name=" + itm.getName() + " share_id=" + itm.getShare_id());
+        ophousesDB.delete(dbName,  "name = ? and share_id = ?" , new String[]{itm.getName(), Long.toString(itm.getShare_id())});
+
         return true;
     }
 
