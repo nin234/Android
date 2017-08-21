@@ -304,11 +304,12 @@ public class ShareActivity extends AppCompatActivity {
         shrMsg += "]:;";
         shrMsg += getCheckList(selectedItem);
         ShareMgr.getInstance().shareItem(shrMsg, selectedItem.getName());
-        for (String selectedImage : selectedImages)
-        {
-            String picMetaStr = picMetaCommon + selectedItem.getName();
-            ShareMgr.getInstance().sharePicture(selectedImage, picMetaStr);
+        if (selectedImages != null) {
+            for (String selectedImage : selectedImages) {
+                String picMetaStr = picMetaCommon + selectedItem.getName();
+                ShareMgr.getInstance().sharePicture(selectedImage, picMetaStr);
 
+            }
         }
         return;
     }
@@ -402,7 +403,8 @@ public class ShareActivity extends AppCompatActivity {
     {
         String chkLstMsg = "::]}]::"; //separator
         java.util.List<Item> list = DBOperations.getInstance().getList(itm.getName(), itm.getShare_id());
-
+        if (list == null || list.size() == 0)
+            return chkLstMsg;
         for (Item selItem : list)
         {
             chkLstMsg += Integer.toString(selItem.getRowno());
