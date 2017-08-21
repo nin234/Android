@@ -32,7 +32,7 @@ public class MessageTranslator {
             byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
             byteBuffer.putInt(msglen);
             byteBuffer.putInt(PIC_MSG);
-            byteBuffer.put(msg);
+            byteBuffer.put(msg, 0, len);
             return byteBuffer;
         }
         catch (Exception excp)
