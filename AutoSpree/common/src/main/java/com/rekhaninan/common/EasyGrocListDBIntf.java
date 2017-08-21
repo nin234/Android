@@ -206,6 +206,8 @@ public class EasyGrocListDBIntf extends DBInterface {
             default:
                 break;
         }
+        Log.i(TAG, "Deleting from database name=" + itm.getName() + " share_id=" + itm.getShare_id()+ " dbName="
+                + dbName + " dbName1=" + dbName1);
         egrocDB.delete(dbName,  "name = ? and share_id = ?" , new String[]{itm.getName(), Long.toString(itm.getShare_id())});
         egrocDB.delete(dbName1,  "name = ? and share_id = ?" , new String[]{itm.getName(), Long.toString(itm.getShare_id())});
 
@@ -214,7 +216,7 @@ public class EasyGrocListDBIntf extends DBInterface {
 
     public  Item shareItemExists (Item itm, int vwType)
     {
-        String column_names[] = {"name", "share_name", "share_id", "pic_url" };
+        String column_names[] = {"name", "share_name", "share_id", "picurl" };
 
         switch (vwType) {
 

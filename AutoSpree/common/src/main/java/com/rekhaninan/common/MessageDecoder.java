@@ -56,7 +56,9 @@ public class MessageDecoder {
         start = true;
 
         aggrbuf = ByteBuffer.allocate(MSG_AGGR_BUF_LEN);
-        decodebuf  = ByteBuffer.allocate(MSG_AGGR_BUF_LEN);
+        aggrbuf.order(ByteOrder.LITTLE_ENDIAN);
+        decodebuf = ByteBuffer.allocate(MSG_AGGR_BUF_LEN);
+        decodebuf.order(ByteOrder.LITTLE_ENDIAN);
     }
 
    private boolean processFreshMessage (ByteBuffer buffer)
@@ -67,6 +69,8 @@ public class MessageDecoder {
 
         while (next)
         {
+            Log.i(TAG, "processFreshMsg buffer.position="+ buffer.position()  + " aggrbuf.posn" +
+                    aggrbuf.position() + " remaining=" + remaining + " start=" + start);
             if (remaining < 4) //4 -> sizeof (int)
             {
                 if(bufferOverFlowCheck(remaining))
@@ -415,6 +419,8 @@ public class MessageDecoder {
         Item existItem = DBOperations.getInstance().shareItemExists(itm, AUTOSPREE_EDIT_ITEM);
         if (existItem == null)
         {
+            long rightNow = System.currentTimeMillis();
+            itm.setAlbum_name(Long.toString(rightNow));
             DBOperations.getInstance().insertDb(itm, AUTOSPREE_ADD_ITEM);
         }
         else
@@ -469,6 +475,9 @@ public class MessageDecoder {
         Item existItem = DBOperations.getInstance().shareItemExists(itm, OPENHOUSES_EDIT_ITEM);
         if (existItem == null)
         {
+            //need to create album directory here
+             long rightNow = System.currentTimeMillis();
+            itm.setAlbum_name(Long.toString(rightNow));
             DBOperations.getInstance().insertDb(itm, OPENHOUSES_ADD_ITEM);
         }
         else
@@ -597,6 +606,8 @@ public class MessageDecoder {
 	int msglen = len;
         while (next)
         {
+            Log.i(TAG, "processFragmentedMsg msglen="+msglen + " mlen=" + mlen + " aggrbuf.posn" +
+                    aggrbuf.position() + " remaining=" + remaining + " start=" + start);
             if (remaining == msglen-aggrbuf.position())
             {
                 if(bufferOverFlowCheck(remaining))
@@ -604,6 +615,7 @@ public class MessageDecoder {
                 aggrbuf.put(buffer.array(), mlen-remaining, remaining);
                 decodeMessage(aggrbuf, msglen);
                 aggrbuf.clear();
+                aggrbuf.order(ByteOrder.LITTLE_ENDIAN);
                 start = true;
                 break;
             }
@@ -620,20 +632,22 @@ public class MessageDecoder {
             {
                 if(bufferOverFlowCheck(msglen-aggrbuf.position()))
                     break;
+                int bufIndx = aggrbuf.position();
                 aggrbuf.put(buffer.array(), mlen-remaining, msglen-aggrbuf.position());
                 decodeMessage(aggrbuf, msglen);
-                remaining -= len - aggrbuf.position();
+                remaining -= msglen - bufIndx;
                 aggrbuf.clear();
-		if (remaining > 4)
-		{
-			msglen = buffer.getInt(mlen-remaining);
-		}
-		else
-		{
-			aggrbuf.put(buffer.array(), mlen-remaining, remaining);
-			bMore = true;
-			break;
-		}
+                aggrbuf.order(ByteOrder.LITTLE_ENDIAN);
+		        if (remaining > 4)
+		        {
+			        msglen = buffer.getInt(mlen-remaining);
+		        }
+		        else
+		        {
+			        aggrbuf.put(buffer.array(), mlen-remaining, remaining);
+		        	bMore = true;
+			        break;
+		        }
             }
         }
 

@@ -139,7 +139,7 @@ public class ShareMgr extends Thread {
                 case OPENHOUSES: {
                     java.util.List<Item> mainLst = DBOperations.getInstance().getMainLst(MAINVW);
                     for (Item itm : mainLst) {
-                        if (itm.getShare_id() == shareId && itm.getShare_name().equals(itemName)) {
+                        if (itm.getShare_id() == shareId && itm.getName().equals(itemName)) {
                             File dir = ctxt.getFilesDir();
                             String thumbDir = itm.getAlbum_name() + File.separator + "thumbnails";
                             thumbNailsDir = new File(dir, thumbDir);
@@ -150,9 +150,10 @@ public class ShareMgr extends Thread {
                             if (!album_dir.exists()) {
                                 album_dir.mkdirs();
                             }
-                            pictureFile = new File(album_dir.getAbsolutePath() + File.separator
-                                    + picName);
+                            String fileName = album_dir.getAbsolutePath() + File.separator + picName;
+                            pictureFile = new File(fileName);
                             fos = new FileOutputStream(pictureFile);
+                            Log.i(TAG, "Opened picture file for writing=" + fileName);
                             break;
                         }
                     }
@@ -228,6 +229,8 @@ public class ShareMgr extends Thread {
             if (fos != null) {
                 fos.write(buffer.array(), offset, msglen);
                 picsofar += msglen;
+                Log.i(TAG, "Storing picture picsofar=" + picsofar + " piclen=" + piclen+ " offset=" + offset +
+                        " msglen=" + msglen);
                 if (picsofar >= piclen)
                 {
                     fos.close();
@@ -242,6 +245,7 @@ public class ShareMgr extends Thread {
                     ThumbImage.compress(Bitmap.CompressFormat.JPEG, 100, fostn); // saving the Bitmap to a file compressed as a JPEG with 85% compression rate
                     fostn.flush(); // Not really required
                     fostn.close();
+                    Log.i(TAG, "Finishing storing picture closing fileoutputstream fos");
                 }
             }
         }
