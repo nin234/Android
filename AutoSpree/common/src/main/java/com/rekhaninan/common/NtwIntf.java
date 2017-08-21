@@ -38,12 +38,12 @@ public class NtwIntf {
         {
             case EASYGROC:
                     connectAddr = "easygroclist.ddns.net";
-                    connectPort = 16972;
+                    connectPort = 16791;
                 break;
 
             case OPENHOUSES:
                     connectAddr = "openhouses.ddns.net";
-                    connectPort = 16973;
+                    connectPort = 16789;
                 break;
 
             case AUTOSPREE:
