@@ -120,7 +120,8 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                 TextView tv = new TextView(ctxt);
                 tv.setHeight(txtHeight);
                 tv.setText(itm.getName());
-                tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+
+                tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
                 tv.setTag(itm);
                 tv.setOnClickListener(new View.OnClickListener() {
                                           @Override
@@ -274,7 +275,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
 
                     case EASYGROC_ADD_TEMPL_LIST:
                     {
-                        return getLabelView(parent, txtHeight, width, "Create from Template Lists");
+                        return getNoLabelView(parent, txtHeight, width, "Create from Template Lists");
                     }
 
                     default:
@@ -846,7 +847,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         Log.d(TAG, "getLabelSwitchView text=" + itm.getItem());
         label.setHeight(txtHeight);
         label.setWidth((width / 10) * 8);
-        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
         Switch onoff = (Switch) vw.findViewById(R.id.done);
         onoff.setOnCheckedChangeListener(
                 new CompoundButton.OnCheckedChangeListener() {
@@ -881,16 +882,17 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
     private View getTemplView(ViewGroup parent, int txtHeight, int width, String labelTxt)
     {
         LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View vw = inflater.inflate(R.layout.label, parent, false);
+        View vw = inflater.inflate(R.layout.label_templ, parent, false);
         TextView label = (TextView) vw.findViewById(R.id.name);
         label.setText(labelTxt);
         label.setHeight(txtHeight);
         label.setWidth((width / 10) * 8);
-        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
         ImageView disclosure = (ImageView) vw.findViewById(R.id.label_image_icon);
         disclosure.setMaxHeight(txtHeight);
         disclosure.setMaxWidth(width / 10);
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+
 
         lp.setMargins((width / 10) * 8, 5, 5, 5);
         disclosure.setLayoutParams(lp);
@@ -972,7 +974,8 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         label.setText(labelTxt);
         label.setHeight(txtHeight);
         label.setWidth((width / 10) * 8);
-        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
+
         ImageView disclosure = (ImageView) vw.findViewById(R.id.label_image_icon);
         disclosure.setMaxHeight(txtHeight);
         disclosure.setMaxWidth(width / 10);
@@ -980,6 +983,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
 
         lp.setMargins((width / 10) * 8, 5, 5, 5);
         disclosure.setLayoutParams(lp);
+
 
         return vw;
 

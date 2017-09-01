@@ -110,7 +110,7 @@ public class AutoSpreeRow extends RowView
                 tv.setTag(itm);
 
                 //tv.setText(Item, TextView.BufferType.EDITABLE);
-                tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+                tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
 
                 tv.setOnClickListener(new View.OnClickListener() {
                                           @Override
@@ -155,7 +155,7 @@ public class AutoSpreeRow extends RowView
                         name.setText("Name:");
                         name.setHeight(txtHeight);
                         name.setWidth(width/4);
-                        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+                        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.5f);
                         name_value = (EditText) vw.findViewById(R.id.value);
                         if (vwType == AUTOSPREE_ADD_ITEM || vwType == AUTOSPREE_EDIT_ITEM) {
                             name_value.setText(itm.getName(), TextView.BufferType.EDITABLE);
@@ -165,7 +165,7 @@ public class AutoSpreeRow extends RowView
                         }
                         name_value.setHeight(txtHeight);
                         name_value.setWidth((width/4)*3);
-                        name_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+                        name_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
                         name_row =vw;
                         return name_row;
                     }
@@ -180,24 +180,24 @@ public class AutoSpreeRow extends RowView
                        TextView name = (TextView) vw.findViewById(R.id.name_tarun);
                         name.setText("Model");
                         name.setHeight(txtHeight);
-                        name.setWidth(width/4);
-                        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+                        name.setWidth(width/6);
+                        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
 
                         model_value = (EditText) vw.findViewById(R.id.value_tarun);
                         model_value.setHeight(txtHeight);
                         model_value.setWidth(width/4);
-                        model_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+                        model_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.3f );
 
                         TextView name1 = (TextView) vw.findViewById(R.id.name);
                         name1.setHeight(txtHeight);
-                        name1.setWidth(width/4);
-                        name1.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+                        name1.setWidth(width/6);
+                        name1.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
 
                         name1.setText("Color");
                         color_value = (EditText) vw.findViewById(R.id.value);
                         color_value.setHeight(txtHeight);
-                        color_value.setWidth(width/4);
-                        color_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+                        color_value.setWidth(width/3);
+                        color_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.3f);
                         if (vwType == AUTOSPREE_DISPLAY_ITEM){
                             model_value.setText(itm.getModel());
                             color_value.setText(itm.getColor());
@@ -222,22 +222,22 @@ public class AutoSpreeRow extends RowView
                         TextView name = (TextView) vw.findViewById(R.id.name_tarun);
                         name.setText("Make");
                         name.setHeight(txtHeight);
-                        name.setWidth(width/4);
-                        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+                        name.setWidth(width/6);
+                        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
                         TextView name1 = (TextView) vw.findViewById(R.id.name);
                         name1.setHeight(txtHeight);
-                        name1.setWidth(width/4);
-                        name1.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+                        name1.setWidth(width/6);
+                        name1.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
 
                         name1.setText("Year");
                         make_value = (EditText) vw.findViewById(R.id.value_tarun);
                         make_value.setHeight(txtHeight);
                         make_value.setWidth(width/4);
-                        make_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+                        make_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.3f);
                         year_value= (EditText) vw.findViewById(R.id.value);
                         year_value.setHeight(txtHeight);
-                        year_value.setWidth(width/4);
-                        year_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+                        year_value.setWidth(width/3);
+                        year_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.3f);
                         if (vwType == AUTOSPREE_DISPLAY_ITEM){
                             make_value.setText(itm.getMake());
                             make_value.setKeyListener(null);
@@ -264,19 +264,19 @@ public class AutoSpreeRow extends RowView
                         TextView name1 = (TextView) vw.findViewById(R.id.name);
                         name1.setText("Miles");
                         name.setHeight(txtHeight);
-                        name.setWidth(width/4);
-                        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+                        name.setWidth(width/6);
+                        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
                         name1.setHeight(txtHeight);
-                        name1.setWidth(width/4);
-                        name1.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+                        name1.setWidth(width/6);
+                        name1.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
                         price_value = (EditText) vw.findViewById(R.id.value_tarun);
                         miles_value = (EditText) vw.findViewById(R.id.value);
                         price_value.setHeight(txtHeight);
                         price_value.setWidth(width/4);
-                        price_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+                        price_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.3f);
                         miles_value.setHeight(txtHeight);
-                        miles_value.setWidth(width/4);
-                        miles_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+                        miles_value.setWidth(width/3);
+                        miles_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.3f);
                         if (vwType == AUTOSPREE_DISPLAY_ITEM){
                             price_value.setText(Double.toString(itm.getPrice()));
                             miles_value.setText(Integer.toString(itm.getMiles()));

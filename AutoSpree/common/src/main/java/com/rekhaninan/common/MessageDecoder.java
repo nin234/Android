@@ -506,6 +506,9 @@ public class MessageDecoder {
         nameval = keyvals.get("Year");
         if (nameval != null)
             itm.setYear(Integer.parseInt(nameval));
+        nameval = keyvals.get("Ratings");
+        if (nameval != null)
+            itm.setRating(Integer.parseInt(nameval));
         nameval = keyvals.get("Notes");
         if (nameval != null)
             itm.setNotes(nameval);

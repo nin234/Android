@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -530,17 +531,17 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
             LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View vw = inflater.inflate(R.layout.label_text, parent,false);
             TextView name = (TextView) vw.findViewById(R.id.name);
-            name.setText("Ratings: ");
+            name.setText("Ratings:    ");
             name.setHeight(txtHeight);
             name.setWidth(width/4);
-            name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+            name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.5f);
             EditText name_value = (EditText) vw.findViewById(R.id.value);
             //itm.getRating()
             name_value.setText(Integer.toString(itm.getRating()));
             name_value.setKeyListener(null);
             name_value.setHeight(txtHeight);
-            name_value.setWidth((width/4)*3);
-            name_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+            name_value.setWidth(width/3);
+            name_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.5f);
             return vw;
         }
         else {
@@ -574,16 +575,17 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
         ImageView camera = (ImageView) vw.findViewById(R.id.label_image_icon);
         camera.setMaxHeight(txtHeight);
         camera.setMaxWidth(width/4);
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+       // RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 
-        lp.setMargins(10, 5, width/10, 5);
-        camera.setLayoutParams(lp);
+        //lp.setMargins(10, 5, width/10, 5);
+        //camera.setLayoutParams(lp);
 
         TextView label = (TextView) vw.findViewById(R.id.label_image_name);
         label.setText(cameraTxt);
         label.setHeight(txtHeight);
         label.setWidth((width/4)*3);
-        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+
+        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
          return vw;
 
     }
@@ -662,7 +664,7 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
         name_value.setKeyListener(null);
         name_value.setHeight(txtHeight);
         name_value.setWidth((width/4)*3);
-        name_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+        name_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
         return vw;
     }
 
@@ -782,7 +784,7 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
         label.setText(txt);
         label.setHeight(txtHeight);
         label.setWidth(width);
-        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
         return vw;
     }
 

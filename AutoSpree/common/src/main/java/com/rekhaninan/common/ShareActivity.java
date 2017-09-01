@@ -374,6 +374,9 @@ public class ShareActivity extends AppCompatActivity {
         shrMsg += "Notes:|:";
         shrMsg += selectedItem.getNotes();
         shrMsg += "]:;";
+        shrMsg += "Ratings:|:";
+        shrMsg += Integer.toString(selectedItem.getRating());
+        shrMsg += "]:;";
         shrMsg += "Street:|:";
         shrMsg += selectedItem.getStreet();
         shrMsg += "]:;";
