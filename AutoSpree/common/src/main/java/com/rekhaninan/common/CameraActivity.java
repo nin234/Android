@@ -56,7 +56,7 @@ public class CameraActivity extends AppCompatActivity {
     private String timeStamp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_layout);
         // Create an instance of Camera
@@ -252,6 +252,9 @@ public class CameraActivity extends AppCompatActivity {
             result = (info.orientation - degrees + 360) % 360;
         }
         camera.setDisplayOrientation(result);
+        Camera.Parameters params = camera.getParameters();
+        params.setRotation(result);
+        camera.setParameters(params);
         //camera.setDisplayOrientation(-90);
     }
 
