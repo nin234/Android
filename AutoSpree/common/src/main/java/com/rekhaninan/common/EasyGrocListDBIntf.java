@@ -40,6 +40,8 @@ public class EasyGrocListDBIntf extends DBInterface {
     {
         egrocDbHelper = new EasyGrocDbHelper(ctxt);
         egrocDB = egrocDbHelper.getWritableDatabase();
+        //egrocDbHelper.cleanUp(egrocDB);
+       // egrocDbHelper.onCreate(egrocDB);
         return;
     }
 
@@ -488,6 +490,14 @@ public class EasyGrocListDBIntf extends DBInterface {
             db.execSQL(SQL_CREATE_ENTRIES_3);
 
 
+        }
+
+        public void cleanUp(SQLiteDatabase db)
+        {
+            db.execSQL(SQL_DELETE_ENTRIES);
+            db.execSQL(SQL_DELETE_ENTRIES_1);
+            db.execSQL(SQL_DELETE_ENTRIES_2);
+            db.execSQL(SQL_DELETE_ENTRIES_3);
         }
 
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

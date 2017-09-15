@@ -1,8 +1,10 @@
 package com.rekhaninan.common;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.media.Image;
 import android.media.MediaRecorder;
 import android.media.CamcorderProfile;
@@ -14,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
+import android.view.Surface;
 import android.widget.FrameLayout;
 import android.net.Uri;
 import android.util.Log;
@@ -53,6 +56,7 @@ public class CameraActivity extends AppCompatActivity {
     private String timeStamp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_layout);
         // Create an instance of Camera
@@ -60,6 +64,7 @@ public class CameraActivity extends AppCompatActivity {
         Log.d(TAG, "Starting camera activity");
 
         mCamera = getCameraInstance();
+        setCameraDisplayOrientation(this, Camera.CameraInfo.CAMERA_FACING_BACK, mCamera);
         Intent intent = getIntent();
         album_name = intent.getStringExtra("album_name");
         File dir = getFilesDir();
@@ -75,9 +80,9 @@ public class CameraActivity extends AppCompatActivity {
             album_dir.mkdirs();
         }
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
+       ActionBar actionBar = getSupportActionBar();
+       // actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.hide();
         // Create our Preview view and set it as the content of our activity.
         mPreview = new CameraPreview1(this, mCamera);
         Log.d(TAG, "Starting camera activity5");
@@ -89,6 +94,7 @@ public class CameraActivity extends AppCompatActivity {
             return;
         }
         preview.addView(mPreview);
+       // mCamera.setDisplayOrientation(90);
 
         final ImageButton cameraButton = (ImageButton) findViewById(R.id.photo_capture);
         Log.d(TAG, "Starting camera activity8");
@@ -223,6 +229,31 @@ public class CameraActivity extends AppCompatActivity {
             Log.d(TAG, "Caught exception: " + e.getMessage());
         }
     }
+    public static void setCameraDisplayOrientation(Activity activity,
+                                                   int cameraId, android.hardware.Camera camera) {
+        android.hardware.Camera.CameraInfo info =
+                new android.hardware.Camera.CameraInfo();
+        android.hardware.Camera.getCameraInfo(cameraId, info);
+        int rotation = activity.getWindowManager().getDefaultDisplay()
+                .getRotation();
+        int degrees = 0;
+        switch (rotation) {
+            case Surface.ROTATION_0: degrees = 0; break;
+            case Surface.ROTATION_90: degrees = 90; break;
+            case Surface.ROTATION_180: degrees = 180; break;
+            case Surface.ROTATION_270: degrees = 270; break;
+        }
+
+        int result;
+        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            result = (info.orientation + degrees) % 360;
+            result = (360 - result) % 360;  // compensate the mirror
+        } else {  // back-facing
+            result = (info.orientation - degrees + 360) % 360;
+        }
+        camera.setDisplayOrientation(result);
+        //camera.setDisplayOrientation(-90);
+    }
 
     private PictureCallback mPicture = new PictureCallback() {
 
@@ -321,6 +352,7 @@ public class CameraActivity extends AppCompatActivity {
         {
             Log.d(TAG, "Got null pointer for camera");
             mCamera = getCameraInstance();
+            setCameraDisplayOrientation(this, Camera.CameraInfo.CAMERA_FACING_BACK, mCamera);
 
         }
         mCamera.unlock();
