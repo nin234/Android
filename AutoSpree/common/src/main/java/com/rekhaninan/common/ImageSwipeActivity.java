@@ -2,14 +2,18 @@ package com.rekhaninan.common;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.PointF;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.FloatMath;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.MediaController;
@@ -26,7 +30,17 @@ public class ImageSwipeActivity extends AppCompatActivity {
     private int position;
     private ArrayList<String> images;
     private final  String TAG = "ImageSwipeActivity";
+
+    public VideoView getVideoView() {
+        return videoView;
+    }
+
     private VideoView videoView;
+
+    public ImageView getImageView() {
+        return imageView;
+    }
+
     private ImageView imageView;
     private MediaController mc;
     private String app;
@@ -93,6 +107,9 @@ public class ImageSwipeActivity extends AppCompatActivity {
             public void onSwipeTop() {
 
             }
+
+
+
             public void onSwipeLeft()
             {
                 if (position+1 >= images.size())
@@ -120,6 +137,8 @@ public class ImageSwipeActivity extends AppCompatActivity {
             public void onSwipeBottom() {
 
             }
+
+
 
         });
     }
@@ -152,7 +171,7 @@ public class ImageSwipeActivity extends AppCompatActivity {
         if (item.getItemId() == android.R.id.home)
         {
             Log.d(getClass().getName(), "Back button pressed");
-            if (app == EASYGROC)
+            if (app.equals(EASYGROC))
             {
                 Intent intent = new Intent();
                 intent.putExtra("App", EASYGROC);

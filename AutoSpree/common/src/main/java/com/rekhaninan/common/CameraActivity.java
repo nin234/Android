@@ -45,6 +45,7 @@ public class CameraActivity extends AppCompatActivity {
     private MediaRecorder mMediaRecorder;
     private CameraPreview1 mPreview;
     private String album_name;
+    private int orientation;
     private File album_dir;
     private File thumbNailsDir;
     public static final int MEDIA_TYPE_IMAGE = 1;
@@ -229,7 +230,7 @@ public class CameraActivity extends AppCompatActivity {
             Log.d(TAG, "Caught exception: " + e.getMessage());
         }
     }
-    public static void setCameraDisplayOrientation(Activity activity,
+    public  void setCameraDisplayOrientation(Activity activity,
                                                    int cameraId, android.hardware.Camera camera) {
         android.hardware.Camera.CameraInfo info =
                 new android.hardware.Camera.CameraInfo();
@@ -255,6 +256,8 @@ public class CameraActivity extends AppCompatActivity {
         Camera.Parameters params = camera.getParameters();
         params.setRotation(result);
         camera.setParameters(params);
+        orientation = result;
+//        mMediaRecorder.setOrientationHint(result);
         //camera.setDisplayOrientation(-90);
     }
 
@@ -358,10 +361,11 @@ public class CameraActivity extends AppCompatActivity {
             setCameraDisplayOrientation(this, Camera.CameraInfo.CAMERA_FACING_BACK, mCamera);
 
         }
+
         mCamera.unlock();
         Log.d(TAG, "Preparing video recorder 2");
         mMediaRecorder.setCamera(mCamera);
-
+        mMediaRecorder.setOrientationHint(orientation);
         // Step 2: Set sources
 
         if (PermissionsManager.getInstance().hasAudioRecordPermission(getApplicationContext())) {
