@@ -649,7 +649,7 @@ public class SingleItemActivity extends AppCompatActivity
 
             case EASYGROC_TEMPL_LISTS: {
                 String app_name = DBOperations.getInstance().getApp_name();
-                if (app_name.equals("EASYGROC"))
+                if (app_name.equals(EASYGROC))
                 {
                     inflater.inflate(R.menu.easygroc_templ_main, menu);
                 }
@@ -717,6 +717,8 @@ public class SingleItemActivity extends AppCompatActivity
         startDisplayActivity();
 
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -85,6 +85,7 @@ public class ShareActivity extends AppCompatActivity {
 
             case SHARE_TEMPL_MAINVW:
             {
+                setContentView(R.layout.activity_main_vw);
                 java.util.List<Item> mainLst = DBOperations.getInstance().getTemplNameLst();
                 if (mainLst == null) {
                     Log.d(TAG, "NULL main list");

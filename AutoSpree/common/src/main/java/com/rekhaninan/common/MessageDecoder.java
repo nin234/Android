@@ -168,8 +168,8 @@ public class MessageDecoder {
 
     boolean processShareTemplItemMessage (ByteBuffer buffer, int mlen)
     {
-        int namelen = buffer.getInt(8); // 8== 2*sizeof(int)
-        int nameoffset = 16; // 4 * sizeof(int)
+        int namelen = buffer.getInt(16); // 8== 2*sizeof(int)
+        int nameoffset = 24; // 4 * sizeof(int)
         String name = new String (buffer.array(), nameoffset, namelen-1);
         int listlenoffset = 20;
         int listlen = buffer.getInt(listlenoffset);
@@ -245,11 +245,15 @@ public class MessageDecoder {
 
     boolean decodeAndStoreEasyGrocTemplItem(String share_name, String list)
     {
+        Log.i(TAG, "decoding easygroc templ item for name=" + share_name + " list=" + list);
         String[] listcomps = list.split(":;]:;");
         int comps = listcomps.length;
         long share_id =0;
         for (int j=0; j < comps; ++j)
         {
+            if (listcomps[j] == null || listcomps[j].length() < 1)
+                continue;
+            Log.i(TAG, "decoding comp j=" + j);
             if (j==0)
             {
                 String[] shareIdArr = listcomps[j].split(":");
@@ -294,6 +298,7 @@ public class MessageDecoder {
                 DBOperations.getInstance().insertDb(itm, EASYGROC_TEMPL_ADD_ITEM);
             }
         }
+        Log.i(TAG, "Decoded easygroc templ item");
         return true;
     }
 
