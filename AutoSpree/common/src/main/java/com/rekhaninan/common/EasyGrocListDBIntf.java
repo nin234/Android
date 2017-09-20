@@ -379,7 +379,7 @@ public class EasyGrocListDBIntf extends DBInterface {
                 list.setName(c.getString(c.getColumnIndexOrThrow("name")));
                 list.setShare_name(c.getString(c.getColumnIndexOrThrow("share_name")));
                 list.setShare_id(c.getLong(c.getColumnIndexOrThrow("share_id")));
-                Log.d(TAG, "Inserting to templNameLst item name=" + list.getName());
+                Log.d(TAG, "Inserting to templNameLst item name=" + list.getName() + " share_id=" + list.getShare_id());
                 templNameLst.add(list);
                 suceed = c.moveToNext();
             }

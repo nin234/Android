@@ -521,8 +521,8 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
             }
         });
         Button delet = (Button) vw.findViewById(R.id.delete_btn_season);
-        delet.setHeight(txtHeight);
-        delet.setWidth(width/10);
+        delet.setHeight(txtHeight/2);
+        delet.setWidth(width/50);
         delet.setTag(itm);
         delet.setOnClickListener(new View.OnClickListener() {
                                      @Override

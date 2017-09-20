@@ -26,7 +26,7 @@ public class TemplNameAdapter extends BaseExpandableListAdapter {
 
     private List<Item> groupItem;
     private Context ctxt;
-
+    private final String TAG = "TemplNameAdapter";
     public TemplNameAdapter (List<Item> gitems, Context ctx)
     {
         super();
@@ -117,6 +117,7 @@ public class TemplNameAdapter extends BaseExpandableListAdapter {
         //itm.setName(name);
         Item itmadj = new Item();
         itmadj.setName(name);
+        itmadj.setShare_id(itm.getShare_id());
         convertView.setTag(itmadj);
         convertView.setOnClickListener(new View.OnClickListener()
                                        {
@@ -129,6 +130,7 @@ public class TemplNameAdapter extends BaseExpandableListAdapter {
                                                Log.d(getClass().getName(), "Clicked row " + tv.getText());
 
                                                Intent intent = new Intent(ctxt, SingleItemActivity.class);
+                                               Log.i(TAG, "Getting templ list for name=" + itm.getName() + " share_id=" + itm.getShare_id());
                                                java.util.List<Item> list = DBOperations.getInstance().getTemplList(itm.getName(), itm.getShare_id());
                                                if (list.size() ==0) {
                                                    intent.putExtra("ViewType", EASYGROC_TEMPL_ADD_ITEM);
