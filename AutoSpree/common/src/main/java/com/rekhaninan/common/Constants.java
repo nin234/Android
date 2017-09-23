@@ -22,6 +22,7 @@ public final class Constants {
     public static final int DELETE_CONTACT_ITEM_ACTIVITY_REQUEST=10;
     public static final int ADD_TEMPL_CHECKLIST_ACTIVITY_REQUEST=11;
     public static final int DELETE_TEMPL_CHECKLIST_ACTIVITY_REQUEST=12;
+    public static final int DELETE_TEMPL_ACTIVITY_REQUEST=13;
 
 
 
@@ -54,7 +55,7 @@ public final class Constants {
     public static final int EASYGROC_TEMPL_NAME_ADD_ITEM=27;
     public static final int SHARE_TEMPL_MAINVW=28;
     public static final int SORT_MAINVW=29;
-
+    public static final int EASYGROC_TEMPL_DELETE_ITEM=30;
 
     public static final int AUTOSPREE_NAME_ROW=0;
     public static final int AUTOSPREE_MODEL_ROW=1;

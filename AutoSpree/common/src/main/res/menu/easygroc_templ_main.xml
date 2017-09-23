@@ -7,6 +7,13 @@
         android:title="@string/new_item"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/delete_templ_item"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_delete_black_48dp"
+        android:title="@string/delete_item"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/share_templ"
         android:orderInCategory="100"
         android:icon="@drawable/ic_folder_shared_black_48dp"

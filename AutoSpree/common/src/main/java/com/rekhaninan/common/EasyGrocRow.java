@@ -52,6 +52,7 @@ import static com.rekhaninan.common.Constants.EASYGROC_DISPLAY_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_EDIT_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_NAME_ROW;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_ADD_ITEM;
+import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_DELETE_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_DISPLAY_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_EDIT_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_LISTS;
@@ -164,6 +165,10 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                 return tv;
             }
 
+            case EASYGROC_TEMPL_DELETE_ITEM:
+            {
+                return  getCheckBoxedMainLstVw(parent, txtHeight, itm, position);
+            }
 
             case CHECK_LIST_ADD:
             {
@@ -355,7 +360,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                             }
                             else
                             {
-                                return getNoLabelView(parent, txtHeight, width, itm.getItem());
+                                return getEasyTemplRow(parent, txtHeight, width, itm.getItem());
                             }
 
                             }
@@ -448,7 +453,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
          View vw = inflater.inflate(R.layout.easygroc_main_season, parent,false);
         final EditText item = (EditText) vw.findViewById(R.id.list_item_string_season);
         item.setHeight(txtHeight);
-        item.setWidth((width/10)*6);
+        //item.setWidth((int)(width*0.8));
         item.setTag(itm);
 
         if (itm.isShowSeasonPicker())
@@ -521,8 +526,8 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
             }
         });
         Button delet = (Button) vw.findViewById(R.id.delete_btn_season);
-        delet.setHeight(txtHeight/2);
-        delet.setWidth(width/50);
+       // delet.setHeight(txtHeight/2);
+       // delet.setWidth(width/50);
         delet.setTag(itm);
         delet.setOnClickListener(new View.OnClickListener() {
                                      @Override
@@ -540,8 +545,9 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         );
 
         Button add = (Button) vw.findViewById(R.id.add_btn_season);
-        add.setHeight(txtHeight);
-        add.setWidth(width/10);
+       // add.setHeight(txtHeight);
+
+      //  add.setWidth(width/10);
         add.setTag(itm);
         add.setOnClickListener(new View.OnClickListener() {
                                    @Override
@@ -559,8 +565,8 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         );
 
         final Button spicker = (Button) vw.findViewById(R.id.season_picker_btn_season);
-        spicker.setHeight(txtHeight);
-        spicker.setWidth(width/10);
+       // spicker.setHeight(txtHeight);
+     //   spicker.setWidth(width/10);
 
         final EasyGrocRow pEasyGrocRow = this;
 
@@ -709,6 +715,18 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         return vw;
     }
 
+    public View getEasyTemplRow(ViewGroup parent, int txtHeight, int width, String txt)
+    {
+        LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View vw = inflater.inflate(R.layout.easy_templ_row, parent,false);
+        TextView label = (TextView) vw.findViewById(R.id.name);
+        label.setText(txt);
+        label.setHeight(txtHeight);
+        label.setWidth(width);
+        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.35f);
+        return vw;
+    }
+
     private View getNameRowView(ViewGroup parent, int txtHeight, int width, final Item itm)
     {
         LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -780,7 +798,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         }
         label.setHeight(txtHeight);
         label.setWidth((width / 10) * 8);
-        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.35f);
         Switch onoff = (Switch) vw.findViewById(R.id.toggle_inv);
         if (itm.getInventory() > 0)
         {

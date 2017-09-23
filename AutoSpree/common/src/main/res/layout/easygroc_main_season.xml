@@ -4,44 +4,45 @@
 
     <Button
         android:id="@+id/delete_btn_season"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:scaleX="0.7"
+        android:scaleY="0.7"
+        style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_delete_black_48dp"
-        android:layout_alignParentLeft="true"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="3dp" />
+        android:drawableStart="@android:drawable/ic_delete"
+        android:layout_alignParentLeft="true" />
 
     <EditText
         android:id="@+id/list_item_string_season"
-        android:layout_width="wrap_content"
+        android:layout_weight="1"
+        android:layout_width="fill_parent"
+        android:background="@android:color/transparent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/delete_btn_season"
-        android:paddingLeft="8dp"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textSize="18sp" />
 
 
     <Button
         android:id="@+id/add_btn_season"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_add_black_48dp"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
         style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_toLeftOf="@+id/season_picker_btn_season"
-         />
+        android:drawableStart="@android:drawable/ic_input_add"
+        android:layout_toStartOf="@+id/season_picker_btn_season" />
 
 
     <Button
         android:id="@+id/season_picker_btn_season"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_flip_to_front_black_48dp"
-        android:layout_alignBaseline="@+id/add_btn_season"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
         style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_alignBottom="@+id/add_btn_season"
-        android:layout_alignParentRight="true"
+        android:drawableStart="@android:drawable/btn_radio"
         android:layout_alignParentEnd="true" />
 </RelativeLayout>

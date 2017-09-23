@@ -242,66 +242,7 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
                case SHARE_TEMPL_MAINVW:
                case SHARE_MAINVW:
                {
-                   LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                   View vw = inflater.inflate(R.layout.share_main, parent, false);
-                   TextView tv = (TextView) vw.findViewById(R.id.share_main_item);
-
-
-                   tv.setHeight(txtHeight);
-                   String itemname = getItemName(itm);
-
-                   Log.d(TAG, "Setting item name=" + itemname);
-                   tv.setText(itemname);
-                   tv.setTag(itm);
-
-                   //tv.setText(Item, TextView.BufferType.EDITABLE);
-                   tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
-                   tv.setOnClickListener(new View.OnClickListener() {
-
-                                             @Override
-                                             public void onClick(View view) {
-
-                                                 TextView tv = (TextView) view;
-                                                 Item itm = (Item) tv.getTag();
-                                                 CheckBox cbxi = itm.getCbx();
-                                                 cbxi.setChecked(!cbxi.isChecked());
-                                                 Log.d(TAG, "Toggling checkbok " + itm.isSelected() + " cbx=" + cbxi.isChecked());
-                                                 itm.setSelected(cbxi.isChecked());
-                                                 if (cbxi.isChecked())
-                                                 {
-                                                     adapter.resetSelected(itm.getRowno());
-                                                 }
-
-                                             }
-                   }
-
-                   );
-
-                   final CheckBox cbx = (CheckBox) vw.findViewById(R.id.share_main_chkbox);
-                   cbx.setTag(itm);
-                   itm.setCbx(cbx);
-                   itm.setRowno(position);
-
-                   cbx.setOnClickListener(new View.OnClickListener() {
-                                              @Override
-                                              public void onClick(View view) {
-
-                                                  CheckBox cbxi = (CheckBox) view;
-                                                  Item itm = (Item) cbxi.getTag();
-                                                  Log.d(TAG, "Toggling checkbok " + itm.isSelected() + " cbx=" + cbxi.isChecked());
-                                                  itm.setSelected(cbxi.isChecked());
-                                                  if (cbxi.isChecked())
-                                                  {
-                                                      adapter.resetSelected(itm.getRowno());
-                                                  }
-
-                                              }
-                                          }
-
-                   );
-
-                   return vw;
-
+                   return  getCheckBoxedMainLstVw(parent, txtHeight, itm, position);
                }
                case AUTOSPREE_ADD_ITEM:
                case AUTOSPREE_DISPLAY_ITEM:
@@ -520,6 +461,70 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
                 ctxt.startActivity(intent);
             }
         });
+    }
+
+    public View getCheckBoxedMainLstVw (ViewGroup parent , int txtHeight,  Item itm, int position)
+    {
+        LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View vw = inflater.inflate(R.layout.share_main, parent, false);
+        TextView tv = (TextView) vw.findViewById(R.id.share_main_item);
+
+
+        tv.setHeight(txtHeight);
+        String itemname = getItemName(itm);
+
+        Log.d(TAG, "Setting item name=" + itemname);
+        tv.setText(itemname);
+        tv.setTag(itm);
+
+        //tv.setText(Item, TextView.BufferType.EDITABLE);
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+        tv.setOnClickListener(new View.OnClickListener() {
+
+                                  @Override
+                                  public void onClick(View view) {
+
+                                      TextView tv = (TextView) view;
+                                      Item itm = (Item) tv.getTag();
+                                      CheckBox cbxi = itm.getCbx();
+                                      cbxi.setChecked(!cbxi.isChecked());
+                                      Log.d(TAG, "Toggling checkbok " + itm.isSelected() + " cbx=" + cbxi.isChecked());
+                                      itm.setSelected(cbxi.isChecked());
+                                      if (cbxi.isChecked())
+                                      {
+                                          adapter.resetSelected(itm.getRowno());
+                                      }
+
+                                  }
+                              }
+
+        );
+
+        final CheckBox cbx = (CheckBox) vw.findViewById(R.id.share_main_chkbox);
+        cbx.setTag(itm);
+        itm.setCbx(cbx);
+        itm.setRowno(position);
+
+        cbx.setOnClickListener(new View.OnClickListener() {
+                                   @Override
+                                   public void onClick(View view) {
+
+                                       CheckBox cbxi = (CheckBox) view;
+                                       Item itm = (Item) cbxi.getTag();
+                                       Log.d(TAG, "Toggling checkbok " + itm.isSelected() + " cbx=" + cbxi.isChecked());
+                                       itm.setSelected(cbxi.isChecked());
+                                       if (cbxi.isChecked())
+                                       {
+                                           adapter.resetSelected(itm.getRowno());
+                                       }
+
+                                   }
+                               }
+
+        );
+
+        return vw;
+
     }
 
        public  abstract void getKeyVals(Item itm);

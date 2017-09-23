@@ -16,6 +16,7 @@ import static com.rekhaninan.common.Constants.EASYGROC_ADD_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_DISPLAY_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_EDIT_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_ADD_ITEM;
+import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_DELETE_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_DISPLAY_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_EDIT_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_NAME_ADD_ITEM;
@@ -192,6 +193,7 @@ public class EasyGrocListDBIntf extends DBInterface {
 
         switch (vwType) {
             case EASYGROC_TEMPL_ADD_ITEM:
+            case EASYGROC_TEMPL_DELETE_ITEM:
             case EASYGROC_TEMPL_EDIT_ITEM:
             case EASYGROC_TEMPL_DISPLAY_ITEM:
             case EASYGROC_ADD_ITEM:
