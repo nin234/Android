@@ -1459,6 +1459,7 @@ public class SingleItemActivity extends AppCompatActivity
         Intent intent = new Intent(this, SingleItemActivity.class);
         intent.putExtra("ViewType", EASYGROC_TEMPL_EDIT_ITEM);
         intent.putExtra("item", itm);
+        //edit activity
         startActivity(intent);
         return;
     }
