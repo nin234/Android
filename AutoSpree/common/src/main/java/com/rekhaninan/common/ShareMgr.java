@@ -201,6 +201,9 @@ public class ShareMgr extends Thread {
                         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                         File dir = ctxt.getFilesDir();
                         File album_dir = new File(dir, EASYGROC);
+                        if (!album_dir.exists()) {
+                            album_dir.mkdirs();
+                        }
                         File   mediaFile = new File(album_dir.getAbsolutePath() + File.separator
                                 + timeStamp + ".jpg");
                         itm.setPicurl(mediaFile.getAbsolutePath());
@@ -237,6 +240,12 @@ public class ShareMgr extends Thread {
                     fos = null;
                     piclen =0;
                     picsofar = 0;
+                    if (app_name.equals(EASYGROC))
+                    {
+                        Log.i(TAG, "Finishing storing picture closing fileoutputstream fos");
+                        refreshMainVw();
+                        return;
+                    }
                     Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(pictureFile.getAbsolutePath()),
                             THUMBSIZE, THUMBSIZE);
 
