@@ -420,7 +420,7 @@ public class CameraActivity extends AppCompatActivity {
         }
 
         // Create a media file name
-         timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+         timeStamp = Long.toString(System.currentTimeMillis()/2000);
         File mediaFile;
         if (type == MEDIA_TYPE_IMAGE){
             mediaFile = new File(album_dir.getAbsolutePath() + File.separator
