@@ -230,6 +230,7 @@ public class CameraActivity extends AppCompatActivity {
             Log.d(TAG, "Caught exception: " + e.getMessage());
         }
     }
+
     public  void setCameraDisplayOrientation(Activity activity,
                                                    int cameraId, android.hardware.Camera camera) {
         android.hardware.Camera.CameraInfo info =

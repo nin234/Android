@@ -7,9 +7,12 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
@@ -70,7 +73,7 @@ public class ShareMgr extends Thread {
     private File thumbNailsDir;
     private FileOutputStream fos;
     private final int THUMBSIZE = 100;
-    private File pictureFile;
+    private File pictureFile, pictureFileTmp;
 
 
 
@@ -129,6 +132,42 @@ public class ShareMgr extends Thread {
         return INSTANCE;
     }
 
+    private void setOHAspreePicDetails(long shareId, String picName, String itemName, long picLen)
+    {
+        try {
+            java.util.List<Item> mainLst = DBOperations.getInstance().getMainLst(MAINVW);
+            for (Item itm : mainLst) {
+                if (itm.getShare_id() == shareId && itm.getName().equals(itemName)) {
+                    File dir = ctxt.getFilesDir();
+                    String thumbDir = itm.getAlbum_name() + File.separator + "thumbnails";
+                    thumbNailsDir = new File(dir, thumbDir);
+                    if (!thumbNailsDir.exists()) {
+                        thumbNailsDir.mkdirs();
+                    }
+                    File album_dir = new File(dir, itm.getAlbum_name());
+                    if (!album_dir.exists()) {
+                        album_dir.mkdirs();
+                    }
+
+                    if (picName.endsWith(".MOV"))
+                    {
+                        picName = picName.substring(0, picName.length()-4);
+                        picName += ".mp4";
+                    }
+                    String fileName = album_dir.getAbsolutePath() + File.separator + picName;
+                    pictureFile = new File(fileName);
+                    fos = new FileOutputStream(pictureFile);
+                    Log.i(TAG, "Opened picture file for writing=" + fileName);
+                    break;
+                }
+            }
+        }
+        catch (FileNotFoundException excp)
+        {
+                Log.e(TAG, "Caught file not found exception " + excp.getMessage());
+        }
+    }
+
     public void setPicDetails (long shareId, String picName, String itemName, long picLen)
     {
         try {
@@ -137,26 +176,7 @@ public class ShareMgr extends Thread {
             switch (app_name) {
                 case AUTOSPREE:
                 case OPENHOUSES: {
-                    java.util.List<Item> mainLst = DBOperations.getInstance().getMainLst(MAINVW);
-                    for (Item itm : mainLst) {
-                        if (itm.getShare_id() == shareId && itm.getName().equals(itemName)) {
-                            File dir = ctxt.getFilesDir();
-                            String thumbDir = itm.getAlbum_name() + File.separator + "thumbnails";
-                            thumbNailsDir = new File(dir, thumbDir);
-                            if (!thumbNailsDir.exists()) {
-                                thumbNailsDir.mkdirs();
-                            }
-                            File album_dir = new File(dir, itm.getAlbum_name());
-                            if (!album_dir.exists()) {
-                                album_dir.mkdirs();
-                            }
-                            String fileName = album_dir.getAbsolutePath() + File.separator + picName;
-                            pictureFile = new File(fileName);
-                            fos = new FileOutputStream(pictureFile);
-                            Log.i(TAG, "Opened picture file for writing=" + fileName);
-                            break;
-                        }
-                    }
+                   setOHAspreePicDetails(shareId, picName, itemName, picLen);
                 }
                 break;
 
@@ -180,6 +200,7 @@ public class ShareMgr extends Thread {
                             break;
                         }
                     }
+
                     if (!bFnd)
                     {
                         Item itm = new Item();
@@ -226,6 +247,112 @@ public class ShareMgr extends Thread {
         return;
     }
 
+    private int getRotateDegrees(int orientation)
+    {
+        int rotateDegrees = 0;
+        switch (orientation)
+        {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                rotateDegrees = 90;
+                break;
+
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                rotateDegrees = 180;
+                break;
+
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                rotateDegrees = 270;
+                break;
+
+            default:
+                break;
+        }
+        return rotateDegrees;
+    }
+
+    private void rotateImageIfReqd()
+    {
+        try
+        {
+            ExifInterface exif = new ExifInterface(pictureFile.getAbsolutePath());
+             int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+             Log.i(TAG, "Orientation of image=" + orientation + " Image path=" + pictureFile.getAbsolutePath());
+
+            int rotateDegrees = getRotateDegrees(orientation);
+            if (rotateDegrees == 0)
+                return;
+            Bitmap bmp = BitmapFactory.decodeFile(pictureFile.getAbsolutePath());
+            Matrix matrix = new Matrix();
+            matrix.postRotate(rotateDegrees);
+             bmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
+            FileOutputStream fOut;
+            try {
+                 pictureFileTmp = new File(pictureFile.getAbsolutePath() + ".tmp");
+                fOut = new FileOutputStream(pictureFileTmp);
+                bmp.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+                fOut.flush();
+                fOut.close();
+                pictureFile.delete();
+                pictureFileTmp.renameTo(pictureFile);
+
+            } catch (FileNotFoundException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+            } catch (IOException e) {
+            // TODO Auto-generated catch block
+             e.printStackTrace();
+            }
+        }
+        catch (Exception e) {
+         e.printStackTrace();
+        }
+
+    }
+
+    private void rotatePictureIfReqd()
+    {
+        try
+        {
+            if (pictureFile.getAbsolutePath().endsWith(".jpg"))
+                rotateImageIfReqd();
+
+        }
+     catch (Exception e) {
+        e.printStackTrace();
+        }
+    }
+
+    private void extractAndStoreThumbNail() {
+        try
+        {
+            Bitmap ThumbImage;
+            if (pictureFile.getAbsolutePath().endsWith("mp4"))
+            {
+                ThumbImage = ThumbnailUtils.createVideoThumbnail(pictureFile.getAbsolutePath(), MediaStore.Images.Thumbnails.MINI_KIND);
+            }
+            else
+            {
+                ThumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(pictureFile.getAbsolutePath()),
+                        THUMBSIZE, THUMBSIZE);
+            }
+
+             if (ThumbImage == null) {
+                Log.e(TAG, "Cannot extract thumbnail for " + pictureFile.getAbsolutePath());
+               return;
+             }
+
+             File thumbNail = new File(thumbNailsDir, pictureFile.getName());
+             FileOutputStream fostn = new FileOutputStream(thumbNail);
+             ThumbImage.compress(Bitmap.CompressFormat.JPEG, 100, fostn); // saving the Bitmap to a file compressed as a JPEG with 85% compression rate
+             fostn.flush(); // Not really required
+             fostn.close();
+    }
+        catch (IOException excp)
+        {
+            Log.e(TAG, "Caught IOException  exception " + excp.getMessage());
+        }
+    }
+
     public void storePicData(ByteBuffer buffer, int offset, int msglen)
     {
         try {
@@ -240,20 +367,14 @@ public class ShareMgr extends Thread {
                     fos = null;
                     piclen =0;
                     picsofar = 0;
+                    rotatePictureIfReqd();
                     if (app_name.equals(EASYGROC))
                     {
                         Log.i(TAG, "Finishing storing picture closing fileoutputstream fos");
                         refreshMainVw();
                         return;
                     }
-                    Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(pictureFile.getAbsolutePath()),
-                            THUMBSIZE, THUMBSIZE);
-
-                    File thumbNail = new File(thumbNailsDir, pictureFile.getName());
-                    FileOutputStream fostn = new FileOutputStream(thumbNail);
-                    ThumbImage.compress(Bitmap.CompressFormat.JPEG, 100, fostn); // saving the Bitmap to a file compressed as a JPEG with 85% compression rate
-                    fostn.flush(); // Not really required
-                    fostn.close();
+                    extractAndStoreThumbNail();
                     Log.i(TAG, "Finishing storing picture closing fileoutputstream fos");
                 }
             }
@@ -264,6 +385,8 @@ public class ShareMgr extends Thread {
         }
         return;
     }
+
+
 
     public void  start_thr(Context ctx, String appname)
     {
