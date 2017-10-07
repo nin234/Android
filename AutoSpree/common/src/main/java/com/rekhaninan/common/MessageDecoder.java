@@ -365,6 +365,7 @@ public class MessageDecoder {
                 Log.d(TAG, "Setting share_id" + share_id + " name=" + share_name);
                 Item nameItem = new Item();
                 nameItem.setShare_id(share_id);
+                
                 nameItem.setShare_name(share_name);
                 nameItem.setName(share_name);
                 Item shareItem = DBOperations.getInstance().shareItemExists(nameItem, EASYGROC_ADD_ITEM);
