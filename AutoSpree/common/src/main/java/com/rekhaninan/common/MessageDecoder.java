@@ -18,6 +18,9 @@ import static com.rekhaninan.common.Constants.EASYGROC_EDIT_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_ADD_ITEM;
 import static com.rekhaninan.common.Constants.GET_EASYGROC_LIST_MSG;
 import static com.rekhaninan.common.Constants.GET_SHARE_ID_RPLY_MSG;
+import static com.rekhaninan.common.Constants.ITEMSEPARATOR;
+import static com.rekhaninan.common.Constants.KEYVALSEPARATOR;
+import static com.rekhaninan.common.Constants.KEYVALSEPARATORREGEX;
 import static com.rekhaninan.common.Constants.MSG_AGGR_BUF_LEN;
 import static com.rekhaninan.common.Constants.OPENHOUSES;
 import static com.rekhaninan.common.Constants.OPENHOUSES_ADD_ITEM;
@@ -345,19 +348,21 @@ public class MessageDecoder {
 
     boolean decodeAndStoreEasyGrocItem(String share_name, String list, boolean bEasy)
     {
-        String[] pArr = list.split("]:;");
+        String[] pArr = list.split(ITEMSEPARATOR);
         int cnt = pArr.length;
         long share_id =0;
-
+        Log.d(TAG, "Decoding easygrocitem cnt=" + cnt);
 
         for (int i=0; i < cnt; ++i)
         {
-            String[] kvarr = pArr[i].split(":");
+            String[] kvarr = pArr[i].split(KEYVALSEPARATORREGEX);
             if (kvarr.length != 2)
                 continue;
             if (i ==0)
             {
+
                 share_id = Long.parseLong(kvarr[1]);
+                Log.d(TAG, "Setting share_id" + share_id + " name=" + share_name);
                 Item nameItem = new Item();
                 nameItem.setShare_id(share_id);
                 nameItem.setShare_name(share_name);
@@ -365,7 +370,7 @@ public class MessageDecoder {
                 Item shareItem = DBOperations.getInstance().shareItemExists(nameItem, EASYGROC_ADD_ITEM);
                 if (shareItem != null)
                 {
-
+                    Log.d(TAG, "Deleting exisiting before insert share_id" + share_id + " name=" + share_name);
                     DBOperations.getInstance().deleteDb(shareItem, EASYGROC_DISPLAY_ITEM);
                 }
 
@@ -379,6 +384,7 @@ public class MessageDecoder {
             itm.setShare_id(share_id);
             itm.setItem(kvarr[1]);
             itm.setRowno(Integer.parseInt(kvarr[0]));
+            Log.d(TAG, "Inserting item="+ itm.getItem() + " rowno=" + itm.getRowno());
             DBOperations.getInstance().insertDb(itm, EASYGROC_ADD_ITEM);
         }
 

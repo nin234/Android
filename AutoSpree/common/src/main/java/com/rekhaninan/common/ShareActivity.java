@@ -21,6 +21,7 @@ import static com.rekhaninan.common.Constants.ADD_CONTACT_ITEM_ACTIVITY_REQUEST;
 import static com.rekhaninan.common.Constants.AUTOSPREE;
 import static com.rekhaninan.common.Constants.CHECK_LIST_ADD;
 import static com.rekhaninan.common.Constants.CHECK_LIST_EDIT;
+import static com.rekhaninan.common.Constants.CONTACTITEMSEPARATOR;
 import static com.rekhaninan.common.Constants.CONTACTS_ITEM_ADD;
 import static com.rekhaninan.common.Constants.CONTACTS_ITEM_DISPLAY;
 import static com.rekhaninan.common.Constants.CONTACTS_MAINVW;
@@ -31,6 +32,8 @@ import static com.rekhaninan.common.Constants.EASYGROC;
 import static com.rekhaninan.common.Constants.EASYGROC_DISPLAY_ITEM;
 import static com.rekhaninan.common.Constants.GET_CONTACTS_ACTIVITY_REQUEST;
 import static com.rekhaninan.common.Constants.IMAGE_SWIPE_ACTIVITY_REQUEST;
+import static com.rekhaninan.common.Constants.ITEMSEPARATOR;
+import static com.rekhaninan.common.Constants.KEYVALSEPARATOR;
 import static com.rekhaninan.common.Constants.MAINVW;
 import static com.rekhaninan.common.Constants.NOTES_ACTIVITY_REQUEST;
 import static com.rekhaninan.common.Constants.OPENHOUSES;
@@ -503,18 +506,25 @@ public class ShareActivity extends AppCompatActivity {
             ShareMgr.getInstance().sharePicture(selectedItem.getPicurl(), picMetaStr);
         }
         else {
-            shrMsg += ":::";
+            shrMsg += CONTACTITEMSEPARATOR;
             java.util.List<Item> list = DBOperations.getInstance().getList(selectedItem.getName(), selectedItem.getShare_id());
-            shrMsg += Long.toString(ShareMgr.getInstance().getShare_id());
-            shrMsg += ":";
-            shrMsg += Long.toString(ShareMgr.getInstance().getShare_id());
-            shrMsg += "]:;";
+            if (list.size() == 0)
+            {
+                Log.e(TAG, "No elements in the sharing list");
+            }
+            Item firstEl = list.get(0);
+            shrMsg += Long.toString(firstEl.getShare_id());
+            shrMsg += KEYVALSEPARATOR;
+            shrMsg += Long.toString(firstEl.getShare_id());
+            shrMsg += ITEMSEPARATOR;
+
             for (Item selItem : list)
             {
+
                 shrMsg += Integer.toString(selItem.getRowno());
-                shrMsg += ":";
+                shrMsg += KEYVALSEPARATOR;
                 shrMsg += selItem.getItem();
-                shrMsg += "]:;";
+                shrMsg += ITEMSEPARATOR;
             }
             ShareMgr.getInstance().shareItem(shrMsg, selectedItem.getName());
         }

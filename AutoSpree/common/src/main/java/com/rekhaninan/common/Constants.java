@@ -125,4 +125,8 @@ public final class Constants {
     public static final String LOCATION_DATA_EXTRA = PACKAGE_NAME +
             ".LOCATION_DATA_EXTRA";
 
+    public static final String KEYVALSEPARATORREGEX= ":\\|:";
+    public static final String KEYVALSEPARATOR= ":|:";
+    public static final String ITEMSEPARATOR= "]:;";
+    public static final String CONTACTITEMSEPARATOR = ":::";
 }
