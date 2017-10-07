@@ -30,6 +30,7 @@ import static com.rekhaninan.common.Constants.PIC_MSG;
 import static com.rekhaninan.common.Constants.SHARE_ITEM_MSG;
 import static com.rekhaninan.common.Constants.SHARE_TEMPL_ITEM_MSG;
 import static com.rekhaninan.common.Constants.STORE_TRNSCTN_ID_RPLY_MSG;
+import static com.rekhaninan.common.Constants.TEMPLLISTSEPERATOR;
 
 /**
  * Created by ninanthomas on 2/23/17.
@@ -249,7 +250,7 @@ public class MessageDecoder {
     boolean decodeAndStoreEasyGrocTemplItem(String share_name, String list)
     {
         Log.i(TAG, "decoding easygroc templ item for name=" + share_name + " list=" + list);
-        String[] listcomps = list.split(":;]:;");
+        String[] listcomps = list.split(TEMPLLISTSEPERATOR);
         int comps = listcomps.length;
         long share_id =0;
         for (int j=0; j < comps; ++j)
@@ -259,12 +260,12 @@ public class MessageDecoder {
             Log.i(TAG, "decoding comp j=" + j);
             if (j==0)
             {
-                String[] shareIdArr = listcomps[j].split(":");
+                String[] shareIdArr = listcomps[j].split(KEYVALSEPARATORREGEX);
                 share_id = Long.parseLong(shareIdArr[1]);
 
                 continue;
             }
-            String[] pArr = listcomps[j].split("]:;");
+            String[] pArr = listcomps[j].split(ITEMSEPARATOR);
             int cnt = pArr.length;
             String adjstedname = share_name;
             if (j ==2)
@@ -286,7 +287,7 @@ public class MessageDecoder {
                 DBOperations.getInstance().deleteDb(shareItem, EASYGROC_TEMPL_ADD_ITEM);
             }
             for (int i=0; i < cnt; ++i) {
-                String[] kvarr = pArr[i].split(":");
+                String[] kvarr = pArr[i].split(KEYVALSEPARATORREGEX);
                 if (kvarr.length != 5)
                     continue;
                 Item itm = new Item();
@@ -365,7 +366,7 @@ public class MessageDecoder {
                 Log.d(TAG, "Setting share_id" + share_id + " name=" + share_name);
                 Item nameItem = new Item();
                 nameItem.setShare_id(share_id);
-                
+
                 nameItem.setShare_name(share_name);
                 nameItem.setName(share_name);
                 Item shareItem = DBOperations.getInstance().shareItemExists(nameItem, EASYGROC_ADD_ITEM);

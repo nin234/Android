@@ -41,6 +41,7 @@ import static com.rekhaninan.common.Constants.SHARE_MAINVW;
 import static com.rekhaninan.common.Constants.SHARE_PICTURE_ACTIVITY_REQUEST;
 import static com.rekhaninan.common.Constants.SHARE_PICTURE_VW;
 import static com.rekhaninan.common.Constants.SHARE_TEMPL_MAINVW;
+import static com.rekhaninan.common.Constants.TEMPLLISTSEPERATOR;
 
 public class ShareActivity extends AppCompatActivity {
 
@@ -447,13 +448,13 @@ public class ShareActivity extends AppCompatActivity {
             Log.e(TAG, "No contact to share to");
             return;
         }
-        shrMsg += ":::";
+        shrMsg += CONTACTITEMSEPARATOR;
 
-        shrMsg += Long.toString(ShareMgr.getInstance().getShare_id());
-        shrMsg += ":";
-        shrMsg += Long.toString(ShareMgr.getInstance().getShare_id());
+        shrMsg += Long.toString(selectedItem.getShare_id());
+        shrMsg += KEYVALSEPARATOR;
+        shrMsg += Long.toString(selectedItem.getShare_id());
 
-        shrMsg += ":;]:;";
+        shrMsg += TEMPLLISTSEPERATOR;
         for (int i=0; i < 3; ++i) {
             String name = selectedItem.getName();
             if (i==1) {
@@ -466,17 +467,17 @@ public class ShareActivity extends AppCompatActivity {
             java.util.List<Item> list = DBOperations.getInstance().getTemplList(name, selectedItem.getShare_id());
             for (Item selItem : list) {
                 shrMsg += Integer.toString(selItem.getRowno());
-                shrMsg += ":";
+                shrMsg += KEYVALSEPARATOR;
                 shrMsg += Integer.toString(selItem.getStart_month());
-                shrMsg += ":";
+                shrMsg += KEYVALSEPARATOR;
                 shrMsg += Integer.toString(selItem.getEnd_month());
-                shrMsg += ":";
+                shrMsg += KEYVALSEPARATOR;
                 shrMsg += Integer.toString(selItem.getInventory());
-                shrMsg += ":";
+                shrMsg += KEYVALSEPARATOR;
                 shrMsg += selItem.getItem();
-                shrMsg += "]:;";
+                shrMsg += ITEMSEPARATOR;
             }
-            shrMsg += ":;]:;";
+            shrMsg += TEMPLLISTSEPERATOR;
         }
         ShareMgr.getInstance().shareTemplItem(shrMsg, selectedItem.getName());
 

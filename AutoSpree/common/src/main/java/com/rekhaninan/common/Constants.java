@@ -129,4 +129,5 @@ public final class Constants {
     public static final String KEYVALSEPARATOR= ":|:";
     public static final String ITEMSEPARATOR= "]:;";
     public static final String CONTACTITEMSEPARATOR = ":::";
+    public static final String TEMPLLISTSEPERATOR  = ":;]:;";
 }

@@ -436,7 +436,7 @@ public class EasyGrocListDBIntf extends DBInterface {
         try {
 
             String column_names[] = {"rowno", "item", "start_month", "end_month", "inventory"};
-            String orderBy = "rowno" + " DESC";
+            String orderBy = "rowno" + " ASC";
             Cursor c =  egrocDB.query("MasterList", column_names, "name = ? and share_id=?" , new String[]{name, Long.toString(share_id)}, null, null, orderBy);
             boolean suceed = c.moveToFirst();
             List<Item> list =  new ArrayList<Item>();
