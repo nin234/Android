@@ -500,7 +500,7 @@ public class ShareMgr extends Thread {
 
                 if (msgsToSend.size() == 0 || imgsToSend.size() == 0)
                 {
-                    dataToSendCondn.await(3, TimeUnit.SECONDS);
+                    dataToSendCondn.await(1, TimeUnit.SECONDS);
                 }
                 dataToSend.unlock();
                 sendMsgs();
@@ -532,13 +532,13 @@ public class ShareMgr extends Thread {
             resp.clear();
             resp.order(ByteOrder.LITTLE_ENDIAN);
             boolean gotResp = ntwIntf.getResp(resp);
-           // Log.i(TAG, "In processResponse gotResp=" + gotResp);
+            Log.i(TAG, "In processResponse gotResp=" + gotResp);
             if (!gotResp)
                 break;
             more = pDecoder.processMessage(resp);
-            Log.i(TAG, "In processResponse more=" + gotResp);
-            if (!more)
-                break;
+          //  Log.i(TAG, "In processResponse more=" + gotResp);
+           // if (!more)
+             //   break;
         }
 
     }

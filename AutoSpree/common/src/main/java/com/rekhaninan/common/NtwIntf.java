@@ -3,13 +3,17 @@ package com.rekhaninan.common;
 import android.util.Log;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketOption;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Locale;
 
@@ -28,6 +32,7 @@ public class NtwIntf {
     private String connectAddr;
     private int connectPort;
     private SocketChannel socket;
+    private ReadableByteChannel wrappedChannel;
 
     private final String TAG="NtwIntf";
 
@@ -61,9 +66,11 @@ public class NtwIntf {
     {
         try {
             socket = SocketChannel.open();
-            socket.configureBlocking(false);
+            socket.socket().setSoTimeout(1000);
+            socket.configureBlocking(true);
             socket.socket().setReceiveBufferSize(MAX_BUF);
             socket.socket().setTcpNoDelay(true);
+
         }
         catch (IOException excp)
         {
@@ -123,7 +130,7 @@ public class NtwIntf {
         }
 
            //Log.i(TAG, "reading nbytes=" + resp.remaining() + " from socket");
-        int bytesRead = socket.read(resp);
+        int bytesRead = wrappedChannel.read(resp);
             if (bytesRead > 0) {
                 Log.d(TAG, "Received response of bytes=" + bytesRead);
                 //resp.flip();
@@ -133,6 +140,11 @@ public class NtwIntf {
                // Log.e(TAG, "Bytes read=" + bytesRead);
                 return false;
             }
+        }
+        catch (SocketTimeoutException excp)
+        {
+            Log.e (TAG, "getResp Caught Time out Exception" + excp.getMessage());
+
         }
         catch (IOException excp)
         {
@@ -153,7 +165,8 @@ public class NtwIntf {
             Log.i(TAG, "Connecting to socket");
              boolean isConnected =  socket.connect (new InetSocketAddress( connectAddr, connectPort));
             while (!socket.finishConnect());
-
+            InputStream inStream = socket.socket().getInputStream();
+            wrappedChannel = Channels.newChannel(inStream);
             Log.i(TAG, "Connected to socket");
             return true;
 
