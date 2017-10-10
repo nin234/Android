@@ -16,8 +16,10 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Locale;
+import java.util.concurrent.SynchronousQueue;
 
 import static com.rekhaninan.common.Constants.AUTOSPREE;
+import static com.rekhaninan.common.Constants.CHECK_INTERVAL;
 import static com.rekhaninan.common.Constants.EASYGROC;
 import static com.rekhaninan.common.Constants.MAX_BUF;
 import static com.rekhaninan.common.Constants.OPENHOUSES;
@@ -33,6 +35,7 @@ public class NtwIntf {
     private int connectPort;
     private SocketChannel socket;
     private ReadableByteChannel wrappedChannel;
+    private long lastChecked;
 
     private final String TAG="NtwIntf";
 
@@ -65,6 +68,7 @@ public class NtwIntf {
     public NtwIntf ()
     {
         try {
+            lastChecked = System.currentTimeMillis();
             socket = SocketChannel.open();
             socket.socket().setSoTimeout(1000);
             socket.configureBlocking(true);
@@ -79,6 +83,34 @@ public class NtwIntf {
         catch (Exception excp)
         {
             Log.e(TAG, "Failed to open socket channel " + excp.getMessage());
+        }
+
+    }
+
+    public void checkAndCloseIfIdle()
+    {
+
+        try {
+
+            if ( !socket.isConnected())
+            {
+                return;
+            }
+            long now = System.currentTimeMillis();
+            if (now < lastChecked + CHECK_INTERVAL) {
+                return;
+            }
+
+            socket.close();
+            Log.i(TAG, "Closing idle socket");
+        }
+        catch (IOException excp)
+        {
+            Log.e (TAG, "sendMsg Caught IOException=" + excp.getMessage());
+        }
+        catch (Exception excp)
+        {
+            Log.e (TAG, "sendMsg Caught Exception=" + excp.getMessage());
         }
 
     }
@@ -100,6 +132,7 @@ public class NtwIntf {
             Log.i(TAG, "Number of bytes to write to socket=" + msg.remaining());
             while (msg.hasRemaining()) {
                 int n = socket.write(msg);
+                lastChecked = System.currentTimeMillis();
                 Log.i(TAG, "Wrote to socket buffer bytes=" + n);
             }
             return true;
@@ -125,7 +158,7 @@ public class NtwIntf {
 
         if (!socket.isConnected())
         {
-            Log.e(TAG, "Socket not connected");
+           // Log.e(TAG, "Socket not connected");
             return false;
         }
 
@@ -133,6 +166,7 @@ public class NtwIntf {
         int bytesRead = wrappedChannel.read(resp);
             if (bytesRead > 0) {
                 Log.d(TAG, "Received response of bytes=" + bytesRead);
+                lastChecked = System.currentTimeMillis();
                 //resp.flip();
                 return true;
             }
@@ -143,7 +177,7 @@ public class NtwIntf {
         }
         catch (SocketTimeoutException excp)
         {
-            Log.e (TAG, "getResp Caught Time out Exception" + excp.getMessage());
+         //   Log.e (TAG, "getResp Caught Time out Exception" + excp.getMessage());
 
         }
         catch (IOException excp)
@@ -162,6 +196,11 @@ public class NtwIntf {
     boolean connect()
     {
         try {
+            socket = SocketChannel.open();
+            socket.socket().setSoTimeout(1000);
+            socket.configureBlocking(true);
+            socket.socket().setReceiveBufferSize(MAX_BUF);
+            socket.socket().setTcpNoDelay(true);
             Log.i(TAG, "Connecting to socket");
              boolean isConnected =  socket.connect (new InetSocketAddress( connectAddr, connectPort));
             while (!socket.finishConnect());

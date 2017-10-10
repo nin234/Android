@@ -503,6 +503,7 @@ public class ShareMgr extends Thread {
                     dataToSendCondn.await(1, TimeUnit.SECONDS);
                 }
                 dataToSend.unlock();
+                ntwIntf.checkAndCloseIfIdle();
                 sendMsgs();
 
 
@@ -532,11 +533,11 @@ public class ShareMgr extends Thread {
             resp.clear();
             resp.order(ByteOrder.LITTLE_ENDIAN);
             boolean gotResp = ntwIntf.getResp(resp);
-            Log.i(TAG, "In processResponse gotResp=" + gotResp);
+            //Log.i(TAG, "In processResponse gotResp=" + gotResp);
             if (!gotResp)
                 break;
             more = pDecoder.processMessage(resp);
-          //  Log.i(TAG, "In processResponse more=" + gotResp);
+            Log.i(TAG, "In processResponse more=" + gotResp);
            // if (!more)
              //   break;
         }

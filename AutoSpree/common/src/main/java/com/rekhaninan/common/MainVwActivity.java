@@ -226,6 +226,20 @@ public class MainVwActivity extends AppCompatActivity {
     {
         Log.d(getClass().getSimpleName(), "In onResume of MainVwActivity");
        refreshVw();
+        /*
+        Bundle bundle = getIntent().getExtras();
+        if(bundle != null)
+        {
+            Log.i(TAG, "Retrieving items from server");
+           // ShareMgr.getInstance().getItems();
+            for (String key : bundle.keySet()) {
+                    Object value = bundle.get(key);
+                    Log.d(TAG, String.format("%s %s (%s)", key,
+                            value.toString(), value.getClass().getName()));
+                }
+
+        }
+        */
         super.onResume();
     }
 }
