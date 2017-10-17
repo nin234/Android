@@ -5,7 +5,9 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:inputType="textMultiLine"
         android:id="@+id/item_notes"
+        android:gravity="top"
         android:layout_marginEnd="5dp"
         android:layout_marginStart="5dp"/>
 </RelativeLayout>

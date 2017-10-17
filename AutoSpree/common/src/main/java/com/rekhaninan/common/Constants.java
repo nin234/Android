@@ -113,7 +113,7 @@ public final class Constants {
     public static final int  MAX_BUF=16384;
     public static final int RCV_BUF_LEN=16384;
     public static final int MSG_AGGR_BUF_LEN = 32768;
-    public static final long CHECK_INTERVAL = 60000;
+    public static final long CHECK_INTERVAL = 120000;
 
 
     public static final int SUCCESS_RESULT = 0;
