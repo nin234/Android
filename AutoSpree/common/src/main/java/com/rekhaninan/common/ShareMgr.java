@@ -189,6 +189,7 @@ public class ShareMgr extends Thread {
         editor.putString("PicName", picName);
         editor.putLong("PicLen", picLen);
         editor.putLong("PicLenStored", picoffset);
+        editor.putLong("PicShareId", share_id);
         editor.commit();
     }
 

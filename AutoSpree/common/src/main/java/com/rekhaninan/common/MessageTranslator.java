@@ -145,6 +145,7 @@ public class MessageTranslator {
            byteBuffer.putInt(picRemaining);
             byteBuffer.put(picName.getBytes("UTF-8"));
             byteBuffer.put((byte)0x00);
+            byteBuffer.putLong(sharing.getLong("PicShareId", 0));
             return byteBuffer;
         }
         catch (UnsupportedEncodingException excep)
