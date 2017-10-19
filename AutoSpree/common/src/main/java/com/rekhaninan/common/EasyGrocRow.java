@@ -27,6 +27,7 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.HashMap;
 
 
@@ -268,7 +269,10 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                                                                   return;
                                                               }
                                                               Intent intent = new Intent(ctxt, CameraActivity.class);
-                                                              intent.putExtra("album_name", EASYGROC);
+                                                              String album_name = EASYGROC;
+                                                              album_name += File.separator;
+                                                              album_name += Long.toString(ShareMgr.getInstance().getShare_id());
+                                                              intent.putExtra("album_name", album_name);
                                                               Activity itemAct = (Activity) ctxt;
                                                               itemAct.startActivityForResult(intent, PICTURE_ACTIVITY_REQUEST);
                                                           }

@@ -312,7 +312,7 @@ public class ShareActivity extends AppCompatActivity {
         if (selectedImages != null) {
             for (String selectedImage : selectedImages) {
                 String picMetaStr = picMetaCommon + selectedItem.getName();
-                ShareMgr.getInstance().sharePicture(selectedImage, picMetaStr);
+                ShareMgr.getInstance().sharePicture(selectedImage, picMetaStr, selectedItem.getShare_id());
 
             }
         }
@@ -357,7 +357,7 @@ public class ShareActivity extends AppCompatActivity {
         if (selectedImages != null) {
             for (String selectedImage : selectedImages) {
                 String picMetaStr = picMetaCommon + selectedItem.getName();
-                ShareMgr.getInstance().sharePicture(selectedImage, picMetaStr);
+                ShareMgr.getInstance().sharePicture(selectedImage, picMetaStr, selectedItem.getShare_id());
 
             }
         }
@@ -504,7 +504,7 @@ public class ShareActivity extends AppCompatActivity {
         {
 
             String picMetaStr = shrMsg + selectedItem.getName();
-            ShareMgr.getInstance().sharePicture(selectedItem.getPicurl(), picMetaStr);
+            ShareMgr.getInstance().sharePicture(selectedItem.getPicurl(), picMetaStr, selectedItem.getShare_id());
         }
         else {
             shrMsg += CONTACTITEMSEPARATOR;

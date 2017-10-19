@@ -140,6 +140,7 @@ public class MainVwActivity extends AppCompatActivity {
                     item_name += item_no;
                     Item itm = new Item();
                     itm.setName(item_name);
+                    itm.setShare_id(ShareMgr.getInstance().getShare_id());
                     intent.putExtra("item", itm);
                 }
                     break;

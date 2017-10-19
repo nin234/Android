@@ -647,9 +647,12 @@ public class ShareMgr extends Thread {
 
     }
 
-    public void sharePicture(String picUrl, String picMetaStr)
+    public void sharePicture(String picUrl, String picMetaStr, long shareId)
     {
-        putPicInQ(picUrl, picMetaStr);
+        String picmetashid = picMetaStr;
+        picmetashid += ":::]";
+        picmetashid += Long.toString(shareId);
+        putPicInQ(picUrl, picmetashid);
         return;
     }
 
@@ -721,7 +724,13 @@ public class ShareMgr extends Thread {
                     int picLength = (int)imgFile.length();
                     if (picLength == 0)
                         continue;
-                    if (ntwIntf.sendMsg(MessageTranslator.sharePicMetaDataMsg(share_id, imgFileStr, picLength, picMetaData))== false)
+                    String[] pMainArr = picMetaData.split(":::]");
+                    if (pMainArr.length !=2)
+                    {
+                        Log.e(TAG, "Invalid picMetaData pMainArr.length=" + pMainArr.length);
+                        continue;
+                    }
+                    if (ntwIntf.sendMsg(MessageTranslator.sharePicMetaDataMsg(Long.parseLong(pMainArr[1]), imgFileStr, picLength, pMainArr[0]))== false)
                     {
                         postErrorMessage();
                         continue;

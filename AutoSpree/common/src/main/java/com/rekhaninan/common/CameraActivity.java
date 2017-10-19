@@ -275,7 +275,7 @@ public class CameraActivity extends AppCompatActivity {
 
             try {
 
-                if (album_name.equals(EASYGROC))
+                if (album_name.contains(EASYGROC))
                 {
                     final boolean bSave = true;
                     AlertDialog alertDialog = new AlertDialog.Builder(CameraActivity.this).create();
