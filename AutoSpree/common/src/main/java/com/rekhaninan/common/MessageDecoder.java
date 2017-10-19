@@ -147,6 +147,8 @@ public class MessageDecoder {
         //NSString *picNameArr = [NSString stringWithCString:(buffer + picNameOffset) encoding:NSASCIIStringEncoding];
         int picLenOffset = picNameOffset+picNameLen;
         picLen = buffer.getLong(picLenOffset);
+        int picOffset = picLenOffset + 8; // 8 sizeof long
+        int picsofar = buffer.getInt(picOffset);
         String[] arr = picNameArr.split(";");
 
         int cnt = arr.length;
@@ -157,7 +159,7 @@ public class MessageDecoder {
             return false;
         }
 
-        ShareMgr.getInstance().setPicDetails(shareId, arr[0], arr[1], picLen);
+        ShareMgr.getInstance().setPicDetails(shareId, arr[0], arr[1], picLen, picsofar);
         return true;
     }
 

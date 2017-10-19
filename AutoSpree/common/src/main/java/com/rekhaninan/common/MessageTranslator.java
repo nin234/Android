@@ -1,5 +1,7 @@
 package com.rekhaninan.common;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import java.io.UnsupportedEncodingException;
@@ -119,7 +121,7 @@ public class MessageTranslator {
         return null;
     }
 
-    public static ByteBuffer getItemsMsg(long shareId)
+    public static ByteBuffer getItemsMsg(Context ctxt, long shareId)
     {
         try
         {
@@ -132,6 +134,16 @@ public class MessageTranslator {
             byteBuffer.putInt(GET_ITEMS_MSG);
             byteBuffer.putLong(shareId);
             byteBuffer.put(uuid.getBytes("UTF-8"));
+            byteBuffer.put((byte)0x00);
+            SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
+            String picName = sharing.getString("PicName", "NoName");
+            long picLen = sharing.getLong("PicLen", 0);
+            long picStored = sharing.getLong("PicLenStored", 0);
+            int picRemaining = (int) (picLen - picStored);
+            if (picRemaining < 0)
+                picRemaining = 0;
+           byteBuffer.putInt(picRemaining);
+            byteBuffer.put(picName.getBytes("UTF-8"));
             byteBuffer.put((byte)0x00);
             return byteBuffer;
         }

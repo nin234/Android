@@ -132,9 +132,10 @@ public class ShareMgr extends Thread {
         return INSTANCE;
     }
 
-    private void setOHAspreePicDetails(long shareId, String picName, String itemName, long picLen)
+    private void setOHAspreePicDetails(long shareId, String picName, String itemName, int picoffset)
     {
         try {
+            fos  = null;
             java.util.List<Item> mainLst = DBOperations.getInstance().getMainLst(MAINVW);
             for (Item itm : mainLst) {
                 if (itm.getShare_id() == shareId && itm.getName().equals(itemName)) {
@@ -156,9 +157,13 @@ public class ShareMgr extends Thread {
                     }
                     String fileName = album_dir.getAbsolutePath() + File.separator + picName;
                     pictureFile = new File(fileName);
-                    fos = new FileOutputStream(pictureFile);
+                    boolean append = false;
+                    if (picoffset > 0)
+                        append = true;
+                    fos = new FileOutputStream(pictureFile, append);
                     Log.i(TAG, "Opened picture file for writing=" + fileName);
-                    break;
+                    return;
+
                 }
             }
         }
@@ -166,83 +171,130 @@ public class ShareMgr extends Thread {
         {
                 Log.e(TAG, "Caught file not found exception " + excp.getMessage());
         }
+        return;
     }
 
-    public void setPicDetails (long shareId, String picName, String itemName, long picLen)
+    private void updatePicLenStored(long picoffset)
     {
+        SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharing.edit();
+        editor.putLong("PicLenStored", picoffset);
+        editor.commit();
+    }
+
+    private void setPicDownloadInfo(long share_id, String picName, String itemName, long picLen, int picoffset)
+    {
+        SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharing.edit();
+        editor.putString("PicName", picName);
+        editor.putLong("PicLen", picLen);
+        editor.putLong("PicLenStored", picoffset);
+        editor.commit();
+    }
+
+    private void setEasyGrocPicDetails(long shareId, String picName, String itemName, int picoffset)
+    {
+        try {
+            fos  = null;
+            java.util.List<Item> mainLst = DBOperations.getInstance().getMainLst(MAINVW);
+            boolean bFnd = false;
+            for (Item itm : mainLst) {
+                if (itm.getShare_id() == shareId && itm.getShare_name().equals(itemName)) {
+                    File dir = ctxt.getFilesDir();
+                    String thumbDir = EASYGROC + File.separator + "thumbnails";
+                    thumbNailsDir = new File(dir, thumbDir);
+                    if (!thumbNailsDir.exists()) {
+                        thumbNailsDir.mkdirs();
+                    }
+
+                    pictureFile = new File(itm.getPicurl());
+                    fos = new FileOutputStream(pictureFile);
+                    bFnd = true;
+                    break;
+                }
+            }
+
+            if (!bFnd) {
+                Item itm = new Item();
+                itm.setShare_id((int) shareId);
+                itm.setShare_name(itemName);
+                itm.setName(itemName);
+                boolean exists = DBOperations.getInstance().itemExists(itm, EASYGROC_ADD_ITEM);
+                if (exists) {
+                    SimpleDateFormat df = new SimpleDateFormat("MM/dd/yy HH:mm:ss");
+                    Calendar c = Calendar.getInstance();
+                    String formattedDate = df.format(c.getTime());
+                    itm.setName("List " + formattedDate);
+
+                }
+                exists = DBOperations.getInstance().itemExists(itm, EASYGROC_ADD_ITEM);
+                if (exists)
+                    return;
+
+                File dir = ctxt.getFilesDir();
+                File album_dir = new File(dir, EASYGROC);
+                if (!album_dir.exists()) {
+                    album_dir.mkdirs();
+                }
+                File mediaFileDir = new File(album_dir.getAbsolutePath() + File.separator
+                        + Long.toString(shareId));
+                if (!mediaFileDir.exists())
+                {
+                    mediaFileDir.mkdirs();
+                }
+                File mediaFile = new File(mediaFileDir.getAbsolutePath() + File.separator
+                        + picName);
+                itm.setPicurl(mediaFile.getAbsolutePath());
+
+                DBOperations.getInstance().insertDb(itm, EASYGROC_ADD_ITEM);
+                pictureFile = new File(itm.getPicurl());
+                boolean append = false;
+                if (picoffset > 0)
+                    append = true;
+                fos = new FileOutputStream(pictureFile, append);
+                return;
+            }
+        }catch (FileNotFoundException excp)
+            {
+                Log.e(TAG, "Caught file not found exception " + excp.getMessage());
+            }
+        catch (Exception excp)
+        {
+            Log.e(TAG, "Caught  exception " + excp.getMessage());
+        }
+        return;
+    }
+
+    public void setPicDetails (long shareId, String picName, String itemName, long picLen, int picoffset)
+    {
+
         try {
             piclen = picLen;
             picurl = picName;
             switch (app_name) {
                 case AUTOSPREE:
                 case OPENHOUSES: {
-                   setOHAspreePicDetails(shareId, picName, itemName, picLen);
+                    setOHAspreePicDetails(shareId, picName, itemName, picoffset);
                 }
                 break;
 
 
                 case EASYGROC:
                 {
-                    java.util.List<Item> mainLst = DBOperations.getInstance().getMainLst(MAINVW);
-                    boolean bFnd =false;
-                    for (Item itm : mainLst) {
-                        if (itm.getShare_id() == shareId && itm.getShare_name().equals(itemName)) {
-                            File dir = ctxt.getFilesDir();
-                            String thumbDir = EASYGROC + File.separator + "thumbnails";
-                            thumbNailsDir = new File(dir, thumbDir);
-                            if (!thumbNailsDir.exists()) {
-                                thumbNailsDir.mkdirs();
-                            }
-
-                            pictureFile = new File(itm.getPicurl());
-                            fos = new FileOutputStream(pictureFile);
-                            bFnd = true;
-                            break;
-                        }
-                    }
-
-                    if (!bFnd)
-                    {
-                        Item itm = new Item();
-                        itm.setShare_id((int)shareId);
-                        itm.setShare_name(itemName);
-                        itm.setName(itemName);
-                        boolean exists = DBOperations.getInstance().itemExists(itm, EASYGROC_ADD_ITEM);
-                        if (exists)
-                        {
-                            SimpleDateFormat df = new SimpleDateFormat("MM/dd/yy HH:mm:ss");
-                            Calendar c = Calendar.getInstance();
-                            String formattedDate = df.format(c.getTime());
-                            itm.setName("List " + formattedDate);
-
-                        }
-                        exists = DBOperations.getInstance().itemExists(itm, EASYGROC_ADD_ITEM);
-                        if (exists)
-                            break;
-                        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                        File dir = ctxt.getFilesDir();
-                        File album_dir = new File(dir, EASYGROC);
-                        if (!album_dir.exists()) {
-                            album_dir.mkdirs();
-                        }
-                        File   mediaFile = new File(album_dir.getAbsolutePath() + File.separator
-                                + timeStamp + ".jpg");
-                        itm.setPicurl(mediaFile.getAbsolutePath());
-
-                        DBOperations.getInstance().insertDb(itm, EASYGROC_ADD_ITEM);
-                        pictureFile = new File(itm.getPicurl());
-                        fos = new FileOutputStream(pictureFile);
-                    }
+                   setEasyGrocPicDetails(shareId, picName, itemName, picoffset);
                 }
                     break;
 
                 default:
                     break;
             }
+
+            setPicDownloadInfo(shareId, picName, itemName, picLen, picoffset);
+            picsofar = (long) picoffset;
         }
-        catch (FileNotFoundException excp)
+        catch (Exception excp)
         {
-            Log.e(TAG, "Caught file not found exception " + excp.getMessage());
+            Log.e(TAG, "Caught  exception " + excp.getMessage());
         }
         return;
     }
@@ -361,6 +413,7 @@ public class ShareMgr extends Thread {
                 picsofar += msglen;
                 Log.i(TAG, "Storing picture picsofar=" + picsofar + " piclen=" + piclen+ " offset=" + offset +
                         " msglen=" + msglen);
+                updatePicLenStored(picsofar);
                 if (picsofar >= piclen)
                 {
                     fos.close();
@@ -547,7 +600,7 @@ public class ShareMgr extends Thread {
     public void getItems()
     {
         Log.d(TAG, "Putting getItemsMsg in Q");
-        putMsgInQ(MessageTranslator.getItemsMsg(share_id));
+        putMsgInQ(MessageTranslator.getItemsMsg(ctxt, share_id));
     }
 
     public void shareItem (String item, String itemName)
@@ -578,6 +631,7 @@ public class ShareMgr extends Thread {
     {
         SharedPreferences sharing =  ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
         String devTkn = sharing.getString("token", "None");
+
         if (devTkn.equals("None"))
             return;
         Log.i(TAG, "Sharing device token");
