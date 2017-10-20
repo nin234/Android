@@ -430,6 +430,8 @@ public class ShareMgr extends Thread {
                     }
                     extractAndStoreThumbNail();
                     Log.i(TAG, "Finishing storing picture closing fileoutputstream fos");
+                    ntwIntf.sendMsg(MessageTranslator.picDoneMsg(ctxt, share_id));
+                    Log.i(TAG, "Sent picDone msg");
                 }
             }
         }

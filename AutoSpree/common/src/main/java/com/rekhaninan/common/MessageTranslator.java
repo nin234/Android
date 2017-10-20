@@ -11,6 +11,7 @@ import java.nio.ByteOrder;
 import static com.rekhaninan.common.Constants.GET_ITEMS_MSG;
 import static com.rekhaninan.common.Constants.GET_SHARE_ID_MSG;
 import static com.rekhaninan.common.Constants.LOCATION_DATA_EXTRA;
+import static com.rekhaninan.common.Constants.PIC_DONE_MSG;
 import static com.rekhaninan.common.Constants.PIC_METADATA_MSG;
 import static com.rekhaninan.common.Constants.PIC_MSG;
 import static com.rekhaninan.common.Constants.SHARE_ITEM_MSG;
@@ -121,13 +122,44 @@ public class MessageTranslator {
         return null;
     }
 
+    public static ByteBuffer picDoneMsg (Context ctxt, long shareId)
+    {
+        try
+        {
+            SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
+            String picName = sharing.getString("PicName", "NoName");
+            int picnamelen = picName.getBytes("UTF-8").length + 1;
+            int msglen = 24 + picnamelen;
+            ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
+            byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
+            byteBuffer.putInt(msglen);
+            byteBuffer.putInt(PIC_DONE_MSG);
+            byteBuffer.putLong(shareId);
+            byteBuffer.putLong(sharing.getLong("PicShareId", 0));
+            byteBuffer.put(picName.getBytes("UTF-8"));
+            return byteBuffer;
+        }
+        catch (UnsupportedEncodingException excep)
+        {
+            Log.e(TAG, "getItemsMsg Unsupported encoding UTF-8 " + excep.getMessage());
+
+        }
+        catch (Exception excp)
+        {
+            Log.e (TAG, "getItemsMsg Caught exception " + excp.getMessage());
+        }
+        return null;
+    }
+
     public static ByteBuffer getItemsMsg(Context ctxt, long shareId)
     {
         try
         {
             String uuid = "Android";
+            SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
+            String picName = sharing.getString("PicName", "NoName");
             int uuidLen = uuid.getBytes("UTF-8").length +1;
-            int msglen = uuidLen + 16;
+            int msglen = uuidLen + 28 + picName.getBytes("UTF-8").length + 1;
             ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
             byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
             byteBuffer.putInt(msglen);
@@ -135,8 +167,7 @@ public class MessageTranslator {
             byteBuffer.putLong(shareId);
             byteBuffer.put(uuid.getBytes("UTF-8"));
             byteBuffer.put((byte)0x00);
-            SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
-            String picName = sharing.getString("PicName", "NoName");
+
             long picLen = sharing.getLong("PicLen", 0);
             long picStored = sharing.getLong("PicLenStored", 0);
             int picRemaining = (int) (picLen - picStored);

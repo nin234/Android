@@ -107,6 +107,7 @@ public final class Constants {
     public static final int SHARE_TEMPL_ITEM_RPLY_MSG=20;
     public static final int  STORE_DEVICE_TKN_MSG =11;
     public static final int  GET_ITEMS_MSG =13;
+    public static final int  PIC_DONE_MSG =21;
 
 
 
