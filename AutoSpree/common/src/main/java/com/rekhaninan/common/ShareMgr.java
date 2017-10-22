@@ -82,6 +82,25 @@ public class ShareMgr extends Thread {
     private long backoff_time;
     private ShareTokenMgr shareTokenMgr;
 
+    public boolean isbSendPic() {
+        return bSendPic;
+    }
+
+    public void setbSendPic(boolean bSendPic) {
+        this.bSendPic = bSendPic;
+    }
+
+    public boolean isbSendPicMetaData() {
+        return bSendPicMetaData;
+    }
+
+    public void setbSendPicMetaData(boolean bSendPicMetaData) {
+        this.bSendPicMetaData = bSendPicMetaData;
+    }
+
+    private boolean bSendPic;
+    private boolean bSendPicMetaData;
+
     private long share_id;
 
 
@@ -508,6 +527,8 @@ public class ShareMgr extends Thread {
     @Override
     public void run() {
 
+        bSendPic = false;
+        bSendPicMetaData = true;
         shareTokenMgr = new ShareTokenMgr();
         Log.d(TAG, "getting Firebase token token: ");
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
@@ -720,25 +741,35 @@ public class ShareMgr extends Thread {
                     postErrorMessage();
                 }
 
-                String picMetaData = imgsMetaData.poll();
-                String imgFileStr = imgsToSend.poll();
+                String picMetaData = null;
+                if (bSendPicMetaData) {
+                    picMetaData = imgsMetaData.poll();
+                }
+
+                String imgFileStr = null;
+                if (bSendPic) {
+                    imgFileStr = imgsToSend.poll();
+                }
+
                 if (picMetaData != null && imgFileStr != null) {
                     File imgFile = new File(imgFileStr);
-                    int picLength = (int)imgFile.length();
+                    int picLength = (int) imgFile.length();
                     if (picLength == 0)
                         continue;
                     String[] pMainArr = picMetaData.split(":::]");
-                    if (pMainArr.length !=2)
-                    {
+                    if (pMainArr.length != 2) {
                         Log.e(TAG, "Invalid picMetaData pMainArr.length=" + pMainArr.length);
                         continue;
                     }
-                    if (ntwIntf.sendMsg(MessageTranslator.sharePicMetaDataMsg(Long.parseLong(pMainArr[1]), imgFileStr, picLength, pMainArr[0]))== false)
-                    {
+                    if (ntwIntf.sendMsg(MessageTranslator.sharePicMetaDataMsg(Long.parseLong(pMainArr[1]), imgFileStr, picLength, pMainArr[0])) == false) {
                         postErrorMessage();
                         continue;
                     }
+                    bSendPicMetaData = false;
 
+                }
+
+                if (imgFileStr != null) {
                     byte[] bytes = new byte[MAX_BUF - 8];
 
 
@@ -759,6 +790,8 @@ public class ShareMgr extends Thread {
                         }
 
                     }
+                    bSendPicMetaData = true;
+                    bSendPic = false;
 
                 }
 

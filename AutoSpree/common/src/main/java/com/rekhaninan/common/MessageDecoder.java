@@ -29,6 +29,7 @@ import static com.rekhaninan.common.Constants.PIC_METADATA_MSG;
 import static com.rekhaninan.common.Constants.PIC_MSG;
 import static com.rekhaninan.common.Constants.SHARE_ITEM_MSG;
 import static com.rekhaninan.common.Constants.SHARE_TEMPL_ITEM_MSG;
+import static com.rekhaninan.common.Constants.SHOULD_UPLOAD_MSG;
 import static com.rekhaninan.common.Constants.STORE_TRNSCTN_ID_RPLY_MSG;
 import static com.rekhaninan.common.Constants.TEMPLLISTSEPERATOR;
 
@@ -124,6 +125,20 @@ public class MessageDecoder {
         int shareId =0;
         shareId = (int) buffer.getLong(offset);
         ShareMgr.getInstance().setShare_id(shareId);
+        return true;
+    }
+
+    boolean processShouldUploadMessage(ByteBuffer buffer, int mlen)
+    {
+        int upload = buffer.getInt(20);
+        if (upload > 0)
+        {
+           ShareMgr.getInstance().setbSendPic(true);
+        }
+        else
+        {
+            ShareMgr.getInstance().setbSendPicMetaData(true);
+        }
         return true;
     }
 
@@ -595,7 +610,13 @@ public class MessageDecoder {
                 {
                     bRet = processShareTemplItemMessage(buffer, mlen);
                 }
+                break;
 
+                case SHOULD_UPLOAD_MSG:
+                {
+                    bRet = processShouldUploadMessage(buffer, mlen);
+                }
+                break;
 
                 default:
                     bRet = true;
