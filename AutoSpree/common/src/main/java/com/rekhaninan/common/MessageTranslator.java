@@ -16,6 +16,7 @@ import static com.rekhaninan.common.Constants.PIC_METADATA_MSG;
 import static com.rekhaninan.common.Constants.PIC_MSG;
 import static com.rekhaninan.common.Constants.SHARE_ITEM_MSG;
 import static com.rekhaninan.common.Constants.SHARE_TEMPL_ITEM_MSG;
+import static com.rekhaninan.common.Constants.SHOULD_DOWNLOAD_MSG;
 import static com.rekhaninan.common.Constants.STORE_DEVICE_TKN_MSG;
 import static com.rekhaninan.common.Constants.STORE_FRIEND_LIST_MSG;
 
@@ -118,6 +119,36 @@ public class MessageTranslator {
         catch (Exception excp)
         {
             Log.e (TAG, "updateFriendListRequest Caught exception " + excp.getMessage());
+        }
+        return null;
+    }
+
+    public static ByteBuffer shouldDownLoadMsg(long shareId, String picName, boolean download)
+    {
+        try
+        {
+            int picnamelen = picName.getBytes("UTF-8").length + 1;
+            int msglen = 24 + picnamelen;
+            ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
+            byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
+            byteBuffer.putInt(msglen);
+            byteBuffer.putInt(SHOULD_DOWNLOAD_MSG);
+            byteBuffer.putLong(shareId);
+            int dwld=0;
+            if (download)
+                dwld = 1;
+            byteBuffer.putInt(dwld);
+            byteBuffer.put(picName.getBytes("UTF-8"));
+            return byteBuffer;
+        }
+        catch (UnsupportedEncodingException excep)
+        {
+            Log.e(TAG, "getItemsMsg Unsupported encoding UTF-8 " + excep.getMessage());
+
+        }
+        catch (Exception excp)
+        {
+            Log.e (TAG, "getItemsMsg Caught exception " + excp.getMessage());
         }
         return null;
     }

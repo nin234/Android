@@ -151,7 +151,7 @@ public class ShareMgr extends Thread {
         return INSTANCE;
     }
 
-    private void setOHAspreePicDetails(long shareId, String picName, String itemName, int picoffset)
+    private boolean setOHAspreePicDetails(long shareId, String picName, String itemName, int picoffset, long picLen)
     {
         try {
             fos  = null;
@@ -176,12 +176,14 @@ public class ShareMgr extends Thread {
                     }
                     String fileName = album_dir.getAbsolutePath() + File.separator + picName;
                     pictureFile = new File(fileName);
+                    if (pictureFile.length() >= picLen)
+                        return false;
                     boolean append = false;
                     if (picoffset > 0)
                         append = true;
                     fos = new FileOutputStream(pictureFile, append);
                     Log.i(TAG, "Opened picture file for writing=" + fileName);
-                    return;
+                    return true;
 
                 }
             }
@@ -190,7 +192,7 @@ public class ShareMgr extends Thread {
         {
                 Log.e(TAG, "Caught file not found exception " + excp.getMessage());
         }
-        return;
+        return false;
     }
 
     private void updatePicLenStored(long picoffset)
@@ -212,7 +214,7 @@ public class ShareMgr extends Thread {
         editor.commit();
     }
 
-    private void setEasyGrocPicDetails(long shareId, String picName, String itemName, int picoffset)
+    private boolean setEasyGrocPicDetails(long shareId, String picName, String itemName, int picoffset,long picLen)
     {
         try {
             fos  = null;
@@ -228,6 +230,8 @@ public class ShareMgr extends Thread {
                     }
 
                     pictureFile = new File(itm.getPicurl());
+                    if (pictureFile.length() >= picLen)
+                        return false;
                     fos = new FileOutputStream(pictureFile);
                     bFnd = true;
                     break;
@@ -239,17 +243,7 @@ public class ShareMgr extends Thread {
                 itm.setShare_id((int) shareId);
                 itm.setShare_name(itemName);
                 itm.setName(itemName);
-                boolean exists = DBOperations.getInstance().itemExists(itm, EASYGROC_ADD_ITEM);
-                if (exists) {
-                    SimpleDateFormat df = new SimpleDateFormat("MM/dd/yy HH:mm:ss");
-                    Calendar c = Calendar.getInstance();
-                    String formattedDate = df.format(c.getTime());
-                    itm.setName("List " + formattedDate);
 
-                }
-                exists = DBOperations.getInstance().itemExists(itm, EASYGROC_ADD_ITEM);
-                if (exists)
-                    return;
 
                 File dir = ctxt.getFilesDir();
                 File album_dir = new File(dir, EASYGROC);
@@ -266,13 +260,16 @@ public class ShareMgr extends Thread {
                         + picName);
                 itm.setPicurl(mediaFile.getAbsolutePath());
 
-                DBOperations.getInstance().insertDb(itm, EASYGROC_ADD_ITEM);
+
                 pictureFile = new File(itm.getPicurl());
+                if (pictureFile.length() >= picLen)
+                    return false;
+                DBOperations.getInstance().insertDb(itm, EASYGROC_ADD_ITEM);
                 boolean append = false;
                 if (picoffset > 0)
                     append = true;
                 fos = new FileOutputStream(pictureFile, append);
-                return;
+                return true;
             }
         }catch (FileNotFoundException excp)
             {
@@ -282,26 +279,27 @@ public class ShareMgr extends Thread {
         {
             Log.e(TAG, "Caught  exception " + excp.getMessage());
         }
-        return;
+        return false;
     }
 
     public void setPicDetails (long shareId, String picName, String itemName, long picLen, int picoffset)
     {
 
+        boolean download = true;
         try {
             piclen = picLen;
             picurl = picName;
             switch (app_name) {
                 case AUTOSPREE:
                 case OPENHOUSES: {
-                    setOHAspreePicDetails(shareId, picName, itemName, picoffset);
+                    download = setOHAspreePicDetails(shareId, picName, itemName, picoffset, picLen);
                 }
                 break;
 
 
                 case EASYGROC:
                 {
-                   setEasyGrocPicDetails(shareId, picName, itemName, picoffset);
+                    download = setEasyGrocPicDetails(shareId, picName, itemName, picoffset, picLen);
                 }
                     break;
 
@@ -311,6 +309,7 @@ public class ShareMgr extends Thread {
 
             setPicDownloadInfo(shareId, picName, itemName, picLen, picoffset);
             picsofar = (long) picoffset;
+            putMsgInQ(MessageTranslator.shouldDownLoadMsg(shareId, picName, download));
         }
         catch (Exception excp)
         {

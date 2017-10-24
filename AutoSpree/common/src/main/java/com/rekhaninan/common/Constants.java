@@ -103,12 +103,13 @@ public final class Constants {
     public static final int GET_SHARE_ID_RPLY_MSG =2;
     public static final int  STORE_TRNSCTN_ID_RPLY_MSG =4;
     public static final int GET_EASYGROC_LIST_MSG=40;
-    public static final int SHARE_TEMPL_ITEM_MSG=21;
-    public static final int SHARE_TEMPL_ITEM_RPLY_MSG=22;
+    public static final int SHARE_TEMPL_ITEM_MSG=22;
+    public static final int SHARE_TEMPL_ITEM_RPLY_MSG=23;
     public static final int  STORE_DEVICE_TKN_MSG =11;
     public static final int  GET_ITEMS_MSG =13;
     public static final int  PIC_DONE_MSG =19;
     public static final int SHOULD_UPLOAD_MSG = 20;
+    public static final int SHOULD_DOWNLOAD_MSG = 21;
 
 
 
