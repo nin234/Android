@@ -74,6 +74,7 @@ public class ShareMgr extends Thread {
     private FileOutputStream fos;
     private final int THUMBSIZE = 100;
     private File pictureFile, pictureFileTmp;
+    private ShareDBIntf shareDBIntf;
 
 
 
@@ -132,9 +133,7 @@ public class ShareMgr extends Thread {
 
     private ShareMgr ()
     {
-        msgsToSend = new ConcurrentLinkedQueue<>();
-        imgsToSend = new ConcurrentLinkedQueue<>();
-        imgsMetaData = new ConcurrentLinkedQueue<>();
+
         ntwIntf = new NtwIntf();
         piclen =0;
         picurl = null;
@@ -469,8 +468,11 @@ public class ShareMgr extends Thread {
         share_id = 0;
         setShId();
         app_name = appname;
-
-
+        shareDBIntf = new ShareDBIntf();
+        shareDBIntf.initDb(ctx);
+        msgsToSend = shareDBIntf.refreshItemData();
+        imgsToSend = shareDBIntf.refreshImages();
+        imgsMetaData = shareDBIntf.refreshImagesMetaData();
         INSTANCE.start();
     }
 
@@ -683,6 +685,8 @@ public class ShareMgr extends Thread {
     {
         imgsToSend.add(picUrl);
         imgsMetaData.add(picMetaStr);
+        shareDBIntf.insertImage(picUrl);
+        shareDBIntf.insertImagesMetaData(picMetaStr);
         signalDataReady();
         return;
 
@@ -715,6 +719,7 @@ public class ShareMgr extends Thread {
         }
         Log.d(TAG, "putMsgInQ called");
         msgsToSend.add(msg);
+        shareDBIntf.insertItem(msg);
        signalDataReady();
         return;
     }
@@ -733,22 +738,27 @@ public class ShareMgr extends Thread {
                     shareDeviceTkn();
                 }
 
-                ByteBuffer msg = msgsToSend.poll();
+                ByteBuffer msg = msgsToSend.peek();
 
                 if (msg != null && ntwIntf.sendMsg(msg) == false)
                 {
                     postErrorMessage();
                 }
+                else {
+                    msgsToSend.poll();
+                    shareDBIntf.deleteItem();
+                }
 
                 String picMetaData = null;
                 if (bSendPicMetaData) {
-                    picMetaData = imgsMetaData.poll();
+                    picMetaData = imgsMetaData.peek();
                 }
 
                 String imgFileStr = null;
                 if (bSendPic) {
-                    imgFileStr = imgsToSend.poll();
+                    imgFileStr = imgsToSend.peek();
                 }
+
 
                 if (picMetaData != null && imgFileStr != null) {
                     File imgFile = new File(imgFileStr);
@@ -775,11 +785,13 @@ public class ShareMgr extends Thread {
 
                     FileInputStream imgFilStream = new FileInputStream(imgFileStr);
                     //read(byte[] b, int off, int len)
+                    boolean bSendFinished = false;
                     for(;;)
                     {
                         int nRead = imgFilStream.read(bytes);
                         if (nRead == -1)
                         {
+                            bSendFinished = true;
                             break;
                         }
 
@@ -791,6 +803,14 @@ public class ShareMgr extends Thread {
                     }
                     bSendPicMetaData = true;
                     bSendPic = false;
+                    if (bSendFinished)
+                    {
+                        shareDBIntf.deleteImagesMetaData();
+                        shareDBIntf.deleteImage();
+                        imgsMetaData.poll();
+                        imgsToSend.poll();
+
+                    }
 
                 }
 

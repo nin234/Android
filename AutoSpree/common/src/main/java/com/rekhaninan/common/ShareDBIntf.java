@@ -10,6 +10,7 @@ import android.util.Log;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static com.rekhaninan.common.Constants.CONTACTS_ITEM_ADD;
 
@@ -23,6 +24,18 @@ public class ShareDBIntf {
     private ShareDbHelper shareDbHelper;
     private final String TAG = "ShareDBIntf";
 
+
+    public ShareDBIntf() {
+
+        Log.i (TAG, "Constructing ShareDBIntf");
+
+    }
+
+    public void initDb(Context ctxt) {
+        shareDbHelper = new ShareDbHelper(ctxt);
+        shareDB = shareDbHelper.getWritableDatabase();
+        return;
+    }
 
     public boolean insertItem(ByteBuffer item)
     {
@@ -38,7 +51,7 @@ public class ShareDBIntf {
         try {
 
             String column_names[] = {"item", "time"};
-            Cursor c = shareDB.query("Items", column_names, null, null, null, null, "time DESC");
+            Cursor c = shareDB.query("Items", column_names, null, null, null, null, "time ASC");
             boolean suceed = c.moveToFirst();
 
             if (suceed) {
@@ -75,12 +88,59 @@ public class ShareDBIntf {
         return true;
     }
 
+
+
+    public ConcurrentLinkedQueue<ByteBuffer> refreshItemData()
+    {
+        ConcurrentLinkedQueue<ByteBuffer> msgsToSend = new ConcurrentLinkedQueue<>();
+        String column_names[] = {"item", "time"};
+        Cursor c = shareDB.query("Items", column_names, null, null, null, null, "time ASC");
+        boolean suceed = c.moveToFirst();
+
+        while (suceed) {
+            msgsToSend.add(ByteBuffer.wrap(c.getBlob(c.getColumnIndexOrThrow("item"))));
+            suceed = c.moveToNext();
+        }
+        c.close();
+        return msgsToSend;
+    }
+
+    public ConcurrentLinkedQueue<String> refreshImages()
+    {
+        ConcurrentLinkedQueue<String> imagesToSend = new ConcurrentLinkedQueue<>();
+        String column_names[] = {"item", "time"};
+        Cursor c = shareDB.query("Images", column_names, null, null, null, null, "time ASC");
+        boolean suceed = c.moveToFirst();
+
+        while (suceed) {
+            imagesToSend.add(c.getString(c.getColumnIndexOrThrow("item")));
+            suceed = c.moveToNext();
+        }
+        c.close();
+        return imagesToSend;
+    }
+
+    public ConcurrentLinkedQueue<String> refreshImagesMetaData()
+    {
+        ConcurrentLinkedQueue<String> imagesMetaDataToSend = new ConcurrentLinkedQueue<>();
+        String column_names[] = {"item", "time"};
+        Cursor c = shareDB.query("ImagesMetaData", column_names, null, null, null, null, "time ASC");
+        boolean suceed = c.moveToFirst();
+
+        while (suceed) {
+            imagesMetaDataToSend.add(c.getString(c.getColumnIndexOrThrow("item")));
+            suceed = c.moveToNext();
+        }
+        c.close();
+        return imagesMetaDataToSend;
+    }
+
     public  boolean deleteImagesMetaData() {
         Log.d(getClass().getSimpleName(), "deleteImagesMetaData");
         try {
 
             String column_names[] = {"item", "time"};
-            Cursor c = shareDB.query("ImagesMetaData", column_names, null, null, null, null, "time DESC");
+            Cursor c = shareDB.query("ImagesMetaData", column_names, null, null, null, null, "time ASC");
             boolean suceed = c.moveToFirst();
 
             if (suceed) {
@@ -122,7 +182,7 @@ public class ShareDBIntf {
         try {
 
             String column_names[] = {"item", "time"};
-            Cursor c = shareDB.query("Images", column_names, null, null, null, null, "time DESC");
+            Cursor c = shareDB.query("Images", column_names, null, null, null, null, "time ASC");
             boolean suceed = c.moveToFirst();
 
             if (suceed) {
