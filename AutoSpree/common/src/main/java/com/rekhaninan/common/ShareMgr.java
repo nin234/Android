@@ -76,6 +76,15 @@ public class ShareMgr extends Thread {
     private File pictureFile, pictureFileTmp;
     private ShareDBIntf shareDBIntf;
 
+    public int getUploadPicOffset() {
+        return uploadPicOffset;
+    }
+
+    public void setUploadPicOffset(int uploadPicOffset) {
+        this.uploadPicOffset = uploadPicOffset;
+    }
+
+    private  int uploadPicOffset;
 
 
     private boolean bUpdateTkn;
@@ -527,7 +536,7 @@ public class ShareMgr extends Thread {
 
     @Override
     public void run() {
-
+        uploadPicOffset = 0;
         bSendPic = false;
         bSendPicMetaData = true;
         shareTokenMgr = new ShareTokenMgr();
@@ -784,6 +793,10 @@ public class ShareMgr extends Thread {
 
 
                     FileInputStream imgFilStream = new FileInputStream(imgFileStr);
+                    if (uploadPicOffset > 0)
+                    {
+                        imgFilStream.skip(uploadPicOffset);
+                    }
                     //read(byte[] b, int off, int len)
                     boolean bSendFinished = false;
                     for(;;)
