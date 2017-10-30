@@ -26,7 +26,7 @@ import static com.rekhaninan.common.Constants.STORE_FRIEND_LIST_MSG;
 
 public class MessageTranslator {
 
-    private static  String TAG="MessageTranslator";
+    private static final String TAG="MessageTranslator";
 
     public static ByteBuffer sharePicMsg(byte[] msg, int len)
     {
@@ -127,8 +127,9 @@ public class MessageTranslator {
     {
         try
         {
+            Log.i(TAG, "shouldDownloadmsg shareId=" + shareId + " picName=" + picName + " download=" + download);
             int picnamelen = picName.getBytes("UTF-8").length + 1;
-            int msglen = 24 + picnamelen;
+            int msglen = 20 + picnamelen;
             ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
             byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
             byteBuffer.putInt(msglen);
@@ -139,6 +140,7 @@ public class MessageTranslator {
                 dwld = 1;
             byteBuffer.putInt(dwld);
             byteBuffer.put(picName.getBytes("UTF-8"));
+            byteBuffer.put((byte)0x00);
             return byteBuffer;
         }
         catch (UnsupportedEncodingException excep)
