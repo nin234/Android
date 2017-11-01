@@ -75,6 +75,8 @@ public class ShareMgr extends Thread {
     private final int THUMBSIZE = 100;
     private File pictureFile, pictureFileTmp;
     private ShareDBIntf shareDBIntf;
+    private  long lastPicRcvdTime;
+    private boolean sendGetItemReq;
 
     public int getUploadPicOffset() {
         return uploadPicOffset;
@@ -292,7 +294,7 @@ public class ShareMgr extends Thread {
 
     public void setPicDetails (long shareId, String picName, String itemName, long picLen, int picoffset)
     {
-
+        lastPicRcvdTime = System.currentTimeMillis();
         boolean download = true;
         try {
             piclen = picLen;
@@ -438,6 +440,7 @@ public class ShareMgr extends Thread {
             if (fos != null) {
                 fos.write(buffer.array(), offset, msglen);
                 picsofar += msglen;
+                lastPicRcvdTime = System.currentTimeMillis();
                 Log.i(TAG, "Storing picture picsofar=" + picsofar + " piclen=" + piclen+ " offset=" + offset +
                         " msglen=" + msglen);
                 updatePicLenStored(picsofar);
@@ -447,6 +450,7 @@ public class ShareMgr extends Thread {
                     fos = null;
                     piclen =0;
                     picsofar = 0;
+                    lastPicRcvdTime = 0;
                     rotatePictureIfReqd();
                     if (app_name.equals(EASYGROC))
                     {
@@ -539,6 +543,8 @@ public class ShareMgr extends Thread {
         uploadPicOffset = 0;
         bSendPic = false;
         bSendPicMetaData = true;
+        lastPicRcvdTime = 0;
+        sendGetItemReq = false;
         shareTokenMgr = new ShareTokenMgr();
         Log.d(TAG, "getting Firebase token token: ");
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
@@ -591,6 +597,11 @@ public class ShareMgr extends Thread {
                 }
                 dataToSend.unlock();
                 ntwIntf.checkAndCloseIfIdle();
+                if (sendGetItemReq)
+                {
+                    putMsgInQ(MessageTranslator.getItemsMsg(ctxt, share_id));
+                    sendGetItemReq = false;
+                }
                 sendMsgs();
 
 
@@ -634,7 +645,13 @@ public class ShareMgr extends Thread {
     public void getItems()
     {
         Log.d(TAG, "Putting getItemsMsg in Q");
-        putMsgInQ(MessageTranslator.getItemsMsg(ctxt, share_id));
+        long now = System.currentTimeMillis();
+        if (now - lastPicRcvdTime > 120000) {
+            putMsgInQ(MessageTranslator.getItemsMsg(ctxt, share_id));
+        }
+        else {
+            sendGetItemReq = true;
+        }
     }
 
     public void shareItem (String item, String itemName)
