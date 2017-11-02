@@ -707,6 +707,7 @@ public class SingleItemActivity extends AppCompatActivity
     private void ASpreeOHAddItemDone()
     {
         Log.d(TAG, "Inserting into Db ");
+        itm.setShare_id(ShareMgr.getInstance().getShare_id());
         DBOperations.getInstance().insertDb(itm, viewType);
         SharedPreferences settings = getSharedPreferences("OHAutoSpree", Context.MODE_PRIVATE);
         int item_no = settings.getInt("item_no", 1);
@@ -719,6 +720,7 @@ public class SingleItemActivity extends AppCompatActivity
         {
             item.setName(itm.getName());
             item.setRowno(i);
+            item.setShare_id(ShareMgr.getInstance().getShare_id());
             DBOperations.getInstance().insertDb(item, EASYGROC_ADD_ITEM);
             ++i;
         }
@@ -735,7 +737,7 @@ public class SingleItemActivity extends AppCompatActivity
         for (Item item : checkLst)
         {
             item.setName(itm.getName());
-
+            item.setShare_id(itm.getShare_id());
             DBOperations.getInstance().insertDb(item, EASYGROC_EDIT_ITEM);
 
             ++i;
@@ -797,7 +799,7 @@ public class SingleItemActivity extends AppCompatActivity
             }
             itm.setName(name);
             itm.setRowno(i);
-
+            itm.setShare_id(ShareMgr.getInstance().getShare_id());
             DBOperations.getInstance().insertDb(itm, viewType);
 
             ++i;

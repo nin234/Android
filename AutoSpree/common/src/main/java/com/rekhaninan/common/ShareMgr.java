@@ -155,6 +155,20 @@ public class ShareMgr extends Thread {
 
     }
 
+    public void processShouldUploadMessage(int upload)
+    {
+        Log.i(TAG, "Received processShouldUploadMessage=" + upload);
+        if (upload > 0)
+        {
+            bSendPic = true;
+        }
+        else
+        {
+            bSendPicMetaData = true;
+            updatePicIndx();
+        }
+    }
+
     public static ShareMgr getInstance ()
     {
 
@@ -709,8 +723,9 @@ public class ShareMgr extends Thread {
 
     public void putPicInQ(String picUrl, String picMetaStr)
     {
-        imgsToSend.add(picUrl);
+        Log.i(TAG, "Adding image to send picUrl=" + picUrl + " picMetaStr=" + picMetaStr);
         imgsMetaData.add(picMetaStr);
+        imgsToSend.add(picUrl);
         shareDBIntf.insertImage(picUrl);
         shareDBIntf.insertImagesMetaData(picMetaStr);
         signalDataReady();
@@ -755,14 +770,19 @@ public class ShareMgr extends Thread {
 
         try {
 
-            while (msgsToSend.size() != 0 || imgsToSend.size() != 0) {
+            while (msgsToSend.size() != 0 || (bSendPic && imgsToSend.size() != 0)
+                    || (bSendPicMetaData && imgsMetaData.size() !=0)) {
 
-                Log.d(TAG, "msgsToSend=" + msgsToSend.size() + " imsgToSend=" + imgsToSend.size());
+                Log.d(TAG, "msgsToSend=" + msgsToSend.size() + " imsgToSend=" + imgsToSend.size()
+                        + " bSendPic=" +bSendPic + " imgsMetaData=" + imgsMetaData.size() +
+                        " bSendPicMetaData=" + bSendPicMetaData);
                 getIdIfRequired();
                 if (bUpdateTkn)
                 {
                     shareDeviceTkn();
                 }
+
+                Log.d(TAG, "Nullpointer exception 1");
 
                 ByteBuffer msg = msgsToSend.peek();
 
@@ -774,7 +794,7 @@ public class ShareMgr extends Thread {
                     msgsToSend.poll();
                     shareDBIntf.deleteItem();
                 }
-
+                Log.d(TAG, "Nullpointer exception 2");
                 String picMetaData = null;
                 if (bSendPicMetaData) {
                     picMetaData = imgsMetaData.peek();
@@ -785,9 +805,10 @@ public class ShareMgr extends Thread {
                     imgFileStr = imgsToSend.peek();
                 }
 
-
-                if (picMetaData != null && imgFileStr != null) {
-                    File imgFile = new File(imgFileStr);
+                Log.d(TAG, "Nullpointer exception 3");
+                if (picMetaData != null && imgsToSend.peek() != null) {
+                    String imgFileStr1 = imgsToSend.peek();
+                    File imgFile = new File(imgFileStr1);
                     int picLength = (int) imgFile.length();
                     if (picLength == 0)
                         continue;
@@ -796,7 +817,7 @@ public class ShareMgr extends Thread {
                         Log.e(TAG, "Invalid picMetaData pMainArr.length=" + pMainArr.length);
                         continue;
                     }
-                    if (ntwIntf.sendMsg(MessageTranslator.sharePicMetaDataMsg(Long.parseLong(pMainArr[1]), imgFileStr, picLength, pMainArr[0])) == false) {
+                    if (!ntwIntf.sendMsg(MessageTranslator.sharePicMetaDataMsg(Long.parseLong(pMainArr[1]), imgFileStr1, picLength, pMainArr[0]))) {
                         postErrorMessage();
                         continue;
                     }
@@ -804,6 +825,7 @@ public class ShareMgr extends Thread {
 
                 }
 
+                Log.d(TAG, "Nullpointer exception 4");
                 if (imgFileStr != null) {
                     byte[] bytes = new byte[MAX_BUF - 8];
 
@@ -835,10 +857,7 @@ public class ShareMgr extends Thread {
                     bSendPic = false;
                     if (bSendFinished)
                     {
-                        shareDBIntf.deleteImagesMetaData();
-                        shareDBIntf.deleteImage();
-                        imgsMetaData.poll();
-                        imgsToSend.poll();
+                        updatePicIndx();
 
                     }
 
@@ -854,7 +873,7 @@ public class ShareMgr extends Thread {
         }
         catch(FileNotFoundException excp)
         {
-            Log.e(TAG, "ShareMgr Thread caught NullPointerException in sendMsgs " + excp.getMessage());
+            Log.e(TAG, "ShareMgr Thread caught FileNotFound in sendMsgs " + excp.getMessage());
             postErrorMessage();
         }
         catch(SecurityException excp)
@@ -869,6 +888,14 @@ public class ShareMgr extends Thread {
         }
 
         return;
+    }
+
+    void updatePicIndx()
+    {
+        shareDBIntf.deleteImagesMetaData();
+        shareDBIntf.deleteImage();
+        imgsMetaData.poll();
+        imgsToSend.poll();
     }
 
     void postErrorMessage()

@@ -133,14 +133,8 @@ public class MessageDecoder {
         int upload = buffer.getInt(20);
         int picOffset = buffer.getInt(24);
         ShareMgr.getInstance().setUploadPicOffset(picOffset);
-        if (upload > 0)
-        {
-           ShareMgr.getInstance().setbSendPic(true);
-        }
-        else
-        {
-            ShareMgr.getInstance().setbSendPicMetaData(true);
-        }
+        ShareMgr.getInstance().processShouldUploadMessage(upload);
+
         return true;
     }
 
