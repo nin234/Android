@@ -77,6 +77,8 @@ public class ShareMgr extends Thread {
     private ShareDBIntf shareDBIntf;
     private  long lastPicRcvdTime;
     private boolean sendGetItemReq;
+    private long lastIdSentTime;
+    private long lastTokenUpdateSentTime;
 
     public int getUploadPicOffset() {
         return uploadPicOffset;
@@ -132,6 +134,7 @@ public class ShareMgr extends Thread {
         newContact.setShare_id(share_id);
         Log.i(TAG, "Setting share_id=" + share_id);
         DBOperations.getInstance().insertDb(newContact, CONTACTS_ITEM_ADD);
+        shareDeviceTkn();
     }
 
     public boolean isbUpdateTkn() {
@@ -539,6 +542,14 @@ public class ShareMgr extends Thread {
     {
         if (share_id != 0)
             return;
+        if (lastIdSentTime >0)
+        {
+           long now = System.currentTimeMillis();
+            if (now < lastIdSentTime+1000*120)
+                return;
+        }
+
+        lastIdSentTime = System.currentTimeMillis();
         Log.d(TAG, "Getting shareId");
         if (ntwIntf.sendMsg(MessageTranslator.createIdRequest()))
         {
@@ -557,6 +568,8 @@ public class ShareMgr extends Thread {
         uploadPicOffset = 0;
         bSendPic = false;
         bSendPicMetaData = true;
+        lastIdSentTime  = 0;
+        lastPicRcvdTime = 0;
         lastPicRcvdTime = 0;
         sendGetItemReq = false;
         shareTokenMgr = new ShareTokenMgr();
@@ -590,15 +603,8 @@ public class ShareMgr extends Thread {
         pDecoder.setApp_name(app_name);
         resp = ByteBuffer.allocate(RCV_BUF_LEN);
 
-        bUpdateTkn = sharing.getBoolean("update", false);
-        getIdIfRequired();
-        bUpdateTkn = true;
-        if (bUpdateTkn)
-        {
-            shareDeviceTkn();
-        }
-
-
+        bUpdateTkn = sharing.getBoolean("update", true);
+        Log.i(TAG, "update token=" + bUpdateTkn);
         for (;;)
         {
             dataToSend.lock();
@@ -616,6 +622,8 @@ public class ShareMgr extends Thread {
                     putMsgInQ(MessageTranslator.getItemsMsg(ctxt, share_id));
                     sendGetItemReq = false;
                 }
+                getIdIfRequired();
+                shareDeviceTkn();
                 sendMsgs();
 
 
@@ -694,22 +702,44 @@ public class ShareMgr extends Thread {
 
     public void shareDeviceTkn()
     {
+        if (!bUpdateTkn)
+        {
+            return;
+        }
         SharedPreferences sharing =  ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
         String devTkn = sharing.getString("token", "None");
 
         if (devTkn.equals("None"))
             return;
+        if (share_id == 0)
+        {
+            return;
+        }
+
+        if (lastTokenUpdateSentTime >0)
+        {
+            long now = System.currentTimeMillis();
+            if (now < lastTokenUpdateSentTime+1000*120)
+                return;
+        }
+
+        lastTokenUpdateSentTime = System.currentTimeMillis();
         Log.i(TAG, "Sharing device token");
         if (ntwIntf.sendMsg(MessageTranslator.shareDevicTknMsg(share_id, devTkn)))
         {
-            bUpdateTkn = false;
-            SharedPreferences.Editor editor = sharing.edit();
-            editor.putBoolean("update", false);
-            editor.commit();
+            Log.i(TAG, "Send device token message");
         }
 
+    }
 
-
+    public void updateDeviceTknStatus()
+    {
+        SharedPreferences sharing =  ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
+        bUpdateTkn = false;
+        Log.i(TAG, "Updating device token status to false");
+        SharedPreferences.Editor editor = sharing.edit();
+        editor.putBoolean("update", false);
+        editor.commit();
     }
 
     public void sharePicture(String picUrl, String picMetaStr, long shareId)
@@ -776,11 +806,6 @@ public class ShareMgr extends Thread {
                 Log.d(TAG, "msgsToSend=" + msgsToSend.size() + " imsgToSend=" + imgsToSend.size()
                         + " bSendPic=" +bSendPic + " imgsMetaData=" + imgsMetaData.size() +
                         " bSendPicMetaData=" + bSendPicMetaData);
-                getIdIfRequired();
-                if (bUpdateTkn)
-                {
-                    shareDeviceTkn();
-                }
 
                 Log.d(TAG, "Nullpointer exception 1");
 

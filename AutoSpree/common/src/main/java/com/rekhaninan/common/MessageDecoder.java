@@ -30,6 +30,8 @@ import static com.rekhaninan.common.Constants.PIC_MSG;
 import static com.rekhaninan.common.Constants.SHARE_ITEM_MSG;
 import static com.rekhaninan.common.Constants.SHARE_TEMPL_ITEM_MSG;
 import static com.rekhaninan.common.Constants.SHOULD_UPLOAD_MSG;
+import static com.rekhaninan.common.Constants.STORE_DEVICE_TKN_MSG;
+import static com.rekhaninan.common.Constants.STORE_DEVICE_TKN_RPLY_MSG;
 import static com.rekhaninan.common.Constants.STORE_TRNSCTN_ID_RPLY_MSG;
 import static com.rekhaninan.common.Constants.TEMPLLISTSEPERATOR;
 
@@ -611,6 +613,12 @@ public class MessageDecoder {
                 case SHOULD_UPLOAD_MSG:
                 {
                     bRet = processShouldUploadMessage(buffer, mlen);
+                }
+                break;
+
+                case STORE_DEVICE_TKN_RPLY_MSG:
+                {
+                    ShareMgr.getInstance().updateDeviceTknStatus();
                 }
                 break;
 
