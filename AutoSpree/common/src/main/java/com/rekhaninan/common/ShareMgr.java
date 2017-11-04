@@ -542,14 +542,13 @@ public class ShareMgr extends Thread {
     {
         if (share_id != 0)
             return;
+        long now = System.currentTimeMillis();
         if (lastIdSentTime >0)
         {
-           long now = System.currentTimeMillis();
             if (now < lastIdSentTime+1000*120)
                 return;
         }
-
-        lastIdSentTime = System.currentTimeMillis();
+        lastIdSentTime = now;
         Log.d(TAG, "Getting shareId");
         if (ntwIntf.sendMsg(MessageTranslator.createIdRequest()))
         {
