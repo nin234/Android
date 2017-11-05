@@ -604,6 +604,7 @@ public class ShareMgr extends Thread {
 
         bUpdateTkn = sharing.getBoolean("update", true);
         Log.i(TAG, "update token=" + bUpdateTkn);
+        getItems();
         for (;;)
         {
             dataToSend.lock();
@@ -616,7 +617,7 @@ public class ShareMgr extends Thread {
                 }
                 dataToSend.unlock();
                 ntwIntf.checkAndCloseIfIdle();
-                if (sendGetItemReq)
+                if (sendGetItemReq && share_id >0)
                 {
                     putMsgInQ(MessageTranslator.getItemsMsg(ctxt, share_id));
                     sendGetItemReq = false;
@@ -665,6 +666,10 @@ public class ShareMgr extends Thread {
 
     public void getItems()
     {
+        if (share_id <= 0)
+        {
+            return;
+        }
         Log.d(TAG, "Putting getItemsMsg in Q");
         long now = System.currentTimeMillis();
         if (now - lastPicRcvdTime > 120000) {
