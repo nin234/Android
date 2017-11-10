@@ -929,6 +929,7 @@ public class ShareMgr extends Thread {
 
     void postErrorMessage()
     {
+        /* not needed now
         Runnable alertRunnable = new Runnable() {
             @Override
             public void run() {
@@ -946,6 +947,7 @@ public class ShareMgr extends Thread {
             } // This is your code
         };
         handler.post(alertRunnable);
+        */
     }
 
 
