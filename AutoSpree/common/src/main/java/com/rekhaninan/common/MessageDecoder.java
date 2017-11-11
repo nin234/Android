@@ -168,7 +168,7 @@ public class MessageDecoder {
         if (cnt != 2)
         {
 
-            Log.e(TAG, "Invalid picNameArr in message decoder");
+            Log.e(TAG, "Invalid picNameArr in message decoder=" + picNameArr);
             return false;
         }
 
