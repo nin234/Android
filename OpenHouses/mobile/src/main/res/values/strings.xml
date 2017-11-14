@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">OpenHouses</string>
+    <string name="shared_label">NRT</string>
 </resources>

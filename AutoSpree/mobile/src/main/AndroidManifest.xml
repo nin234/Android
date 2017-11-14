@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.rekhaninan.autospree">
-
-
+    package="com.rekhaninan.autospree"
+    android:sharedUserId="com.rekhaninan"
+    android:sharedUserLabel="@string/shared_label">
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
