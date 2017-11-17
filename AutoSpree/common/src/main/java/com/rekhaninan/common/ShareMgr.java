@@ -492,6 +492,7 @@ public class ShareMgr extends Thread {
         }
     }
 
+
     private void extractAndStoreThumbNail() {
         try
         {

@@ -2,6 +2,7 @@ package com.rekhaninan.common;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -11,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.rekhaninan.common.Constants.CONTACTS_ITEM_ADD;
+import static com.rekhaninan.common.Constants.FRIENDLISTITEMSEPERATOR;
+import static com.rekhaninan.common.Constants.FRIENDLISTTOKENSEPERATOR;
 
 /**
  * Created by ninanthomas on 2/9/17.
@@ -21,6 +24,7 @@ public class ContactsDBIntf {
 
     private SQLiteDatabase contactsDB;
     private ContactsDbHelper contactsDbHelper;
+    private Context ctxt;
 
     private final String TAG = "ContactsDBIntf";
 
@@ -30,7 +34,8 @@ public class ContactsDBIntf {
 
     }
 
-    public void initDb(Context ctxt) {
+    public void initDb(Context ctx) {
+        ctxt = ctx;
         contactsDbHelper = new ContactsDbHelper(ctxt);
         contactsDB = contactsDbHelper.getWritableDatabase();
         return;
@@ -74,6 +79,22 @@ public class ContactsDBIntf {
             if (itm.getName() != null && itm.getName().length() > 0) {
                 values.put("name", itm.getName());
                 contactsDB.insert("Contacts", null, values);
+                SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
+                String frndList = sharing.getString("FriendList", "NoName");
+                if (frndList.equals("NoName"))
+                {
+                    frndList = Long.toString(itm.getShare_id());
+                }
+                else
+                {
+                    frndList += Long.toString(itm.getShare_id());
+                }
+                frndList += FRIENDLISTTOKENSEPERATOR;
+                frndList += itm.getName();
+                frndList += FRIENDLISTITEMSEPERATOR;
+                SharedPreferences.Editor editor = sharing.edit();
+                editor.putString("FriendList", frndList);
+                editor.commit();
             }
         }
         return true;
@@ -84,6 +105,43 @@ public class ContactsDBIntf {
 
         String dbName = "Contacts";
         contactsDB.delete(dbName,  "share_id = ?" , new String[]{Long.toString(itm.getShare_id())});
+        SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
+        String frndList = sharing.getString("FriendList", "NoName");
+        boolean bFirst = true;
+        if (frndList.equals("NoName"))
+        {
+            return true;
+        }
+        else
+        {
+            String[] listcomps = frndList.split(FRIENDLISTITEMSEPERATOR);
+            int comps = listcomps.length;
+            long share_id =0;
+            for (int j=0; j < comps; ++j)
+            {
+                if (listcomps[j] == null || listcomps[j].length() < 1)
+                    continue;
+                Log.i(TAG, "decoding comp j=" + j);
+
+                    String[] shareIdArr = listcomps[j].split(FRIENDLISTTOKENSEPERATOR);
+                    share_id = Long.parseLong(shareIdArr[0]);
+                if (share_id == itm.getShare_id())
+                    continue;
+                if (bFirst)
+                {
+                    bFirst = false;
+                    frndList = shareIdArr[0];
+                }
+                else
+                {
+                    frndList += shareIdArr[0];
+                }
+                frndList += FRIENDLISTTOKENSEPERATOR;
+                frndList += shareIdArr[1];
+                frndList += FRIENDLISTITEMSEPERATOR;
+
+            }
+        }
         return true;
     }
 
