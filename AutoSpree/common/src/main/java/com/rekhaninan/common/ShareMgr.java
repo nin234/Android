@@ -81,6 +81,7 @@ public class ShareMgr extends Thread {
     private boolean sendGetItemReq;
     private long lastIdSentTime;
     private long lastTokenUpdateSentTime;
+    private boolean bNtwConnected;
 
     public int getUploadPicOffset() {
         return uploadPicOffset;
@@ -693,6 +694,7 @@ public class ShareMgr extends Thread {
         lastPicRcvdTime = 0;
         lastPicRcvdTime = 0;
         sendGetItemReq = false;
+        bNtwConnected = true;
         shareTokenMgr = new ShareTokenMgr();
         Log.d(TAG, "getting Firebase token token: ");
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
@@ -735,7 +737,10 @@ public class ShareMgr extends Thread {
 
                 if (msgsToSend.size() == 0 || imgsToSend.size() == 0)
                 {
-                    dataToSendCondn.await(1, TimeUnit.SECONDS);
+                    int delay = 1;
+                    if (!bNtwConnected)
+                        delay = 20;
+                    dataToSendCondn.await(delay, TimeUnit.SECONDS);
                 }
                 dataToSend.unlock();
                 ntwIntf.checkAndCloseIfIdle();
@@ -933,19 +938,22 @@ public class ShareMgr extends Thread {
                         + " bSendPic=" +bSendPic + " imgsMetaData=" + imgsMetaData.size() +
                         " bSendPicMetaData=" + bSendPicMetaData);
 
-                Log.d(TAG, "Nullpointer exception 1");
+
 
                 ByteBuffer msg = msgsToSend.peek();
 
                 if (msg != null && ntwIntf.sendMsg(msg) == false)
                 {
                     postErrorMessage();
+                    bNtwConnected = false;
+                    break;
                 }
                 else {
                     msgsToSend.poll();
                     shareDBIntf.deleteItem();
+                    bNtwConnected = true;
                 }
-                Log.d(TAG, "Nullpointer exception 2");
+
                 String picMetaData = null;
                 if (bSendPicMetaData) {
                     picMetaData = imgsMetaData.peek();
@@ -956,7 +964,7 @@ public class ShareMgr extends Thread {
                     imgFileStr = imgsToSend.peek();
                 }
 
-                Log.d(TAG, "Nullpointer exception 3");
+
                 if (picMetaData != null && imgsToSend.peek() != null) {
                     String imgFileStr1 = imgsToSend.peek();
                     File imgFile = new File(imgFileStr1);
@@ -970,13 +978,18 @@ public class ShareMgr extends Thread {
                     }
                     if (!ntwIntf.sendMsg(MessageTranslator.sharePicMetaDataMsg(Long.parseLong(pMainArr[1]), imgFileStr1, picLength, pMainArr[0]))) {
                         postErrorMessage();
+                        bNtwConnected= false;
                         continue;
+                    }
+                    else
+                    {
+                        bNtwConnected = true;
                     }
                     bSendPicMetaData = false;
 
                 }
 
-                Log.d(TAG, "Nullpointer exception 4");
+
                 if (imgFileStr != null) {
                     byte[] bytes = new byte[MAX_BUF - 8];
 
@@ -1000,7 +1013,12 @@ public class ShareMgr extends Thread {
 
                         if (ntwIntf.sendMsg(MessageTranslator.sharePicMsg(bytes, nRead)) == false) {
                             postErrorMessage();
+                            bNtwConnected = false;
                             break;
+                        }
+                        else
+                        {
+                            bNtwConnected = true;
                         }
 
                     }
