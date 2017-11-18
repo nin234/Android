@@ -3,12 +3,14 @@ package com.rekhaninan.common;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.rekhaninan.common.Constants.CONTACTS_ITEM_ADD;
@@ -25,6 +27,7 @@ public class ContactsDBIntf {
     private SQLiteDatabase contactsDB;
     private ContactsDbHelper contactsDbHelper;
     private Context ctxt;
+    private HashMap<Long, Item> contactsMp;
 
     private final String TAG = "ContactsDBIntf";
 
@@ -38,29 +41,55 @@ public class ContactsDBIntf {
         ctxt = ctx;
         contactsDbHelper = new ContactsDbHelper(ctxt);
         contactsDB = contactsDbHelper.getWritableDatabase();
+        contactsMp = new HashMap<>();
+
         return;
+    }
+
+    private void populateContactsMp()
+    {
+        contactsMp.clear();
+        SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_MULTI_PROCESS);
+        String frndList = sharing.getString("FriendList", "NoName");
+        Log.i(TAG, "Populating contactsMp with friendList=" + frndList);
+        if (!frndList.equals("NoName")) {
+            String[] listcomps = frndList.split(FRIENDLISTITEMSEPERATOR);
+            int comps = listcomps.length;
+            long share_id = 0;
+            for (int j = 0; j < comps; ++j) {
+                if (listcomps[j] == null || listcomps[j].length() < 1)
+                    continue;
+
+                String[] shareIdArr = listcomps[j].split(FRIENDLISTTOKENSEPERATOR);
+                Item contact = new Item();
+
+                share_id = Long.parseLong(shareIdArr[0]);
+                contact.setShare_id(share_id);
+                contact.setName(shareIdArr[1]);
+                contactsMp.put(share_id, contact);
+            }
+        }
     }
 
     public List<Item> getMainViewLst()
     {
         try {
-            String column_names[] = {"name" , "share_id", "nickname", "phoneno", "email"};
-            Cursor c =  contactsDB.query("Contacts", column_names, null, null, null, null, null);
-            boolean suceed = c.moveToFirst();
+            populateContactsMp();
             List<Item> mainVwLst =  new ArrayList<Item>();
-            while (suceed)
-            {
-                Item contact = new Item();
-                contact.setName(c.getString(c.getColumnIndexOrThrow("name")));
-                contact.setNickname(c.getString(c.getColumnIndexOrThrow("nickname")));
-                contact.setEmail(c.getString(c.getColumnIndexOrThrow("email")));
-                contact.setShare_id(c.getInt(c.getColumnIndexOrThrow("share_id")));
-                contact.setPhoneno(c.getInt(c.getColumnIndexOrThrow("phoneno")));
+            for (HashMap.Entry<Long, Item> entry : contactsMp.entrySet()) {
+                if (entry.getValue().getName().equals("ME")) {
+                    mainVwLst.add(entry.getValue());
+                }
 
-                mainVwLst.add(contact);
-                suceed = c.moveToNext();
             }
-            c.close();
+
+            for (HashMap.Entry<Long, Item> entry : contactsMp.entrySet()) {
+                if (!entry.getValue().getName().equals("ME")) {
+                    mainVwLst.add(entry.getValue());
+                }
+
+            }
+
             return mainVwLst;
         }
         catch(Exception e)
@@ -74,11 +103,21 @@ public class ContactsDBIntf {
     public  boolean insertDb (Item itm, int vwType)
     {
         if (vwType == CONTACTS_ITEM_ADD) {
-            ContentValues values = new ContentValues();
-            values.put("share_id", itm.getShare_id());
+            populateContactsMp();
+            if (contactsMp.containsKey(itm.getShare_id()))
+            {
+                Log.i(TAG, "Share Id=" + itm.getShare_id() + " exists in contacts failed to insert");
+                return false;
+            }
+            if (itm.getName().equals("ME"))
+            {
+                Log.e(TAG, "Invalid name ME for contacts");
+                return  false;
+            }
+            String name = Long.toString(itm.getShare_id());
             if (itm.getName() != null && itm.getName().length() > 0) {
-                values.put("name", itm.getName());
-                contactsDB.insert("Contacts", null, values);
+                name = itm.getName();
+            }
                 SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
                 String frndList = sharing.getString("FriendList", "NoName");
                 if (frndList.equals("NoName"))
@@ -90,21 +129,25 @@ public class ContactsDBIntf {
                     frndList += Long.toString(itm.getShare_id());
                 }
                 frndList += FRIENDLISTTOKENSEPERATOR;
-                frndList += itm.getName();
+                frndList += name;
                 frndList += FRIENDLISTITEMSEPERATOR;
-                SharedPreferences.Editor editor = sharing.edit();
-                editor.putString("FriendList", frndList);
-                editor.commit();
-            }
+                storeFriendList("com.rekhaninan.autospree" , frndList);
+                storeFriendList("com.rekhaninan.openhouses" , frndList);
+                storeFriendList("com.rekhaninan.easygroclist" , frndList);
+                 Item contact = new Item();
+                contact.setShare_id(itm.getShare_id());
+                contact.setName(name);
+                contactsMp.put(itm.getShare_id(), contact);
+
+
         }
         return true;
     }
 
     public  boolean deleteDb (Item itm, int vwType)
     {
-
-        String dbName = "Contacts";
-        contactsDB.delete(dbName,  "share_id = ?" , new String[]{Long.toString(itm.getShare_id())});
+        populateContactsMp();
+        contactsMp.remove(itm.getShare_id());
         SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
         String frndList = sharing.getString("FriendList", "NoName");
         boolean bFirst = true;
@@ -141,8 +184,38 @@ public class ContactsDBIntf {
                 frndList += FRIENDLISTITEMSEPERATOR;
 
             }
+            storeFriendList("com.rekhaninan.autospree" , frndList);
+            storeFriendList("com.rekhaninan.openhouses" , frndList);
+            storeFriendList("com.rekhaninan.easygroclist" , frndList);
         }
         return true;
+    }
+
+    private void storeFriendList(String pkgname, String friendList)
+    {
+        try
+        {
+            Context con = ctxt.createPackageContext(pkgname, 0);//first app package name is "com.sharedpref1"
+            if (con == null)
+            {
+                Log.i(TAG, "Cannot obtain context pkgname " + pkgname + " not installed?");
+                return ;
+            }
+            SharedPreferences pref = con.getSharedPreferences(
+                    "Sharing", Context.MODE_PRIVATE);
+            if (pref == null)
+            {
+                Log.i(TAG, "Cannot obtain SharedPreferences  " + pkgname + " not installed?");
+                return;
+            }
+
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putString("FriendList", friendList);
+            editor.apply();
+        }
+        catch (PackageManager.NameNotFoundException e) {
+            Log.e("Not data shared", e.toString());
+        }
     }
 
     public class ContactsDbHelper extends SQLiteOpenHelper {

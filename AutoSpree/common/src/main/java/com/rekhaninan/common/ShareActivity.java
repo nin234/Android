@@ -112,7 +112,7 @@ public class ShareActivity extends AppCompatActivity {
 
             case CONTACTS_VW:
             {
-                mergeContacts();
+
                 setContentView(R.layout.activity_main_vw);
                 java.util.List<Item> mainLst = DBOperations.getInstance().getMainLst(CONTACTS_VW);
                 if (mainLst == null)
@@ -141,7 +141,7 @@ public class ShareActivity extends AppCompatActivity {
 
             case CONTACTS_MAINVW:
             {
-                mergeContacts();
+
                 setContentView(R.layout.activity_main_vw);
                 java.util.List<Item> mainLst = DBOperations.getInstance().getMainLst(CONTACTS_MAINVW);
                 mListView = (ListView) findViewById(R.id.recipe_list_view);
@@ -187,109 +187,9 @@ public class ShareActivity extends AppCompatActivity {
 
     }
 
-    private String getFriendList(String pkgname)
-    {
-        String friendList = "NoName";
+    
 
-        try
-        {
-            Context con = createPackageContext(pkgname, 0);//first app package name is "com.sharedpref1"
-            if (con == null)
-            {
-                Log.i(TAG, "Cannot obtain context AutoSpree not installed?");
-                return friendList;
-            }
-            SharedPreferences pref = con.getSharedPreferences(
-                    "Sharing", Context.MODE_PRIVATE);
-            if (pref == null)
-            {
-                Log.i(TAG, "Cannot obtain SharedPreferences AutoSpree not installed?");
-                return friendList;
-            }
-            friendList = pref.getString("FriendList", "NoName");
-        }
-        catch (PackageManager.NameNotFoundException e) {
-            Log.e("Not data shared", e.toString());
-        }
-        return friendList;
-    }
 
-    private void mergeContacts()
-    {
-
-        String friendList1 = "NoName";
-        String friendList2 = "NoName";
-        switch (app_name)
-        {
-            case AUTOSPREE:
-            {
-                friendList1 = getFriendList("com.rekhaninan.openhouses");
-                friendList2 = getFriendList("com.rekhaninan.easygroclist");
-            }
-            break;
-
-            case OPENHOUSES:
-            {
-                friendList1 = getFriendList("com.rekhaninan.autospree");
-                friendList2 = getFriendList("com.rekhaninan.easygroclist");
-            }
-            break;
-
-            case EASYGROC:
-            {
-                friendList1 = getFriendList("com.rekhaninan.autospree");
-                friendList2 = getFriendList("com.rekhaninan.openhouses");
-            }
-            break;
-
-            default:
-                break;
-
-        }
-
-        Log.i(TAG, "Merging lists friendList1=" + friendList1 + " friendList2=" + friendList2);
-        HashMap<Long, String> contactsMp = new HashMap<>();
-        populateContactsMp(friendList1, contactsMp);
-        populateContactsMp(friendList2, contactsMp);
-        java.util.List<Item> mainLst = DBOperations.getInstance().getMainLst(CONTACTS_MAINVW);
-
-        for (Item itm : mainLst)
-        {
-            if (contactsMp.containsKey(itm.getShare_id()))
-            {
-                contactsMp.remove(itm.getShare_id());
-            }
-
-        }
-
-        for (HashMap.Entry<Long, String> entry : contactsMp.entrySet()) {
-            Item newContact = new Item();
-            newContact.setShare_id(entry.getKey());
-            newContact.setName(entry.getValue());
-            DBOperations.getInstance().insertDb(newContact, CONTACTS_ITEM_ADD);
-            // ...
-        }
-    }
-
-    private HashMap<Long, String> populateContactsMp(String frndLst, HashMap<Long, String> contactsMp)
-    {
-
-        if (!frndLst.equals("NoName")) {
-            String[] listcomps = frndLst.split(FRIENDLISTITEMSEPERATOR);
-            int comps = listcomps.length;
-            long share_id = 0;
-            for (int j = 0; j < comps; ++j) {
-                if (listcomps[j] == null || listcomps[j].length() < 1)
-                    continue;
-
-                String[] shareIdArr = listcomps[j].split(FRIENDLISTTOKENSEPERATOR);
-                share_id = Long.parseLong(shareIdArr[0]);
-                contactsMp.put(share_id, shareIdArr[1]);
-
-            }
-        }
-        return contactsMp;
-    }
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -839,7 +739,7 @@ public class ShareActivity extends AppCompatActivity {
     @Override
     protected void onResume()
     {
-        mergeContacts();
+
         super.onResume();
     }
     void updateFriendList ()
