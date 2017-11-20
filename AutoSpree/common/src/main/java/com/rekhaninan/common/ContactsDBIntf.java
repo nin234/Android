@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.rekhaninan.common.Constants.CONTACTS_ITEM_ADD;
+import static com.rekhaninan.common.Constants.CONTACTS_ITEM_ADD_NOVWTYP;
 import static com.rekhaninan.common.Constants.FRIENDLISTITEMSEPERATOR;
 import static com.rekhaninan.common.Constants.FRIENDLISTTOKENSEPERATOR;
 
@@ -102,14 +103,14 @@ public class ContactsDBIntf {
 
     public  boolean insertDb (Item itm, int vwType)
     {
-        if (vwType == CONTACTS_ITEM_ADD) {
+        if (vwType == CONTACTS_ITEM_ADD || vwType == CONTACTS_ITEM_ADD_NOVWTYP) {
             populateContactsMp();
             if (contactsMp.containsKey(itm.getShare_id()))
             {
                 Log.i(TAG, "Share Id=" + itm.getShare_id() + " exists in contacts failed to insert");
                 return false;
             }
-            if (itm.getName().equals("ME"))
+            if (itm.getName().equals("ME") && vwType == CONTACTS_ITEM_ADD)
             {
                 Log.e(TAG, "Invalid name ME for contacts");
                 return  false;

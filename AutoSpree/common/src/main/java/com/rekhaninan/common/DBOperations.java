@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 
 import static com.rekhaninan.common.Constants.CONTACTS_ITEM_ADD;
+import static com.rekhaninan.common.Constants.CONTACTS_ITEM_ADD_NOVWTYP;
 import static com.rekhaninan.common.Constants.CONTACTS_ITEM_DISPLAY;
 import static com.rekhaninan.common.Constants.CONTACTS_MAINVW;
 import static com.rekhaninan.common.Constants.CONTACTS_VW;
@@ -237,6 +238,7 @@ public class DBOperations {
             switch (vwType) {
 
                 case CONTACTS_ITEM_ADD:
+                case CONTACTS_ITEM_ADD_NOVWTYP:
                     return contactsDBIntf.insertDb(itm, vwType);
 
                 default:

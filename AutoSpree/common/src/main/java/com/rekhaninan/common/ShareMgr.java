@@ -42,6 +42,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import static com.rekhaninan.common.Constants.AUTOSPREE;
 import static com.rekhaninan.common.Constants.CONTACTS_ITEM_ADD;
+import static com.rekhaninan.common.Constants.CONTACTS_ITEM_ADD_NOVWTYP;
 import static com.rekhaninan.common.Constants.CONTACTS_MAINVW;
 import static com.rekhaninan.common.Constants.CONTACTS_NAME_ROW;
 import static com.rekhaninan.common.Constants.CONTACTS_SHARE_ID_ROW;
@@ -136,7 +137,7 @@ public class ShareMgr extends Thread {
         newContact.setName("ME");
         newContact.setShare_id(share_id);
         Log.i(TAG, "Setting share_id=" + share_id);
-        DBOperations.getInstance().insertDb(newContact, CONTACTS_ITEM_ADD);
+        DBOperations.getInstance().insertDb(newContact, CONTACTS_ITEM_ADD_NOVWTYP);
         SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharing.edit();
         editor.putLong("share_id", share_id);
@@ -646,7 +647,7 @@ public class ShareMgr extends Thread {
                 newContact.setName("ME");
                 newContact.setShare_id(share_id);
                 Log.i(TAG, "Setting share_id=" + share_id + " from shared preferences");
-                DBOperations.getInstance().insertDb(newContact, CONTACTS_ITEM_ADD);
+                DBOperations.getInstance().insertDb(newContact, CONTACTS_ITEM_ADD_NOVWTYP);
             }
         }
         catch(Exception e)

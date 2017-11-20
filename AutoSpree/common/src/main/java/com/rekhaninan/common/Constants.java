@@ -56,6 +56,7 @@ public final class Constants {
     public static final int SHARE_TEMPL_MAINVW=28;
     public static final int SORT_MAINVW=29;
     public static final int EASYGROC_TEMPL_DELETE_ITEM=30;
+    public static final int CONTACTS_ITEM_ADD_NOVWTYP=31;
 
     public static final int AUTOSPREE_NAME_ROW=0;
     public static final int AUTOSPREE_MODEL_ROW=1;
