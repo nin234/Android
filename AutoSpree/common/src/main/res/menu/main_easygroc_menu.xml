@@ -8,20 +8,20 @@
         android:orderInCategory="100"
         android:icon="@drawable/ic_add_black_48dp"
         android:title="@string/new_item"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/templ_list_view"
         android:orderInCategory="100"
         android:icon="@drawable/ic_list_black_48dp"
         android:title="@string/templ_list"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/share"
         android:orderInCategory="100"
         android:icon="@drawable/ic_folder_shared_black_48dp"
         android:title="@string/share_item"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 </menu>
 

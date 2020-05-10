@@ -1,10 +1,7 @@
 package com.rekhaninan.common;
 
-import android.content.ContentValues;
 import android.content.Context;
 
-import android.content.ContextWrapper;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -15,8 +12,7 @@ import android.media.ThumbnailUtils;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
+import androidx.appcompat.app.AlertDialog;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -27,10 +23,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
@@ -41,11 +33,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 
 import static com.rekhaninan.common.Constants.AUTOSPREE;
-import static com.rekhaninan.common.Constants.CONTACTS_ITEM_ADD;
 import static com.rekhaninan.common.Constants.CONTACTS_ITEM_ADD_NOVWTYP;
 import static com.rekhaninan.common.Constants.CONTACTS_MAINVW;
-import static com.rekhaninan.common.Constants.CONTACTS_NAME_ROW;
-import static com.rekhaninan.common.Constants.CONTACTS_SHARE_ID_ROW;
 import static com.rekhaninan.common.Constants.EASYGROC;
 import static com.rekhaninan.common.Constants.EASYGROC_ADD_ITEM;
 import static com.rekhaninan.common.Constants.MAINVW;
@@ -740,7 +729,7 @@ public class ShareMgr extends Thread {
                 {
                     int delay = 1;
                     if (!bNtwConnected)
-                        delay = 20;
+                        delay = 30;
                     dataToSendCondn.await(delay, TimeUnit.SECONDS);
                 }
                 dataToSend.unlock();

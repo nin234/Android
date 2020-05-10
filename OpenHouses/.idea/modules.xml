@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/OpenHouses.iml" filepath="$PROJECT_DIR$/OpenHouses.iml" group="OpenHouses" />
+      <module fileurl="file://$PROJECT_DIR$/common-release/common-release.iml" filepath="$PROJECT_DIR$/common-release/common-release.iml" group="OpenHouses/common-release" />
+      <module fileurl="file://$PROJECT_DIR$/mobile/mobile.iml" filepath="$PROJECT_DIR$/mobile/mobile.iml" group="OpenHouses/mobile" />
+      <module fileurl="file://$PROJECT_DIR$/tv/tv.iml" filepath="$PROJECT_DIR$/tv/tv.iml" group="OpenHouses/tv" />
+    </modules>
+  </component>
+</project>

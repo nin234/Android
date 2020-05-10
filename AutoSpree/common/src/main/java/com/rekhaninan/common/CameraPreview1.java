@@ -4,7 +4,6 @@ import android.view.SurfaceView;
 import android.view.SurfaceHolder;
 import android.hardware.Camera;
 import android.content.Context;
-import android.util.Log;
 import java.io.IOException;
 /**
  * Created by nin234 on 12/24/16.

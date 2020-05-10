@@ -16,7 +16,7 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.ResultReceiver;
 import android.text.TextUtils;
-import android.util.Log;
+
 
 import static android.content.ContentValues.TAG;
 
@@ -77,14 +77,14 @@ public class FetchAddressIntentService extends IntentService {
             } catch (IOException ioException) {
                 // Catch network or other I/O problems.
 
-                Log.e(TAG, "Location service not available ", ioException);
+                Log.e(TAG, "Location service not available " + ioException.getMessage());
             } catch (IllegalArgumentException illegalArgumentException) {
                 // Catch invalid latitude or longitude values.
 
                 Log.e(TAG,  "Invalid latitude or longitude used . " +
                         "Latitude = " + location.getLatitude() +
                         ", Longitude = " +
-                        location.getLongitude(), illegalArgumentException);
+                        location.getLongitude() + " " + illegalArgumentException.getMessage());
             }
 
             // Handle case where no address was found.

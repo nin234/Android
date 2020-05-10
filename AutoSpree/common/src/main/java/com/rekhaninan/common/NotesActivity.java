@@ -1,19 +1,12 @@
 package com.rekhaninan.common;
 
-import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import static com.rekhaninan.common.Constants.*;
 
 
 public class NotesActivity extends AppCompatActivity {

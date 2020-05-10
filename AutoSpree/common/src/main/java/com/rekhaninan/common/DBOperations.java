@@ -2,7 +2,7 @@ package com.rekhaninan.common;
 
 import android.content.Context;
 import android.provider.Contacts;
-import android.util.Log;
+
 
 import java.util.HashMap;
 import java.util.StringTokenizer;

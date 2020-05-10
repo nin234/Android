@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -95,7 +94,7 @@ public class ContactsDBIntf {
         }
         catch(Exception e)
         {
-            Log.e("Error", "Error", e);
+            Log.e("Error", "Error" + e.getMessage());
         }
 
         return  null;

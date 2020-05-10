@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -229,7 +228,7 @@ public class OpenHousesDBIntf extends DBInterface {
         }
         catch(Exception e)
         {
-            Log.e("Error", "Error", e);
+            Log.e("Error", "Error" + e.getMessage());
         }
         return null;
     }
@@ -306,7 +305,7 @@ public class OpenHousesDBIntf extends DBInterface {
         }
         catch(Exception e)
         {
-            Log.e("Error", "Error", e);
+            Log.e("Error", "Error" + e.getMessage());
         }
         return  null;
     }

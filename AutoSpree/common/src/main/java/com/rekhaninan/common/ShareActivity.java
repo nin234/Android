@@ -1,16 +1,12 @@
 package com.rekhaninan.common;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,30 +14,19 @@ import android.widget.ListView;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
 
 import static com.rekhaninan.common.Constants.ADD_CONTACT_ITEM_ACTIVITY_REQUEST;
 import static com.rekhaninan.common.Constants.AUTOSPREE;
-import static com.rekhaninan.common.Constants.CHECK_LIST_ADD;
-import static com.rekhaninan.common.Constants.CHECK_LIST_EDIT;
 import static com.rekhaninan.common.Constants.CONTACTITEMSEPARATOR;
 import static com.rekhaninan.common.Constants.CONTACTS_ITEM_ADD;
 import static com.rekhaninan.common.Constants.CONTACTS_ITEM_DISPLAY;
 import static com.rekhaninan.common.Constants.CONTACTS_MAINVW;
-import static com.rekhaninan.common.Constants.CONTACTS_NAME_ROW;
 import static com.rekhaninan.common.Constants.CONTACTS_VW;
 import static com.rekhaninan.common.Constants.DELETE_CONTACT_ITEM_ACTIVITY_REQUEST;
 import static com.rekhaninan.common.Constants.EASYGROC;
-import static com.rekhaninan.common.Constants.EASYGROC_DISPLAY_ITEM;
-import static com.rekhaninan.common.Constants.FRIENDLISTITEMSEPERATOR;
-import static com.rekhaninan.common.Constants.FRIENDLISTTOKENSEPERATOR;
 import static com.rekhaninan.common.Constants.GET_CONTACTS_ACTIVITY_REQUEST;
-import static com.rekhaninan.common.Constants.IMAGE_SWIPE_ACTIVITY_REQUEST;
 import static com.rekhaninan.common.Constants.ITEMSEPARATOR;
 import static com.rekhaninan.common.Constants.KEYVALSEPARATOR;
-import static com.rekhaninan.common.Constants.MAINVW;
-import static com.rekhaninan.common.Constants.NOTES_ACTIVITY_REQUEST;
 import static com.rekhaninan.common.Constants.OPENHOUSES;
 import static com.rekhaninan.common.Constants.SHARE_MAINVW;
 import static com.rekhaninan.common.Constants.SHARE_PICTURE_ACTIVITY_REQUEST;

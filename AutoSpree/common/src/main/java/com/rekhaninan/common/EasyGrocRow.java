@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;

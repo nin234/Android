@@ -1,6 +1,5 @@
 package com.rekhaninan.common;
 
-import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;

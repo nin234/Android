@@ -1,25 +1,16 @@
 package com.rekhaninan.common;
 
-import android.support.annotation.NonNull;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.content.Context;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.util.TypedValue;
-import android.view.Display;
-import android.view.WindowManager;
-import android.graphics.Point;
+
 import static com.rekhaninan.common.Constants.*;
 
-import java.util.ListIterator;
 import java.util.Stack;
 
 /**

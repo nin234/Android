@@ -1,38 +1,19 @@
 package com.rekhaninan.common;
 
-import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Intent;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.util.Log;
 import android.content.Context;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
-import android.view.LayoutInflater;
 import android.widget.ListView;
-import android.widget.ArrayAdapter;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuInflater;
 
-import static com.google.android.gms.plus.PlusOneDummyView.TAG;
 import static com.rekhaninan.common.Constants.*;
-import android.widget.AdapterView;
-import android.view.View;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
-import android.support.v7.widget.Toolbar;
 
-import com.google.firebase.iid.FirebaseInstanceId;
-
-import java.util.HashMap;
+import androidx.appcompat.widget.Toolbar;
 
 public class MainVwActivity extends AppCompatActivity {
     private static final String TAG="MainVwActivity";

@@ -5,13 +5,10 @@ import java.util.ArrayList;
 import android.content.Intent;
 
 import android.os.Bundle;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,7 +18,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
 import static com.rekhaninan.common.Constants.AUTOSPREE;
-import static com.rekhaninan.common.Constants.EASYGROC;
 import static com.rekhaninan.common.Constants.PICTURE_VW;
 import static com.rekhaninan.common.Constants.SHARE_PICTURE_VW;
 

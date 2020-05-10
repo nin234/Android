@@ -1,31 +1,21 @@
 package com.rekhaninan.common;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
-import android.provider.ContactsContract;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.LinearLayout;
+
 import static com.rekhaninan.common.Constants.*;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.jar.Manifest;
 
 import static com.rekhaninan.common.Constants.AUTOSPREE_ADD_ITEM;
 import static com.rekhaninan.common.Constants.AUTOSPREE_MAKE_ROW;
@@ -33,9 +23,6 @@ import static com.rekhaninan.common.Constants.AUTOSPREE_MODEL_ROW;
 import static com.rekhaninan.common.Constants.AUTOSPREE_NAME_ROW;
 import static com.rekhaninan.common.Constants.AUTOSPREE_PRICE_ROW;
 import static com.rekhaninan.common.Constants.MAINVW;
-import static com.rekhaninan.common.Constants.OPENHOUSES_ADD_ITEM;
-import static com.rekhaninan.common.Constants.OPENHOUSES_NAME_ROW;
-import android.content.pm.PackageManager;
 
 /**
  * Created by nin234 on 8/28/16.

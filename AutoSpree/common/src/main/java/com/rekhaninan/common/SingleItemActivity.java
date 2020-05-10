@@ -11,13 +11,12 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Handler;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,25 +25,22 @@ import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 
-import android.support.v7.app.ActionBar;
+import androidx.appcompat.app.ActionBar;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.io.File;
 import java.util.List;
 
 import android.os.ResultReceiver;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.games.request.Requests;
 import com.google.android.gms.location.LocationServices;
 
 import static com.rekhaninan.common.Constants.*;
@@ -299,7 +295,7 @@ public class SingleItemActivity extends AppCompatActivity
             case EASYGROC_ADD_ITEM_OPTIONS:
             {
                 setContentView(R.layout.activity_single_item);
-                for (int i=0; i < 5; ++i)
+                for (int i=0; i < 3; ++i)
                 {
                     mainLst.add(itm);
                 }
@@ -1498,8 +1494,7 @@ public class SingleItemActivity extends AppCompatActivity
                 Log.i(TAG, "Received address=" + address.toString());
 
 
-               // adapter.notifyDataSetChanged();
-               // adapter.setNotifyOnChange(false);
+
 
                 String street = address.getFeatureName();
                 street += " ";
@@ -1513,6 +1508,8 @@ public class SingleItemActivity extends AppCompatActivity
                 itm.setLongitude(address.getLongitude());
                 Log.d(TAG, "Setting address " + street + " " +address.getLocality() + " "
                         + address.getAdminArea() + " " + address.getPostalCode());
+                 adapter.notifyDataSetChanged();
+                // adapter.setNotifyOnChange(false);
             }
 
 

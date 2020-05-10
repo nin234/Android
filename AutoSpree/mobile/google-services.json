@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "516330867276",
+    "firebase_url": "https://autospree.firebaseio.com",
+    "project_id": "autospree",
+    "storage_bucket": "autospree.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:516330867276:android:8c2381af1cb9f807",
+        "android_client_info": {
+          "package_name": "com.rekhaninan.autospree"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "516330867276-22kmfmlcv37cbjjl74ffugosqcig7b7d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rekhaninan.autospree",
+            "certificate_hash": "e53aa9910b5e1f5616351fef7e69de139e4b8120"
+          }
+        },
+        {
+          "client_id": "516330867276-hu2moptq6j7obuqilpqu3n2tr8pjve5k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9CnS5TiWtf9kSLsngtNa83j_V7xzywKc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "516330867276-hu2moptq6j7obuqilpqu3n2tr8pjve5k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

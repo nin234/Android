@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -69,7 +68,7 @@ public class ShareDBIntf {
         }
         catch(Exception e)
         {
-            Log.e("Error", "Exception deleteItem ", e);
+            Log.e("Error", "Exception deleteItem " + e.getMessage());
         }
         return true;
     }
@@ -158,7 +157,7 @@ public class ShareDBIntf {
         }
         catch(Exception e)
         {
-            Log.e("Error", "Exception deleteImagesMetaData ", e);
+            Log.e("Error", "Exception deleteImagesMetaData " + e.getMessage());
         }
         return true;
     }
@@ -200,7 +199,7 @@ public class ShareDBIntf {
         }
         catch(Exception e)
         {
-            Log.e("Error", "Exception deleteImagesMetaData ", e);
+            Log.e("Error", "Exception deleteImagesMetaData " + e.getMessage());
         }
         return true;
     }

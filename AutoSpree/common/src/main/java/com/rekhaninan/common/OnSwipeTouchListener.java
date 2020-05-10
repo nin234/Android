@@ -2,7 +2,6 @@ package com.rekhaninan.common;
 
 import android.graphics.Matrix;
 import android.graphics.PointF;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;

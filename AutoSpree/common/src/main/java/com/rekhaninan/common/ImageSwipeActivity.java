@@ -2,18 +2,12 @@ package com.rekhaninan.common;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.graphics.PointF;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.graphics.Bitmap;
-import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.util.FloatMath;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.MediaController;

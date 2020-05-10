@@ -3,7 +3,6 @@ package com.rekhaninan.common;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;

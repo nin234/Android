@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
+
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -180,7 +180,7 @@ public class EasyGrocListDBIntf extends DBInterface {
         }
         catch(Exception e)
         {
-            Log.e("Error", "Error", e);
+            Log.e("Error", "Error" + e.getMessage());
         }
 
         return true;
@@ -356,7 +356,7 @@ public class EasyGrocListDBIntf extends DBInterface {
         }
         catch(Exception e)
         {
-            Log.e("Error", "Error", e);
+            Log.e("Error", "Error" + e.getMessage());
         }
 
         return  null;
@@ -391,7 +391,7 @@ public class EasyGrocListDBIntf extends DBInterface {
         }
         catch(Exception e)
         {
-            Log.e("Error", "Error", e);
+            Log.e("Error", "Error" + e.getMessage());
         }
 
         return null;
@@ -424,7 +424,7 @@ public class EasyGrocListDBIntf extends DBInterface {
         }
         catch(Exception e)
         {
-            Log.e("Error", "Error", e);
+            Log.e("Error", "Error" + e.getMessage());
         }
 
         return null;
@@ -460,7 +460,7 @@ public class EasyGrocListDBIntf extends DBInterface {
         }
         catch(Exception e)
         {
-            Log.e("Error", "Error", e);
+            Log.e("Error", "Error" + e.getMessage());
         }
 
         return null;

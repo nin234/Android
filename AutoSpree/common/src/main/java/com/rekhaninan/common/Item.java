@@ -3,7 +3,6 @@ package com.rekhaninan.common;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 

@@ -2,7 +2,6 @@ package com.rekhaninan.common;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;

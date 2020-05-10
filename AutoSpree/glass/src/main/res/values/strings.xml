@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">AutoSpree</string>
+    <string name="title_activity_main">Main View</string>
+    <string name="hello_world">Hello world!</string>
+</resources>

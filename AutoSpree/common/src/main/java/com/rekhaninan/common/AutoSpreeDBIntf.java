@@ -1,7 +1,6 @@
 package com.rekhaninan.common;
 
 import android.content.ContentValues;
-import android.util.Log;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -243,7 +242,7 @@ public class AutoSpreeDBIntf extends DBInterface {
         }
         catch(Exception e)
         {
-            Log.e("Error", "Exception getting MainVwLst", e);
+            Log.e("Error", "Exception getting MainVwLst" + e.getMessage());
         }
 
         return null;
@@ -313,7 +312,7 @@ public class AutoSpreeDBIntf extends DBInterface {
         }
         catch(Exception e)
         {
-            Log.e("Error", "Exception getting MainVwLst", e);
+            Log.e("Error", "Exception getting MainVwLst" + e.getMessage());
         }
         return null;
     }

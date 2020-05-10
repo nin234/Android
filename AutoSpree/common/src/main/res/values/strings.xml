@@ -3,7 +3,7 @@
     <string name="edit_message">Enter a message</string>
     <string name="button_send">Send</string>
     <string name="new_item">Add</string>
-    <string name="templ_list">Template Lists</string>
+    <string name="templ_list">planner</string>
     <string name="check_list">Check Lists</string>
     <string name="undo">Undo</string>
     <string name="delete_item">Delete</string>
@@ -12,7 +12,7 @@
     <string name="add_item_done">Done</string>
     <string name="edit_item">Edit</string>
     <string name="title_activity_maps">Map</string>
-    <string name="share_item">Share</string>
+    <string name="share_item">share</string>
     <string name="sort">Sort By</string>
     <string name="select_item">Select items</string>
     <string name="contact_mgr">Contacts</string>
