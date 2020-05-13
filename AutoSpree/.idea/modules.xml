@@ -5,7 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/AutoSpree.iml" filepath="$PROJECT_DIR$/AutoSpree.iml" group="AutoSpree" />
       <module fileurl="file://$PROJECT_DIR$/common/common.iml" filepath="$PROJECT_DIR$/common/common.iml" group="AutoSpree/common" />
       <module fileurl="file://$PROJECT_DIR$/mobile/mobile.iml" filepath="$PROJECT_DIR$/mobile/mobile.iml" group="AutoSpree/mobile" />
-      <module fileurl="file://$PROJECT_DIR$/tv/tv.iml" filepath="$PROJECT_DIR$/tv/tv.iml" group="AutoSpree/tv" />
     </modules>
   </component>
 </project>

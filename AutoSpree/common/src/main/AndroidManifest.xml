@@ -47,12 +47,7 @@
         <activity android:name=".NotesActivity" />
         <activity android:name=".ShareActivity" />
         <activity android:name=".SortActivity"></activity>
-        <service
-            android:name=".ShareTokenMgr">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-            </intent-filter>
-        </service>
+
         <service
             android:name=".FirebaseMsgRcv">
             <intent-filter>

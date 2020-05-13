@@ -87,7 +87,7 @@ public class ShareMgr extends Thread {
     private boolean bUpdateTkn;
     private int failed_attempts;
     private long backoff_time;
-    private ShareTokenMgr shareTokenMgr;
+
 
     public boolean isbSendPic() {
         return bSendPic;
@@ -685,28 +685,11 @@ public class ShareMgr extends Thread {
         lastPicRcvdTime = 0;
         sendGetItemReq = false;
         bNtwConnected = true;
-        shareTokenMgr = new ShareTokenMgr();
-        Log.d(TAG, "getting Firebase token token: ");
-        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        if (refreshedToken == null)
-        {
-            Log.d(TAG, "NULL pointer returned by FirebaseInstanceId getToken");
-        }
 
-            Log.d(TAG, "Refreshed token: " + refreshedToken);
 
             // TODO: Implement this method to send any registration to your app's servers.
             // sendRegistrationToServer(refreshedToken);
             SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
-
-
-             String devTkn = sharing.getString("token", "None");
-            if (!devTkn.equals(refreshedToken)) {
-                SharedPreferences.Editor editor = sharing.edit();
-                editor.putString("token", refreshedToken);
-                editor.putBoolean("update", true);
-                editor.commit();
-            }
 
 
 

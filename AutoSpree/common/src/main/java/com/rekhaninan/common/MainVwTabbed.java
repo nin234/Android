@@ -28,7 +28,7 @@ public class MainVwTabbed extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        demoCollectionAdapter = new DemoCollectionAdapter(this);
+        demoCollectionAdapter = new TabbedCollectionAdapter(this);
         viewPager = view.findViewById(R.id.pager);
         viewPager.setAdapter(demoCollectionAdapter);
     }
@@ -36,23 +36,3 @@ public class MainVwTabbed extends Fragment {
 
 
 
-// Instances of this class are fragments representing a single
-// object in our collection.
-public class DemoObjectFragment extends Fragment {
-    public static final String ARG_OBJECT = "object";
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_collection_object, container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Bundle args = getArguments();
-        ((TextView) view.findViewById(android.R.id.text1))
-                .setText(Integer.toString(args.getInt(ARG_OBJECT)));
-    }
-
-}

@@ -1,1 +1,1 @@
-include ':mobile', ':common-release'
+include ':mobile', ':common-debug'

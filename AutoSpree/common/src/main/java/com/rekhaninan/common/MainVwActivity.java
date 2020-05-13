@@ -37,6 +37,7 @@ public class MainVwActivity extends AppCompatActivity {
             message = intent.getStringExtra(APP_NAME);
             app_name = message;
             setContentView(R.layout.activity_main_vw);
+            //setContentView(R.layout.tabbed_main);
 
 
             PermissionsManager.getInstance().requestPermissionIfReqd(getApplicationContext(), this);
