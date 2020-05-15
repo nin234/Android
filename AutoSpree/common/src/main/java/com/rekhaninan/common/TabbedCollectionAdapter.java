@@ -6,13 +6,16 @@ import java.util.StringJoiner;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 public class TabbedCollectionAdapter extends FragmentStateAdapter {
-    public TabbedCollectionAdapter(Fragment fragment) {
-        super(fragment);
+
+    public TabbedCollectionAdapter(FragmentActivity frg) {
+        super(frg);
     }
 
+    private static final int MAIN_PAGE_TABS = 4;
     @NonNull
     @Override
     public Fragment createFragment(int position) {
@@ -27,6 +30,7 @@ public class TabbedCollectionAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 100;
+
+        return MAIN_PAGE_TABS;
     }
 }

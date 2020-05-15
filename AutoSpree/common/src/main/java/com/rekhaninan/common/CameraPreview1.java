@@ -31,12 +31,12 @@ public class CameraPreview1 extends SurfaceView implements SurfaceHolder.Callbac
         try {
             if (holder == null)
             {
-                Log.e(TAG, "surface holder null");
+                Log.d(TAG, "surface holder null");
                 return;
             }
             if (mCamera == null)
             {
-                Log.e(TAG, "mCamera null");
+                Log.d(TAG, "mCamera null");
                 return;
             }
             mCamera.setPreviewDisplay(holder);

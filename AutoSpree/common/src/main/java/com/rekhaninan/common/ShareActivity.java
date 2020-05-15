@@ -289,7 +289,7 @@ public class ShareActivity extends AppCompatActivity {
 
         if (shrMsg == null || shrMsg.length() <=0)
         {
-            Log.e(TAG, "No contact to share to");
+            Log.d(TAG, "No contact to share to");
             return;
         }
         String picMetaCommon = shrMsg;
@@ -329,7 +329,7 @@ public class ShareActivity extends AppCompatActivity {
 
         if (shrMsg == null || shrMsg.length() <=0)
         {
-            Log.e(TAG, "No contact to share to");
+            Log.d(TAG, "No contact to share to");
             return;
         }
 
@@ -442,7 +442,7 @@ public class ShareActivity extends AppCompatActivity {
 
         if (shrMsg == null || shrMsg.length() <=0)
         {
-            Log.e(TAG, "No contact to share to");
+            Log.d(TAG, "No contact to share to");
             return;
         }
         shrMsg += CONTACTITEMSEPARATOR;
@@ -493,7 +493,7 @@ public class ShareActivity extends AppCompatActivity {
 
         if (shrMsg == null || shrMsg.length() <=0)
         {
-          Log.e(TAG, "No contact to share to");
+          Log.d(TAG, "No contact to share to");
             return;
         }
 
@@ -508,7 +508,7 @@ public class ShareActivity extends AppCompatActivity {
             java.util.List<Item> list = DBOperations.getInstance().getList(selectedItem.getName(), selectedItem.getShare_id());
             if (list.size() == 0)
             {
-                Log.e(TAG, "No elements in the sharing list");
+                Log.d(TAG, "No elements in the sharing list");
             }
             Item firstEl = list.get(0);
             shrMsg += Long.toString(firstEl.getShare_id());

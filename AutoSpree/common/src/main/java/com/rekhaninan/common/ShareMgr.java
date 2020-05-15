@@ -12,9 +12,6 @@ import android.media.ThumbnailUtils;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
-import androidx.appcompat.app.AlertDialog;
-
-import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -176,7 +173,7 @@ public class ShareMgr extends Thread {
             return shid;
         }
         catch (PackageManager.NameNotFoundException e) {
-            Log.e("Not data shared", e.toString());
+            Log.e("Not data shared", e.toString(), e);
         }
         return 0;
     }
@@ -196,7 +193,7 @@ public class ShareMgr extends Thread {
             return shid;
         }
         catch (PackageManager.NameNotFoundException e) {
-            Log.e("Not data shared", e.toString());
+            Log.e("Not data shared", e.toString(), e);
         }
         return 0;
     }
@@ -216,7 +213,7 @@ public class ShareMgr extends Thread {
             return shid;
         }
         catch (PackageManager.NameNotFoundException e) {
-            Log.e("Not data shared", e.toString());
+            Log.e("Not data shared", e.toString(), e);
         }
         return 0;
     }
@@ -280,7 +277,7 @@ public class ShareMgr extends Thread {
         }
         catch (FileNotFoundException excp)
         {
-                Log.e(TAG, "Caught file not found exception " + excp.getMessage());
+                Log.e(TAG, "Caught file not found exception " + excp.getMessage(), excp);
         }
         return false;
     }
@@ -363,11 +360,11 @@ public class ShareMgr extends Thread {
             }
         }catch (FileNotFoundException excp)
             {
-                Log.e(TAG, "Caught file not found exception " + excp.getMessage());
+                Log.e(TAG, "Caught file not found exception " + excp.getMessage(), excp);
             }
         catch (Exception excp)
         {
-            Log.e(TAG, "Caught  exception " + excp.getMessage());
+            Log.e(TAG, "Caught  exception " + excp.getMessage(), excp);
         }
         return false;
     }
@@ -403,7 +400,7 @@ public class ShareMgr extends Thread {
         }
         catch (Exception excp)
         {
-            Log.e(TAG, "Caught  exception " + excp.getMessage());
+            Log.e(TAG, "Caught  exception " + excp.getMessage(), excp);
         }
         return;
     }
@@ -499,7 +496,7 @@ public class ShareMgr extends Thread {
             }
 
              if (ThumbImage == null) {
-                Log.e(TAG, "Cannot extract thumbnail for " + pictureFile.getAbsolutePath());
+                Log.d(TAG, "Cannot extract thumbnail for " + pictureFile.getAbsolutePath());
                return;
              }
 
@@ -511,7 +508,7 @@ public class ShareMgr extends Thread {
     }
         catch (IOException excp)
         {
-            Log.e(TAG, "Caught IOException  exception " + excp.getMessage());
+            Log.e(TAG, "Caught IOException  exception " + excp.getMessage(), excp);
         }
     }
 
@@ -548,7 +545,7 @@ public class ShareMgr extends Thread {
         }
         catch (IOException excp)
         {
-            Log.e(TAG, "Caught IOException  exception " + excp.getMessage());
+            Log.e(TAG, "Caught IOException  exception " + excp.getMessage(), excp);
         }
         return;
     }
@@ -641,7 +638,7 @@ public class ShareMgr extends Thread {
         }
         catch(Exception e)
         {
-            Log.e(TAG, "Caught exception " + e.toString());
+            Log.e(TAG, "Caught exception " + e.toString(), e);
         }
     }
 
@@ -669,7 +666,7 @@ public class ShareMgr extends Thread {
         }
         else
         {
-            Log.e(TAG, "Failed to send share_id request");
+            Log.d(TAG, "Failed to send share_id request");
         }
 
         return;
@@ -877,7 +874,7 @@ public class ShareMgr extends Thread {
 
         catch (Exception excp)
         {
-            Log.e(TAG, "ShareMgr Thread caught exception " + excp.getMessage());
+            Log.e(TAG, "ShareMgr Thread caught exception " + excp.getMessage(), excp);
 
         }
         finally {
@@ -946,7 +943,7 @@ public class ShareMgr extends Thread {
                         continue;
                     String[] pMainArr = picMetaData.split(":::]");
                     if (pMainArr.length != 2) {
-                        Log.e(TAG, "Invalid picMetaData pMainArr.length=" + pMainArr.length);
+                        Log.d(TAG, "Invalid picMetaData pMainArr.length=" + pMainArr.length);
                         continue;
                     }
                     if (!ntwIntf.sendMsg(MessageTranslator.sharePicMetaDataMsg(Long.parseLong(pMainArr[1]), imgFileStr1, picLength, pMainArr[0]))) {
@@ -1010,22 +1007,22 @@ public class ShareMgr extends Thread {
         }
         catch (NullPointerException excp)
         {
-            Log.e(TAG, "ShareMgr Thread caught NullPointerException in sendMsgs " + excp.getMessage());
+            Log.e(TAG, "ShareMgr Thread caught NullPointerException in sendMsgs " + excp.getMessage(), excp);
             postErrorMessage();
         }
         catch(FileNotFoundException excp)
         {
-            Log.e(TAG, "ShareMgr Thread caught FileNotFound in sendMsgs " + excp.getMessage());
+            Log.e(TAG, "ShareMgr Thread caught FileNotFound in sendMsgs " + excp.getMessage(), excp);
             postErrorMessage();
         }
         catch(SecurityException excp)
         {
-            Log.e(TAG, "Caught SecurityException in sendMsgs " + excp.getMessage());
+            Log.e(TAG, "Caught SecurityException in sendMsgs " + excp.getMessage(), excp);
             postErrorMessage();
         }
         catch (Exception excp)
         {
-            Log.e(TAG, "ShareMgr Thread caught Exception in sendMsgs " + excp.getMessage());
+            Log.e(TAG, "ShareMgr Thread caught Exception in sendMsgs " + excp.getMessage(), excp);
             postErrorMessage();
         }
 

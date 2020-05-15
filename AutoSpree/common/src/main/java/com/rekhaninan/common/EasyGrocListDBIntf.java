@@ -180,7 +180,7 @@ public class EasyGrocListDBIntf extends DBInterface {
         }
         catch(Exception e)
         {
-            Log.e("Error", "Error" + e.getMessage());
+            Log.e("Error", "Error" + e.getMessage(), e);
         }
 
         return true;
@@ -356,7 +356,7 @@ public class EasyGrocListDBIntf extends DBInterface {
         }
         catch(Exception e)
         {
-            Log.e("Error", "Error" + e.getMessage());
+            Log.e("Error", "Error" + e.getMessage(), e);
         }
 
         return  null;
@@ -391,7 +391,7 @@ public class EasyGrocListDBIntf extends DBInterface {
         }
         catch(Exception e)
         {
-            Log.e("Error", "Error" + e.getMessage());
+            Log.e("Error", "Error" + e.getMessage(), e);
         }
 
         return null;
@@ -424,7 +424,7 @@ public class EasyGrocListDBIntf extends DBInterface {
         }
         catch(Exception e)
         {
-            Log.e("Error", "Error" + e.getMessage());
+            Log.e("Error", "Error" + e.getMessage(), e);
         }
 
         return null;
@@ -460,7 +460,7 @@ public class EasyGrocListDBIntf extends DBInterface {
         }
         catch(Exception e)
         {
-            Log.e("Error", "Error" + e.getMessage());
+            Log.e("Error", "Error" + e.getMessage(), e);
         }
 
         return null;

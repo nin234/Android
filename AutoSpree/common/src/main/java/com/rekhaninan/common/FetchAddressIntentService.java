@@ -2,10 +2,8 @@ package com.rekhaninan.common;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.content.Context;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -13,12 +11,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.os.ResultReceiver;
-import android.text.TextUtils;
-
-
-import static android.content.ContentValues.TAG;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -46,7 +39,7 @@ public class FetchAddressIntentService extends IntentService {
 
             // Check if receiver was properly registered.
             if (mReceiver == null) {
-                Log.e(TAG, "No receiver received. There is nowhere to send the results.");
+                Log.d(TAG, "No receiver received. There is nowhere to send the results.");
                 return;
             }
 
@@ -57,7 +50,7 @@ public class FetchAddressIntentService extends IntentService {
             // send an error error message and return.
             if (location == null) {
 
-                Log.e(TAG, "No location data provided");
+                Log.d(TAG, "No location data provided");
                 deliverResultToReceiver(Constants.FAILURE_RESULT, "No location data provided");
                 return;
             }
@@ -77,20 +70,20 @@ public class FetchAddressIntentService extends IntentService {
             } catch (IOException ioException) {
                 // Catch network or other I/O problems.
 
-                Log.e(TAG, "Location service not available " + ioException.getMessage());
+                Log.e(TAG, "Location service not available " + ioException.getMessage(), ioException);
             } catch (IllegalArgumentException illegalArgumentException) {
                 // Catch invalid latitude or longitude values.
 
                 Log.e(TAG,  "Invalid latitude or longitude used . " +
                         "Latitude = " + location.getLatitude() +
                         ", Longitude = " +
-                        location.getLongitude() + " " + illegalArgumentException.getMessage());
+                        location.getLongitude() + " " + illegalArgumentException.getMessage(), illegalArgumentException);
             }
 
             // Handle case where no address was found.
             if (addresses == null || addresses.size()  == 0) {
 
-                    Log.e(TAG, "Address not found");
+                    Log.d(TAG, "Address not found");
 
                 deliverResultToReceiver(Constants.FAILURE_RESULT, errorMessage);
             } else {

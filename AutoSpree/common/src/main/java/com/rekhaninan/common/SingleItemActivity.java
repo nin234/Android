@@ -1408,7 +1408,7 @@ public class SingleItemActivity extends AppCompatActivity
             break;
 
             default:
-                    Log.e(TAG, "Invalid app_name " + app_name);
+                    Log.d(TAG, "Invalid app_name " + app_name);
                 break;
 
         }

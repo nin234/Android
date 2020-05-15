@@ -27,7 +27,7 @@ public class FirebaseMsgRcv extends FirebaseMessagingService {
 
     @Override
     public void onNewToken(String refreshedToken) {
-        Log.e("NEW_TOKEN", refreshedToken);
+        Log.d("NEW_TOKEN", refreshedToken);
 
 
         Log.i(TAG, "Refreshed token: " + refreshedToken);

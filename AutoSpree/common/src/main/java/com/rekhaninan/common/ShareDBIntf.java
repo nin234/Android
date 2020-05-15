@@ -7,11 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
-import static com.rekhaninan.common.Constants.CONTACTS_ITEM_ADD;
 
 /**
  * Created by ninanthomas on 10/26/17.
@@ -68,7 +64,7 @@ public class ShareDBIntf {
         }
         catch(Exception e)
         {
-            Log.e("Error", "Exception deleteItem " + e.getMessage());
+            Log.e("Error", "Exception deleteItem " + e.getMessage(), e);
         }
         return true;
     }
@@ -157,7 +153,7 @@ public class ShareDBIntf {
         }
         catch(Exception e)
         {
-            Log.e("Error", "Exception deleteImagesMetaData " + e.getMessage());
+            Log.e("Error", "Exception deleteImagesMetaData " + e.getMessage(), e);
         }
         return true;
     }
@@ -199,7 +195,7 @@ public class ShareDBIntf {
         }
         catch(Exception e)
         {
-            Log.e("Error", "Exception deleteImagesMetaData " + e.getMessage());
+            Log.e("Error", "Exception deleteImagesMetaData " + e.getMessage(), e);
         }
         return true;
     }

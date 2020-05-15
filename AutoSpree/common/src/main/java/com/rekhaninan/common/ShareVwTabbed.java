@@ -24,8 +24,8 @@ public class ShareVwTabbed extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         Bundle args = getArguments();
-        ((TextView) view.findViewById(android.R.id.text1))
-                .setText(Integer.toString(args.getInt(ARG_OBJECT)));
+       // ((TextView) view.findViewById(android.R.id.text1))
+              //  .setText(Integer.toString(args.getInt(ARG_OBJECT)));
     }
 
 }

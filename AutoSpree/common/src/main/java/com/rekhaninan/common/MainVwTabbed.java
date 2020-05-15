@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -28,7 +29,7 @@ public class MainVwTabbed extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        demoCollectionAdapter = new TabbedCollectionAdapter(this);
+
         viewPager = view.findViewById(R.id.pager);
         viewPager.setAdapter(demoCollectionAdapter);
     }

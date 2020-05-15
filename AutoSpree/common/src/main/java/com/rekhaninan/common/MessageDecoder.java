@@ -3,8 +3,6 @@ package com.rekhaninan.common;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
 
 import static com.rekhaninan.common.Constants.AUTOSPREE;
@@ -13,12 +11,9 @@ import static com.rekhaninan.common.Constants.AUTOSPREE_EDIT_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC;
 import static com.rekhaninan.common.Constants.EASYGROC_ADD_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_DISPLAY_ITEM;
-import static com.rekhaninan.common.Constants.EASYGROC_EDIT_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_ADD_ITEM;
-import static com.rekhaninan.common.Constants.GET_EASYGROC_LIST_MSG;
 import static com.rekhaninan.common.Constants.GET_SHARE_ID_RPLY_MSG;
 import static com.rekhaninan.common.Constants.ITEMSEPARATOR;
-import static com.rekhaninan.common.Constants.KEYVALSEPARATOR;
 import static com.rekhaninan.common.Constants.KEYVALSEPARATORREGEX;
 import static com.rekhaninan.common.Constants.MSG_AGGR_BUF_LEN;
 import static com.rekhaninan.common.Constants.OPENHOUSES;
@@ -29,7 +24,6 @@ import static com.rekhaninan.common.Constants.PIC_MSG;
 import static com.rekhaninan.common.Constants.SHARE_ITEM_MSG;
 import static com.rekhaninan.common.Constants.SHARE_TEMPL_ITEM_MSG;
 import static com.rekhaninan.common.Constants.SHOULD_UPLOAD_MSG;
-import static com.rekhaninan.common.Constants.STORE_DEVICE_TKN_MSG;
 import static com.rekhaninan.common.Constants.STORE_DEVICE_TKN_RPLY_MSG;
 import static com.rekhaninan.common.Constants.STORE_TRNSCTN_ID_RPLY_MSG;
 import static com.rekhaninan.common.Constants.TEMPLLISTSEPERATOR;
@@ -167,7 +161,7 @@ public class MessageDecoder {
         if (cnt != 2)
         {
 
-            Log.e(TAG, "Invalid picNameArr in message decoder=" + picNameArr);
+            Log.d(TAG, "Invalid picNameArr in message decoder=" + picNameArr);
             return false;
         }
 
@@ -251,11 +245,11 @@ public class MessageDecoder {
         }
         catch (java.io.UnsupportedEncodingException excp)
         {
-            Log.e(TAG, "processShareItemMsg UnsupportedEncodingException " + excp.getMessage());
+            Log.e(TAG, "processShareItemMsg UnsupportedEncodingException " + excp.getMessage(), excp);
         }
         catch (Exception excp)
         {
-            Log.e(TAG, "processShareItemMsg exception  " + excp.getMessage());
+            Log.e(TAG, "processShareItemMsg exception  " + excp.getMessage(), excp);
         }
 
         return bRet;
@@ -633,7 +627,7 @@ public class MessageDecoder {
     {
         if (MSG_AGGR_BUF_LEN - aggrbuf.position()  < remaining)
         {
-            Log.e(TAG, "Invalid message received remaining=" + remaining + " bufIndx=" + aggrbuf.position());
+            Log.d(TAG, "Invalid message received remaining=" + remaining + " bufIndx=" + aggrbuf.position());
             aggrbuf.clear();
             start = true;
             return true;

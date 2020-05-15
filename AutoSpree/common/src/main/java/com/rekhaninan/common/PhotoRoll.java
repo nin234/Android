@@ -55,7 +55,7 @@ public class PhotoRoll extends AppCompatActivity {
 
                     //Create intent
                     if (position < 0 || position >= images.size()) {
-                        Log.e(TAG, "Invalid grid position " + position + " images array size=" + images.size());
+                        Log.d(TAG, "Invalid grid position " + position + " images array size=" + images.size());
                         return;
                     }
                     Intent intent = new Intent(PhotoRoll.this, ImageSwipeActivity.class);
@@ -109,12 +109,12 @@ public class PhotoRoll extends AppCompatActivity {
                 }
                 else
                 {
-                    Log.e(TAG, "No such file = " + picFile.getAbsolutePath() + " or video file=" + vidFile.getAbsolutePath());
-                }
+                    Log.d(TAG, "No such file = " + picFile.getAbsolutePath() + " or video file=" + vidFile.getAbsolutePath());
+            }
             }
             else
             {
-                Log.e(TAG, "Cannot get Bitmap for file " + file.getAbsolutePath());
+                Log.d(TAG, "Cannot get Bitmap for file " + file.getAbsolutePath());
             }
         }
         return imageItems;

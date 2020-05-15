@@ -228,7 +228,7 @@ public class OpenHousesDBIntf extends DBInterface {
         }
         catch(Exception e)
         {
-            Log.e("Error", "Error" + e.getMessage());
+            Log.e("Error", "Error" + e.getMessage(), e);
         }
         return null;
     }
@@ -305,7 +305,7 @@ public class OpenHousesDBIntf extends DBInterface {
         }
         catch(Exception e)
         {
-            Log.e("Error", "Error" + e.getMessage());
+            Log.e("Error", "Error" + e.getMessage(), e);
         }
         return  null;
     }

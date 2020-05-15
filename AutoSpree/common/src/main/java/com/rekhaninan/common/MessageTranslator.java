@@ -9,7 +9,6 @@ import java.nio.ByteOrder;
 
 import static com.rekhaninan.common.Constants.GET_ITEMS_MSG;
 import static com.rekhaninan.common.Constants.GET_SHARE_ID_MSG;
-import static com.rekhaninan.common.Constants.LOCATION_DATA_EXTRA;
 import static com.rekhaninan.common.Constants.PIC_DONE_MSG;
 import static com.rekhaninan.common.Constants.PIC_METADATA_MSG;
 import static com.rekhaninan.common.Constants.PIC_MSG;
@@ -40,7 +39,7 @@ public class MessageTranslator {
         }
         catch (Exception excp)
         {
-            Log.e (TAG, "sharePicMsg Caught exception " + excp.getMessage());
+            Log.e (TAG, "sharePicMsg Caught exception " + excp.getMessage(), excp);
         }
         return null;
     }
@@ -84,12 +83,12 @@ public class MessageTranslator {
         }
         catch (UnsupportedEncodingException excep)
         {
-            Log.e(TAG, "shareDevicTknMsg Unsupported encoding UTF-8 " + excep.getMessage());
+            Log.e(TAG, "shareDevicTknMsg Unsupported encoding UTF-8 " + excep.getMessage(), excep);
 
         }
         catch (Exception excp)
         {
-            Log.e (TAG, "shareDevicTknMsg Caught exception " + excp.getMessage());
+            Log.e (TAG, "shareDevicTknMsg Caught exception " + excp.getMessage(), excp);
         }
         return null;
     }
@@ -112,12 +111,12 @@ public class MessageTranslator {
         }
         catch (UnsupportedEncodingException excep)
         {
-            Log.e(TAG, "updateFriendListRequest Unsupported encoding UTF-8 " + excep.getMessage());
+            Log.e(TAG, "updateFriendListRequest Unsupported encoding UTF-8 " + excep.getMessage(), excep);
 
         }
         catch (Exception excp)
         {
-            Log.e (TAG, "updateFriendListRequest Caught exception " + excp.getMessage());
+            Log.e (TAG, "updateFriendListRequest Caught exception " + excp.getMessage(), excp);
         }
         return null;
     }
@@ -144,12 +143,12 @@ public class MessageTranslator {
         }
         catch (UnsupportedEncodingException excep)
         {
-            Log.e(TAG, "getItemsMsg Unsupported encoding UTF-8 " + excep.getMessage());
+            Log.e(TAG, "getItemsMsg Unsupported encoding UTF-8 " + excep.getMessage(), excep);
 
         }
         catch (Exception excp)
         {
-            Log.e (TAG, "getItemsMsg Caught exception " + excp.getMessage());
+            Log.e (TAG, "getItemsMsg Caught exception " + excp.getMessage(), excp);
         }
         return null;
     }
@@ -174,12 +173,12 @@ public class MessageTranslator {
         }
         catch (UnsupportedEncodingException excep)
         {
-            Log.e(TAG, "getItemsMsg Unsupported encoding UTF-8 " + excep.getMessage());
+            Log.e(TAG, "getItemsMsg Unsupported encoding UTF-8 " + excep.getMessage(), excep);
 
         }
         catch (Exception excp)
         {
-            Log.e (TAG, "getItemsMsg Caught exception " + excp.getMessage());
+            Log.e (TAG, "getItemsMsg Caught exception " + excp.getMessage(), excp);
         }
         return null;
     }
@@ -214,12 +213,12 @@ public class MessageTranslator {
         }
         catch (UnsupportedEncodingException excep)
         {
-            Log.e(TAG, "getItemsMsg Unsupported encoding UTF-8 " + excep.getMessage());
+            Log.e(TAG, "getItemsMsg Unsupported encoding UTF-8 " + excep.getMessage(), excep);
 
         }
         catch (Exception excp)
         {
-            Log.e (TAG, "getItemsMsg Caught exception " + excp.getMessage());
+            Log.e (TAG, "getItemsMsg Caught exception " + excp.getMessage(), excp);
         }
         return null;
     }
@@ -258,12 +257,12 @@ public static ByteBuffer sharePicMetaDataMsg(long shareId, String picUrl, int pi
     }
     catch (UnsupportedEncodingException excep)
     {
-        Log.e(TAG, "sharePicMetaDataMsg Unsupported encoding UTF-8 " + excep.getMessage());
+        Log.e(TAG, "sharePicMetaDataMsg Unsupported encoding UTF-8 " + excep.getMessage(), excep);
 
     }
     catch (Exception excp)
     {
-        Log.e (TAG, "sharePicMetaDataMsg Caught exception " + excp.getMessage());
+        Log.e (TAG, "sharePicMetaDataMsg Caught exception " + excp.getMessage(), excp);
     }
     return null;
 }
@@ -288,12 +287,12 @@ public static ByteBuffer sharePicMetaDataMsg(long shareId, String picUrl, int pi
             return byteBuffer;
         }catch (UnsupportedEncodingException excep)
         {
-            Log.e(TAG, "shareCmnItemMsg Unsupported encoding UTF-8 " + excep.getMessage());
+            Log.e(TAG, "shareCmnItemMsg Unsupported encoding UTF-8 " + excep.getMessage(), excep);
 
         }
         catch (Exception excp)
         {
-            Log.e (TAG, "shareCmnItemMsg Caught exception " + excp.getMessage());
+            Log.e (TAG, "shareCmnItemMsg Caught exception " + excp.getMessage(), excp);
         }
         return null;
     }

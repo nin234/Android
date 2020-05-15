@@ -11,9 +11,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuInflater;
 
+import com.google.android.material.tabs.TabLayout;
+
 import static com.rekhaninan.common.Constants.*;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager2.widget.ViewPager2;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 public class MainVwActivity extends AppCompatActivity {
     private static final String TAG="MainVwActivity";
@@ -22,9 +26,13 @@ public class MainVwActivity extends AppCompatActivity {
     private String message;
     private int no_items;
     private String dbClassName;
+    private static final int SHARE_POSN=0;
+    private static final int CONTACTS_POSN=1;
+    private static final int PLANNER_POSN=2;
+    private static final int HOME_POSN=3;
 
-
-
+    ViewPager2 viewPager;
+    TabLayout tabLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -33,13 +41,49 @@ public class MainVwActivity extends AppCompatActivity {
             Log.d(getClass().getSimpleName(), "Starting onCreate of MainVwActivity");
             super.onCreate(savedInstanceState);
             Intent intent = getIntent();
+            Log.d(getClass().getSimpleName(), "Starting onCreate of MainVwActivity1");
             String APP_NAME = "APP_NAME";
             message = intent.getStringExtra(APP_NAME);
             app_name = message;
-            setContentView(R.layout.activity_main_vw);
-            //setContentView(R.layout.tabbed_main);
+            //setContentView(R.layout.activity_main_vw);
+            Log.d(getClass().getSimpleName(), "Starting onCreate of MainVwActivity2");
+            setContentView(R.layout.tabbed_main);
+            Log.d(getClass().getSimpleName(), "Starting onCreate of MainVwActivity3");
+            viewPager = findViewById(R.id.pager);
+            Log.d(getClass().getSimpleName(), "Starting onCreate of MainVwActivity4");
+            tabLayout = findViewById(R.id.tab_layout);
+            Log.d(getClass().getSimpleName(), "Starting onCreate of MainVwActivity5");
+            viewPager.setAdapter((new TabbedCollectionAdapter(this)));
+            new TabLayoutMediator(tabLayout, viewPager,
+                    new TabLayoutMediator.TabConfigurationStrategy() {
+                        @Override public void onConfigureTab(TabLayout.Tab tab, int position) {
+                            Log.d(getClass().getSimpleName(), "Configuring tab at" + position);
+                            switch (position)
+                            {
+                                case SHARE_POSN:
+                                    tab.setText("Share");
+                                    break;
 
+                                case CONTACTS_POSN:
+                                    tab.setText("Contacts");
+                                    break;
 
+                                case PLANNER_POSN:
+                                    tab.setText("Planner");
+                                    break;
+                                case HOME_POSN:
+                                    tab.setText("Home");
+                                    break;
+                                default:
+                                    tab.setText("Invalid Posn");
+                                    break;
+                            }
+
+                        }
+                    }).attach();
+
+            return;
+            /*
             PermissionsManager.getInstance().requestPermissionIfReqd(getApplicationContext(), this);
             dbClassName = "com.rekhaninan.common.";
             dbClassName +=   message;
@@ -69,12 +113,12 @@ public class MainVwActivity extends AppCompatActivity {
            //mListView.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
           //  mListView.setClickable(true);
 
-
+    */
         }
 
         catch (Exception e)
         {
-            Log.d(getClass().getName(), "Exception in onCreate of MainVwActivity");
+            Log.e(getClass().getName(), "Exception2 in onCreate of MainVwActivity " + e.getMessage(), e);
             return;
         }
 
@@ -86,7 +130,7 @@ public class MainVwActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         if (app_name.equals(EASYGROC))
         {
-            Log.d(TAG, "Inflating main_easygroc_menu");
+            Log.d(TAG, "Inflating main_easygro_menu");
             inflater.inflate(R.menu.main_easygroc_menu, menu);
         }
         else {
@@ -211,8 +255,8 @@ public class MainVwActivity extends AppCompatActivity {
     @Override
     protected void onResume()
     {
-        Log.d(getClass().getSimpleName(), "In onResume of MainVwActivity");
-       refreshVw();
+        Log.d(getClass().getSimpleName(), "In onResume of MainVwActivity1");
+       //refreshVw();
         /*
         Bundle bundle = getIntent().getExtras();
         if(bundle != null)

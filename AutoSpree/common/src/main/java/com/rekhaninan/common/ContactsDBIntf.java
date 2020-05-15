@@ -1,10 +1,8 @@
 package com.rekhaninan.common;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -94,7 +92,7 @@ public class ContactsDBIntf {
         }
         catch(Exception e)
         {
-            Log.e("Error", "Error" + e.getMessage());
+            Log.e("Error", "Error" + e.getMessage(), e);
         }
 
         return  null;
@@ -111,7 +109,7 @@ public class ContactsDBIntf {
             }
             if (itm.getName().equals("ME") && vwType == CONTACTS_ITEM_ADD)
             {
-                Log.e(TAG, "Invalid name ME for contacts");
+                Log.d(TAG, "Invalid name ME for contacts");
                 return  false;
             }
             String name = Long.toString(itm.getShare_id());
@@ -214,7 +212,7 @@ public class ContactsDBIntf {
             editor.apply();
         }
         catch (PackageManager.NameNotFoundException e) {
-            Log.e("Not data shared", e.toString());
+            Log.e("Not data shared", e.toString(), e);
         }
     }
 

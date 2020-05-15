@@ -9,8 +9,6 @@ import android.content.Context;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.StringTokenizer;
 
 import static com.rekhaninan.common.Constants.EASYGROC_ADD_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_DISPLAY_ITEM;
@@ -242,7 +240,7 @@ public class AutoSpreeDBIntf extends DBInterface {
         }
         catch(Exception e)
         {
-            Log.e("Error", "Exception getting MainVwLst" + e.getMessage());
+            Log.e("Error", "Exception getting MainVwLst" + e.getMessage(), e);
         }
 
         return null;
@@ -312,7 +310,7 @@ public class AutoSpreeDBIntf extends DBInterface {
         }
         catch(Exception e)
         {
-            Log.e("Error", "Exception getting MainVwLst" + e.getMessage());
+            Log.e("Error", "Exception getting MainVwLst" + e.getMessage(), e);
         }
         return null;
     }

@@ -3,26 +3,19 @@ package com.rekhaninan.common;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketOption;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.SocketChannel;
-import java.util.Locale;
-import java.util.concurrent.SynchronousQueue;
 
 import static com.rekhaninan.common.Constants.AUTOSPREE;
 import static com.rekhaninan.common.Constants.CHECK_INTERVAL;
 import static com.rekhaninan.common.Constants.EASYGROC;
 import static com.rekhaninan.common.Constants.MAX_BUF;
 import static com.rekhaninan.common.Constants.OPENHOUSES;
-import static com.rekhaninan.common.Constants.RCV_BUF_LEN;
 
 /**
  * Created by ninanthomas on 2/15/17.
@@ -77,11 +70,11 @@ public class NtwIntf {
         }
         catch (IOException excp)
         {
-            Log.e(TAG, "Failed to open socket channel " + excp.getMessage());
+            Log.e(TAG, "Failed to open socket channel " + excp.getMessage(), excp);
         }
         catch (Exception excp)
         {
-            Log.e(TAG, "Failed to open socket channel " + excp.getMessage());
+            Log.e(TAG, "Failed to open socket channel " + excp.getMessage(), excp);
         }
 
     }
@@ -105,11 +98,11 @@ public class NtwIntf {
         }
         catch (IOException excp)
         {
-            Log.e (TAG, "sendMsg Caught IOException=" + excp.getMessage());
+            Log.e (TAG, "sendMsg Caught IOException=" + excp.getMessage(), excp);
         }
         catch (Exception excp)
         {
-            Log.e (TAG, "sendMsg Caught Exception=" + excp.getMessage());
+            Log.e (TAG, "sendMsg Caught Exception=" + excp.getMessage(), excp);
         }
 
     }
@@ -120,7 +113,7 @@ public class NtwIntf {
         {
             if (!connect()){
 
-                Log.e (TAG, "Failed to connect to socket");
+                Log.d (TAG, "Failed to connect to socket");
                 return false;
             }
 
@@ -139,11 +132,11 @@ public class NtwIntf {
         }
         catch (IOException excp)
         {
-            Log.e (TAG, "sendMsg Caught IOException=" + excp.getMessage());
+            Log.e (TAG, "sendMsg Caught IOException=" + excp.getMessage(), excp);
         }
         catch (Exception excp)
         {
-            Log.e (TAG, "sendMsg Caught Exception=" + excp.getMessage());
+            Log.e (TAG, "sendMsg Caught Exception=" + excp.getMessage(), excp);
         }
 
 
@@ -181,11 +174,11 @@ public class NtwIntf {
         }
         catch (IOException excp)
         {
-            Log.e (TAG, "getResp Caught IOException" + excp.getMessage());
+            Log.e (TAG, "getResp Caught IOException" + excp.getMessage(), excp);
         }
         catch (Exception excp)
         {
-            Log.e (TAG, "getResp Caught Exception" + excp.getMessage());
+            Log.e (TAG, "getResp Caught Exception" + excp.getMessage(), excp);
         }
 
         return false;
@@ -212,15 +205,15 @@ public class NtwIntf {
         }
         catch (UnknownHostException excp)
         {
-            Log.e (TAG, "connect Caught UnknownHostException " + excp.getMessage());
+            Log.e (TAG, "connect Caught UnknownHostException " + excp.getMessage(), excp);
         }
         catch (IOException excp)
         {
-            Log.e (TAG, "connect Caught IOException " + excp.getMessage());
+            Log.e (TAG, "connect Caught IOException " + excp.getMessage(), excp);
         }
         catch (Exception excp)
         {
-            Log.e (TAG, "connect Caught Exception " + excp.getMessage());
+            Log.e (TAG, "connect Caught Exception " + excp.getMessage(), excp);
         }
 
         return false;
