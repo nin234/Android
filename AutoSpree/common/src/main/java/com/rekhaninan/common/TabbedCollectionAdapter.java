@@ -24,15 +24,40 @@ public class TabbedCollectionAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         // Return a NEW fragment instance in createFragment(int)
-        if (position == HOME_POSN)
-        {
-            MainVwTabbed fragment = new MainVwTabbed();
-            fragment.app_name = appName;
-            Bundle args = new Bundle();
-            // Our object is just an integer :-P
-            args.putInt(MainVwTabbed.ARG_OBJECT, position + 1);
-            fragment.setArguments(args);
-            return fragment;
+        switch (position) {
+            case  HOME_POSN: {
+                MainVwTabbed fragment = new MainVwTabbed();
+                fragment.app_name = appName;
+                Bundle args = new Bundle();
+                // Our object is just an integer :-P
+                args.putInt(MainVwTabbed.ARG_OBJECT, position + 1);
+                fragment.setArguments(args);
+                return fragment;
+            }
+
+            case PLANNER_POSN: {
+                PlannerVwTabbed fragment = new PlannerVwTabbed();
+                fragment.app_name = appName;
+                Bundle args = new Bundle();
+                // Our object is just an integer :-P
+                args.putInt(PlannerVwTabbed.ARG_OBJECT, position + 1);
+                fragment.setArguments(args);
+                return fragment;
+            }
+
+            case CONTACTS_POSN: {
+                ContactsVwTabbed fragment = new ContactsVwTabbed();
+                fragment.app_name = appName;
+                Bundle args = new Bundle();
+                // Our object is just an integer :-P
+                args.putInt(ContactsVwTabbed.ARG_OBJECT, position + 1);
+                fragment.setArguments(args);
+                return fragment;
+            }
+
+            default:
+                break;
+
         }
         Fragment fragment = new ShareVwTabbed();
         Bundle args = new Bundle();
