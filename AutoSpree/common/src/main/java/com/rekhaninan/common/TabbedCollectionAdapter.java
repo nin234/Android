@@ -55,6 +55,16 @@ public class TabbedCollectionAdapter extends FragmentStateAdapter {
                 return fragment;
             }
 
+            case SHARE_POSN: {
+                ShareVwTabbed fragment = new ShareVwTabbed();
+                fragment.app_name = appName;
+                Bundle args = new Bundle();
+                // Our object is just an integer :-P
+                args.putInt(ShareVwTabbed.ARG_OBJECT, position + 1);
+                fragment.setArguments(args);
+                return fragment;
+            }
+
             default:
                 break;
 
