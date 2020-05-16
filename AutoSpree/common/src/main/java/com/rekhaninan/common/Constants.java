@@ -112,6 +112,10 @@ public final class Constants {
     public static final int  PIC_DONE_MSG =19;
     public static final int SHOULD_UPLOAD_MSG = 20;
     public static final int SHOULD_DOWNLOAD_MSG = 21;
+    public static final int SHARE_POSN=0;
+    public static final int CONTACTS_POSN=1;
+    public static final int PLANNER_POSN=2;
+    public static final int HOME_POSN=3;
 
 
 

@@ -26,10 +26,7 @@ public class MainVwActivity extends AppCompatActivity {
     private String message;
     private int no_items;
     private String dbClassName;
-    private static final int SHARE_POSN=0;
-    private static final int CONTACTS_POSN=1;
-    private static final int PLANNER_POSN=2;
-    private static final int HOME_POSN=3;
+
 
     ViewPager2 viewPager;
     TabLayout tabLayout;
@@ -45,6 +42,15 @@ public class MainVwActivity extends AppCompatActivity {
             String APP_NAME = "APP_NAME";
             message = intent.getStringExtra(APP_NAME);
             app_name = message;
+            PermissionsManager.getInstance().requestPermissionIfReqd(getApplicationContext(), this);
+            dbClassName = "com.rekhaninan.common.";
+            dbClassName +=   message;
+            dbClassName += "DBIntf";
+            Log.d(getClass().getSimpleName(), dbClassName);
+            DBOperations.getInstance().initDb(dbClassName, this);
+            ShareMgr.getInstance().start_thr(this, app_name);
+            Log.d(TAG, "Getting main list from DB MAINVW=" + MAINVW);
+            DBOperations.getInstance().setApp_name(app_name);
             //setContentView(R.layout.activity_main_vw);
             Log.d(getClass().getSimpleName(), "Starting onCreate of MainVwActivity2");
             setContentView(R.layout.tabbed_main);
@@ -53,7 +59,9 @@ public class MainVwActivity extends AppCompatActivity {
             Log.d(getClass().getSimpleName(), "Starting onCreate of MainVwActivity4");
             tabLayout = findViewById(R.id.tab_layout);
             Log.d(getClass().getSimpleName(), "Starting onCreate of MainVwActivity5");
-            viewPager.setAdapter((new TabbedCollectionAdapter(this)));
+            TabbedCollectionAdapter adapter = new TabbedCollectionAdapter(this);
+            adapter.appName = app_name;
+            viewPager.setAdapter(adapter);
             new TabLayoutMediator(tabLayout, viewPager,
                     new TabLayoutMediator.TabConfigurationStrategy() {
                         @Override public void onConfigureTab(TabLayout.Tab tab, int position) {
@@ -82,17 +90,11 @@ public class MainVwActivity extends AppCompatActivity {
                         }
                     }).attach();
 
-            return;
+            viewPager.setCurrentItem(HOME_POSN);
+
+
+
             /*
-            PermissionsManager.getInstance().requestPermissionIfReqd(getApplicationContext(), this);
-            dbClassName = "com.rekhaninan.common.";
-            dbClassName +=   message;
-            dbClassName += "DBIntf";
-            Log.d(getClass().getSimpleName(), dbClassName);
-            DBOperations.getInstance().initDb(dbClassName, this);
-            ShareMgr.getInstance().start_thr(this, app_name);
-            Log.d(TAG, "Getting main list from DB MAINVW=" + MAINVW);
-            DBOperations.getInstance().setApp_name(app_name);
             java.util.List<Item> mainLst = DBOperations.getInstance().getMainLst(MAINVW);
             if (mainLst == null)
             {
