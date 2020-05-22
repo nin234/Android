@@ -86,16 +86,16 @@ public class TemplNameAdapter extends BaseExpandableListAdapter {
         switch (childPosition)
         {
             case 0:
-                expandedListText = "Recurring List";
+                expandedListText = "Always";
             break;
 
             case 1:
-                expandedListText = "Inventory List";
+                expandedListText = "Replenish";
                 name += ":INV";
              break;
 
             case 2:
-                expandedListText = "Scratch Pad";
+                expandedListText = "One-time";
                 name += ":SCRTCH";
             break;
 

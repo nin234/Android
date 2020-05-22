@@ -19,11 +19,14 @@ public class TabbedCollectionAdapter extends FragmentStateAdapter {
         super(frg);
     }
 
+
+
     private static final int MAIN_PAGE_TABS = 4;
     @NonNull
     @Override
     public Fragment createFragment(int position) {
         // Return a NEW fragment instance in createFragment(int)
+        Log.d(getClass().getSimpleName(), "Creating fragment at=" + position);
         switch (position) {
             case  HOME_POSN: {
                 MainVwTabbed fragment = new MainVwTabbed();

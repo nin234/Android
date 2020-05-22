@@ -13,6 +13,8 @@ import static com.rekhaninan.common.Constants.*;
 
 import java.util.Stack;
 
+import androidx.fragment.app.Fragment;
+
 /**
  * Created by nin234 on 8/21/16.
  */
@@ -311,6 +313,10 @@ public class ArrayAdapterMainVw extends ArrayAdapter<Item> {
         return true;
     }
 
+    public void setFragment(Fragment frg)
+    {
+        rowView.setFragment(frg);
+    }
 
     public void setParams (String appTyp, int viewType)
     {

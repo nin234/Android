@@ -1,7 +1,12 @@
 package com.rekhaninan.common;
 
 
+
 import androidx.fragment.app.Fragment;
+
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,6 +15,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -29,6 +37,12 @@ public class MainVwTabbed extends Fragment {
     private ListView mListView;
     private static final String TAG="MainVwTabbed";
     public String app_name;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
     @Nullable
     @Override
@@ -63,6 +77,68 @@ public class MainVwTabbed extends Fragment {
           //  mListView.setClickable(true);
 
 
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if (app_name.equals(EASYGROC))
+        {
+            Log.d(TAG, "Inflating main_easygro_menu");
+            inflater.inflate(R.menu.main_easygroc_menu, menu);
+        }
+        else {
+            Log.d(TAG, "Inflating main_menu");
+            inflater.inflate(R.menu.main_menu, menu);
+        }
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        if (item.getItemId() == R.id.add_item) {
+            Log.d(getClass().getName(), "Creating new Item");
+
+            Intent intent = new Intent(getActivity(), SingleItemActivity.class);
+            SharedPreferences settings = getContext().getSharedPreferences("OHAutoSpree", Context.MODE_PRIVATE);
+
+            switch (app_name) {
+                case AUTOSPREE: {
+                    intent.putExtra("ViewType", AUTOSPREE_ADD_ITEM);
+                    String item_name = "Car";
+                    int item_no = settings.getInt("item_no", 1);
+                    item_name += item_no;
+                    Item itm = new Item();
+                    itm.setName(item_name);
+                    intent.putExtra("item", itm);
+                }
+                break;
+
+                case OPENHOUSES: {
+                    intent.putExtra("ViewType", OPENHOUSES_ADD_ITEM);
+                    String item_name = "House";
+                    int item_no = settings.getInt("item_no", 1);
+                    item_name += item_no;
+                    Item itm = new Item();
+                    itm.setName(item_name);
+                    itm.setShare_id(ShareMgr.getInstance().getShare_id());
+                    intent.putExtra("item", itm);
+                }
+                break;
+
+                case EASYGROC:
+                    intent.putExtra("ViewType", EASYGROC_ADD_ITEM_OPTIONS);
+                    Item itm = new Item();
+                    intent.putExtra("item", itm);
+                    break;
+
+                default:
+
+                    break;
+            }
+            startActivity(intent);
+
+        }
+        return true;
     }
 }
 

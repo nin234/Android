@@ -26,12 +26,18 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
+
 import java.io.File;
 import java.util.HashMap;
 
 
+import androidx.viewpager2.widget.ViewPager2;
+
 import static com.rekhaninan.common.Constants.ADD_CHECK_LIST_ACTIVITY_REQUEST;
 import static com.rekhaninan.common.Constants.ADD_CHECK_LIST_ACTIVITY_REQUEST_2;
+import static com.rekhaninan.common.Constants.ALWAYS_POSN;
 import static com.rekhaninan.common.Constants.AUTOSPREE_ADD_ITEM;
 import static com.rekhaninan.common.Constants.AUTOSPREE_DISPLAY_ITEM;
 import static com.rekhaninan.common.Constants.AUTOSPREE_EDIT_ITEM;
@@ -39,13 +45,12 @@ import static com.rekhaninan.common.Constants.CHECK_LIST_ADD;
 import static com.rekhaninan.common.Constants.CHECK_LIST_DISPLAY;
 import static com.rekhaninan.common.Constants.CHECK_LIST_EDIT;
 import static com.rekhaninan.common.Constants.CHECK_LIST_TEMPL_SELECTOR;
+import static com.rekhaninan.common.Constants.CONTACTS_POSN;
 import static com.rekhaninan.common.Constants.DELETE_TEMPL_CHECKLIST_ACTIVITY_REQUEST;
 import static com.rekhaninan.common.Constants.EASYGROC;
 import static com.rekhaninan.common.Constants.EASYGROC_ADD_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_ADD_ITEM_OPTIONS;
 import static com.rekhaninan.common.Constants.EASYGROC_ADD_NEW_LIST;
-import static com.rekhaninan.common.Constants.EASYGROC_ADD_PIC_LIST;
-import static com.rekhaninan.common.Constants.EASYGROC_ADD_ROW_FOUR;
 import static com.rekhaninan.common.Constants.EASYGROC_ADD_ROW_TWO;
 import static com.rekhaninan.common.Constants.EASYGROC_ADD_TEMPL_LIST;
 import static com.rekhaninan.common.Constants.EASYGROC_DISPLAY_ITEM;
@@ -56,10 +61,16 @@ import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_DELETE_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_DISPLAY_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_EDIT_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_LISTS;
+import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_NAME_LISTS;
+import static com.rekhaninan.common.Constants.HOME_POSN;
 import static com.rekhaninan.common.Constants.MAINVW;
 import static com.rekhaninan.common.Constants.NOTES_ACTIVITY_REQUEST;
+import static com.rekhaninan.common.Constants.ONETIME_POSN;
 import static com.rekhaninan.common.Constants.PICTURE_ACTIVITY_REQUEST;
+import static com.rekhaninan.common.Constants.PLANNER_POSN;
+import static com.rekhaninan.common.Constants.REPLENISH_POSN;
 import static com.rekhaninan.common.Constants.SHARE_MAINVW;
+import static com.rekhaninan.common.Constants.SHARE_POSN;
 
 /**
  * Created by nin234 on 8/28/1
@@ -67,6 +78,9 @@ import static com.rekhaninan.common.Constants.SHARE_MAINVW;
 public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedListener
 {
     private final String TAG = "EasyGrocRow";
+    ViewPager2 viewPager;
+    TabLayout tabLayout;
+
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
         // An item was selected. You can retrieve the selected item using
@@ -97,6 +111,77 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         return itm.getName();
     }
 
+    private View getTemplNameRowView(int txtHeight, final Item itm, final ViewGroup parent)
+    {
+        TextView tv = new TextView(ctxt);
+        tv.setHeight(txtHeight);
+        tv.setText(itm.getName());
+
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
+        tv.setTag(itm);
+        tv.setOnClickListener(new View.OnClickListener() {
+                                  @Override
+                                  public void onClick(View view) {
+
+
+                                      Intent intent = new Intent(ctxt, PlannerActivity.class);
+                                      intent.putExtra("item", itm);
+                                      ctxt.startActivity(intent);
+                                  }
+                              }
+        );
+        return tv;
+    }
+
+    private View getMainRowVw(int txtHeight, Item itm)
+    {
+        TextView tv = new TextView(ctxt);
+        tv.setHeight(txtHeight);
+        tv.setText(itm.getName());
+
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
+        tv.setTag(itm);
+        tv.setOnClickListener(new View.OnClickListener() {
+                                  @Override
+                                  public void onClick(View view) {
+
+                                      TextView tv = (TextView) view;
+                                      Item itm = (Item) tv.getTag();
+                                      Log.d(getClass().getName(), "Clicked row " + tv.getText());
+                                      Intent intent = new Intent(ctxt, SingleItemActivity.class);
+                                      if (vwType == MAINVW) {
+                                          intent.putExtra("ViewType", EASYGROC_DISPLAY_ITEM);
+                                      }
+                                      else if (vwType == EASYGROC_TEMPL_LISTS)
+                                      {
+                                          intent.putExtra("ViewType", EASYGROC_TEMPL_DISPLAY_ITEM);
+                                      }
+                                      intent.putExtra("item", itm);
+
+                                      String app_name = DBOperations.getInstance().getApp_name();
+                                      if (app_name.equals(EASYGROC))
+                                      {
+                                          ctxt.startActivity(intent);
+                                      }
+                                      else
+                                      {
+                                          if (vwType == EASYGROC_TEMPL_LISTS)
+                                          {
+                                              Activity itemAct = (Activity) ctxt;
+                                              itemAct.startActivityForResult(intent, DELETE_TEMPL_CHECKLIST_ACTIVITY_REQUEST);
+                                          }
+                                          else
+                                          {
+                                              ctxt.startActivity(intent);
+                                          }
+                                      }
+                                  }
+                              }
+
+        );
+        return tv;
+    }
+
     public View getView(Item itm, int position, ViewGroup parent)
     {
         WindowManager wm = (WindowManager) ctxt.getSystemService(Context.WINDOW_SERVICE);
@@ -116,53 +201,14 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
 
         switch (vwType)
         {
+            case EASYGROC_TEMPL_NAME_LISTS:
+            {
+                return getTemplNameRowView(txtHeight, itm, parent);
+            }
+
             case EASYGROC_TEMPL_LISTS:
             case MAINVW: {
-                TextView tv = new TextView(ctxt);
-                tv.setHeight(txtHeight);
-                tv.setText(itm.getName());
-
-                tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
-                tv.setTag(itm);
-                tv.setOnClickListener(new View.OnClickListener() {
-                                          @Override
-                                          public void onClick(View view) {
-
-                                              TextView tv = (TextView) view;
-                                              Item itm = (Item) tv.getTag();
-                                              Log.d(getClass().getName(), "Clicked row " + tv.getText());
-                                              Intent intent = new Intent(ctxt, SingleItemActivity.class);
-                                              if (vwType == MAINVW) {
-                                                  intent.putExtra("ViewType", EASYGROC_DISPLAY_ITEM);
-                                              }
-                                              else if (vwType == EASYGROC_TEMPL_LISTS)
-                                              {
-                                                  intent.putExtra("ViewType", EASYGROC_TEMPL_DISPLAY_ITEM);
-                                              }
-                                              intent.putExtra("item", itm);
-
-                                              String app_name = DBOperations.getInstance().getApp_name();
-                                              if (app_name.equals(EASYGROC))
-                                              {
-                                                  ctxt.startActivity(intent);
-                                              }
-                                              else
-                                              {
-                                                  if (vwType == EASYGROC_TEMPL_LISTS)
-                                                  {
-                                                      Activity itemAct = (Activity) ctxt;
-                                                      itemAct.startActivityForResult(intent, DELETE_TEMPL_CHECKLIST_ACTIVITY_REQUEST);
-                                                  }
-                                                  else
-                                                  {
-                                                      ctxt.startActivity(intent);
-                                                  }
-                                              }
-                                          }
-                                      }
-
-                );
-                return tv;
+                return getMainRowVw(txtHeight, itm);
             }
 
             case EASYGROC_TEMPL_DELETE_ITEM:
@@ -251,39 +297,15 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                     }
 
                     case EASYGROC_ADD_ROW_TWO:
-                    case EASYGROC_ADD_ROW_FOUR:
+
                     {
                         return getNoLabelView(parent, txtHeight, width, "  ");
                     }
 
-                    case EASYGROC_ADD_PIC_LIST:
-                    {
-                       View vw = getCameraView(parent, txtHeight, width, "Picture List");
-                        vw.setOnClickListener(new View.OnClickListener() {
-                                                          @Override
-                                                          public void onClick(View view) {
-                                                              Log.d(getClass().getName(), "Clicked Picture List starting camera");
-                                                              if (!PermissionsManager.getInstance().hasCameraPermission(ctxt))
-                                                              {
-                                                                  return;
-                                                              }
-                                                              Intent intent = new Intent(ctxt, CameraActivity.class);
-                                                              String album_name = EASYGROC;
-                                                              album_name += File.separator;
-                                                              album_name += Long.toString(ShareMgr.getInstance().getShare_id());
-                                                              intent.putExtra("album_name", album_name);
-                                                              Activity itemAct = (Activity) ctxt;
-                                                              itemAct.startActivityForResult(intent, PICTURE_ACTIVITY_REQUEST);
-                                                          }
-                                                      }
-                        );
-                        return vw;
-
-                    }
 
                     case EASYGROC_ADD_TEMPL_LIST:
                     {
-                        return getNoLabelView(parent, txtHeight, width, "Create from Template Lists");
+                        return getNoLabelView(parent, txtHeight, width, "Create List from Planner");
                     }
 
                     default:

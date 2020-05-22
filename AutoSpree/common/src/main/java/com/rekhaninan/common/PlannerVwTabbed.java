@@ -13,8 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import static com.rekhaninan.common.Constants.CONTACTS_MAINVW;
 import static com.rekhaninan.common.Constants.EASYGROC;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_LISTS;
+import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_NAME_LISTS;
 
 public class PlannerVwTabbed extends Fragment {
     public String app_name;
@@ -29,7 +31,7 @@ public class PlannerVwTabbed extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.templ_name_layout, container, false);
+        return inflater.inflate(R.layout.activity_main_vw, container, false);
     }
 
     @Override
@@ -37,9 +39,12 @@ public class PlannerVwTabbed extends Fragment {
 
         List<Item> mainLst = DBOperations.getInstance().getTemplNameLst();
         Log.i(TAG, "No of elements in Templ name list=" + mainLst.size());
-        mTemplNameView = (ExpandableListView) view.findViewById(R.id.templName);
-        templNameAdapter = new TemplNameAdapter(mainLst, getContext());
-        mTemplNameView.setAdapter(templNameAdapter);
+
+        mListView = (ListView) view.findViewById(R.id.recipe_list_view);
+        ArrayAdapterMainVw adapter = new ArrayAdapterMainVw(getActivity(), R.layout.simple_list_1, mainLst);
+        adapter.setParams(app_name, EASYGROC_TEMPL_NAME_LISTS);
+        adapter.setFragment(this);
+        mListView.setAdapter(adapter);
     }
 
     }

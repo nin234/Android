@@ -57,6 +57,7 @@ public final class Constants {
     public static final int SORT_MAINVW=29;
     public static final int EASYGROC_TEMPL_DELETE_ITEM=30;
     public static final int CONTACTS_ITEM_ADD_NOVWTYP=31;
+    public static final int EASYGROC_TEMPL_NAME_LISTS=32;
 
     public static final int AUTOSPREE_NAME_ROW=0;
     public static final int AUTOSPREE_MODEL_ROW=1;
@@ -71,9 +72,8 @@ public final class Constants {
 
     public static final int EASYGROC_ADD_NEW_LIST =0;
     public static final int EASYGROC_ADD_ROW_TWO = 1;
-    public static final int EASYGROC_ADD_PIC_LIST = 2;
-    public static final int EASYGROC_ADD_ROW_FOUR = 3;
-    public static final int EASYGROC_ADD_TEMPL_LIST = 4;
+
+    public static final int EASYGROC_ADD_TEMPL_LIST = 2;
 
 
     public static final int EASYGROC_NAME_ROW = 0;
@@ -112,12 +112,15 @@ public final class Constants {
     public static final int  PIC_DONE_MSG =19;
     public static final int SHOULD_UPLOAD_MSG = 20;
     public static final int SHOULD_DOWNLOAD_MSG = 21;
+
     public static final int SHARE_POSN=0;
     public static final int CONTACTS_POSN=1;
     public static final int PLANNER_POSN=2;
     public static final int HOME_POSN=3;
 
-
+    public static final int ONETIME_POSN=0;
+    public static final int REPLENISH_POSN=1;
+    public static final int ALWAYS_POSN=2;
 
     public static final int  MAX_BUF=16384;
     public static final int RCV_BUF_LEN=16384;

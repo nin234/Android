@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import androidx.fragment.app.Fragment;
+
 import static com.rekhaninan.common.Constants.*;
 
 
@@ -43,6 +45,9 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
     private String app_name;
     private int ratings;
     private Spinner ratingsSpnr;
+    protected Fragment fragment;
+
+    public void setFragment(Fragment frg) {fragment = frg;}
 
     public int getRatings() {
         return ratings;

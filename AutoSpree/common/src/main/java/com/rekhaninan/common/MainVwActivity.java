@@ -52,13 +52,13 @@ public class MainVwActivity extends AppCompatActivity {
             Log.d(TAG, "Getting main list from DB MAINVW=" + MAINVW);
             DBOperations.getInstance().setApp_name(app_name);
             //setContentView(R.layout.activity_main_vw);
-            Log.d(getClass().getSimpleName(), "Starting onCreate of MainVwActivity2");
+
             setContentView(R.layout.tabbed_main);
-            Log.d(getClass().getSimpleName(), "Starting onCreate of MainVwActivity3");
+
             viewPager = findViewById(R.id.pager);
-            Log.d(getClass().getSimpleName(), "Starting onCreate of MainVwActivity4");
+
             tabLayout = findViewById(R.id.tab_layout);
-            Log.d(getClass().getSimpleName(), "Starting onCreate of MainVwActivity5");
+
             TabbedCollectionAdapter adapter = new TabbedCollectionAdapter(this);
             adapter.appName = app_name;
             viewPager.setAdapter(adapter);
@@ -129,6 +129,7 @@ public class MainVwActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        /*
         MenuInflater inflater = getMenuInflater();
         if (app_name.equals(EASYGROC))
         {
@@ -139,12 +140,15 @@ public class MainVwActivity extends AppCompatActivity {
             Log.d(TAG, "Inflating main_menu");
             inflater.inflate(R.menu.main_menu, menu);
         }
+
+         */
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
+        /*
         if (item.getItemId() == R.id.add_item)
         {
             Log.d(getClass().getName(), "Creating new Item");
@@ -190,6 +194,7 @@ public class MainVwActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         }
+
         else if (item.getItemId() == R.id.templ_list_view)
         {
             Log.d (TAG, "Launching template lists");
@@ -200,7 +205,9 @@ public class MainVwActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         }
-        else if (item.getItemId() == R.id.check_list_view)
+        */
+
+         if (item.getItemId() == R.id.check_list_view)
         {
             Log.d (TAG, "Launching template lists");
             Intent intent = new Intent(this, SingleItemActivity.class);

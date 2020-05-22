@@ -10,6 +10,8 @@ import com.rekhaninan.common.MainVwActivity;
 public class MainActivity extends AppCompatActivity {
 
     public final static String APP_NAME = "APP_NAME";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
