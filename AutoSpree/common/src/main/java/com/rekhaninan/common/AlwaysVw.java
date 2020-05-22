@@ -30,7 +30,12 @@ public class AlwaysVw extends Fragment {
         return inflater.inflate(R.layout.activity_single_item, container, false);
     }
 
-    public void setItem(Item itm) {item = itm;}
+    public void setItem(Item itm)
+    {
+        item = new Item();
+        item.setName(itm.getName());
+        item.setShare_id(itm.getShare_id());
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {

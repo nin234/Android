@@ -31,10 +31,12 @@ public class ReplenishVw extends Fragment {
     }
 
     public void setItem(Item itm) {
-        item = itm;
-        String name = item.getName();
+
+        item = new Item();
+        String name = itm.getName();
         name += ":INV";
         item.setName(name);
+        item.setShare_id(itm.getShare_id());
     }
 
     @Override

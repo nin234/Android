@@ -32,12 +32,13 @@ public class OneTimeVw extends Fragment {
         return inflater.inflate(R.layout.activity_single_item, container, false);
     }
 
-    public void setItem(Item itm) {
-
-        item = itm;
-        String name = item.getName();
+    public void setItem(Item itm)
+    {
+        item = new Item();
+        String name = itm.getName();
         name += ":SCRTCH";
         item.setName(name);
+        item.setShare_id(itm.getShare_id());
     }
 
     @Override
