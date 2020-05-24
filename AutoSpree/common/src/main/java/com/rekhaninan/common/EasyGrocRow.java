@@ -112,15 +112,27 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         return itm.getName();
     }
 
-    private View getTemplNameRowView(int txtHeight, final Item itm, final ViewGroup parent)
+    private View getTemplNameRowView(int txtHeight, final Item itm, final ViewGroup parent, int width)
     {
-        TextView tv = new TextView(ctxt);
-        tv.setHeight(txtHeight);
-        tv.setText(itm.getName());
+        LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View vw = inflater.inflate(R.layout.label, parent, false);
 
-        tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
-        tv.setTag(itm);
-        tv.setOnClickListener(new View.OnClickListener() {
+        TextView label = (TextView) vw.findViewById(R.id.name);
+        label.setText(itm.getName());
+        label.setHeight(txtHeight);
+        label.setWidth((width / 10) * 8);
+        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
+        label.setTag(itm);
+
+        ImageView disclosure = (ImageView) vw.findViewById(R.id.label_image_icon);
+        disclosure.setMaxHeight(txtHeight);
+        disclosure.setMaxWidth(width / 10);
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+        lp.setMargins((width / 10) * 8, 5, 5, 5);
+        disclosure.setLayoutParams(lp);
+
+        vw.setOnClickListener(new View.OnClickListener() {
                                   @Override
                                   public void onClick(View view) {
 
@@ -132,7 +144,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                                   }
                               }
         );
-        return tv;
+        return vw;
     }
 
     private View getMainRowVw(int txtHeight, Item itm)
@@ -205,7 +217,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         {
             case EASYGROC_TEMPL_NAME_LISTS:
             {
-                return getTemplNameRowView(txtHeight, itm, parent);
+                return getTemplNameRowView(txtHeight, itm, parent, width);
             }
 
             case EASYGROC_TEMPL_LISTS:

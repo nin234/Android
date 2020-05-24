@@ -3,7 +3,6 @@
     <item
         android:id="@+id/add_new_item"
         android:orderInCategory="100"
-        android:icon="@drawable/ic_add_black_48dp"
         android:title="@string/new_item"
         app:showAsAction="ifRoom" />
 </menu>
