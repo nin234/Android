@@ -55,6 +55,7 @@ import static com.rekhaninan.common.Constants.EASYGROC_ADD_ROW_TWO;
 import static com.rekhaninan.common.Constants.EASYGROC_ADD_TEMPL_LIST;
 import static com.rekhaninan.common.Constants.EASYGROC_DISPLAY_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_EDIT_ITEM;
+import static com.rekhaninan.common.Constants.EASYGROC_EDIT_VIEW;
 import static com.rekhaninan.common.Constants.EASYGROC_NAME_ROW;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_ADD_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_DELETE_ITEM;
@@ -126,6 +127,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
 
                                       Intent intent = new Intent(ctxt, PlannerActivity.class);
                                       intent.putExtra("item", itm);
+                                      intent.putExtra("View", EASYGROC_EDIT_VIEW);
                                       ctxt.startActivity(intent);
                                   }
                               }

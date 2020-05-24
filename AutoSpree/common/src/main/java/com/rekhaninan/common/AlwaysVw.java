@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import static com.rekhaninan.common.Constants.EASYGROC;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_ADD_ITEM;
+import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_DISPLAY_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_EDIT_ITEM;
 
 public class AlwaysVw extends Fragment {
@@ -21,7 +23,7 @@ public class AlwaysVw extends Fragment {
     private Item item;
     private ListView mListView;
     ArrayAdapterMainVw adapter;
-
+    int viewType;
 
     @Nullable
     @Override
@@ -36,6 +38,10 @@ public class AlwaysVw extends Fragment {
         item.setName(itm.getName());
         item.setShare_id(itm.getShare_id());
     }
+    public void setViewType(int type)
+    {
+        viewType = type;
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -47,7 +53,7 @@ public class AlwaysVw extends Fragment {
             mainLst.addAll(list);
             mListView = (ListView) view.findViewById(R.id.add_item_view);
             adapter = new ArrayAdapterMainVw(getActivity(), R.layout.simple_list_1, mainLst);
-            adapter.setParams(EASYGROC, EASYGROC_TEMPL_EDIT_ITEM);
+            adapter.setParams(EASYGROC, viewType);
             if (!item.getName().endsWith(":INV") && !item.getName().endsWith(":SCRTCH"))
                 adapter.setRecrLst(true);
             mListView.setAdapter(adapter);
@@ -61,11 +67,38 @@ public class AlwaysVw extends Fragment {
             }
             mListView = (ListView) view.findViewById(R.id.add_item_view);
             adapter = new ArrayAdapterMainVw(getActivity(), R.layout.simple_list_1, mainLst);
-            adapter.setParams(EASYGROC, EASYGROC_TEMPL_ADD_ITEM);
+            adapter.setParams(EASYGROC, viewType);
             if (item.getName() != null && !item.getName().endsWith(":INV") && !item.getName().endsWith(":SCRTCH"))
                 adapter.setRecrLst(true);
             mListView.setAdapter(adapter);
         }
 
     }
+
+    public void save()
+    {
+        if (mListView == null)
+        {
+            return;
+        }
+        ArrayAdapterMainVw adapterMainVw = (ArrayAdapterMainVw) mListView.getAdapter();
+        List<Item> arryEl = adapterMainVw.getArryElems();
+        Item nameItem = arryEl.get(0);
+        String name = nameItem.getName();
+        int i=0;
+        DBOperations.getInstance().deleteDb(nameItem, viewType);
+        for (Item itm : arryEl)
+        {
+            if (i == 0) {
+                ++i;
+                continue;
+            }
+            itm.setName(name);
+
+            DBOperations.getInstance().insertDb(itm, viewType);
+
+            ++i;
+        }
+    }
+
 }

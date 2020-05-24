@@ -14,9 +14,11 @@ public class PlannerAdapter extends FragmentStateAdapter {
     private static final int PLANNER_TABS = 3;
 
     private Item item;
+    private int viewType;
 
-
-
+    private AlwaysVw alwaysVw;
+    private ReplenishVw replenishVw;
+    private OneTimeVw oneTimeVw;
 
 
     public PlannerAdapter(FragmentActivity frg)
@@ -26,39 +28,44 @@ public class PlannerAdapter extends FragmentStateAdapter {
     }
     public void setItem(Item itm) {item = itm;}
 
+    public void setViewType(int type) {viewType = type;}
 
     public Fragment createFragment(int position) {
         // Return a NEW fragment instance in createFragment(int)
         Log.d(getClass().getSimpleName(), "Creating fragment at=" + position);
         switch (position) {
             case REPLENISH_POSN: {
-                ReplenishVw fragment = new ReplenishVw();
-                fragment.setItem(item);
+                replenishVw = new ReplenishVw();
+                replenishVw.setItem(item);
+                replenishVw.setViewType(viewType);
                 Bundle args = new Bundle();
                 // Our object is just an integer :-P
                 args.putInt(ReplenishVw.ARG_OBJECT, position + 1);
-                fragment.setArguments(args);
-                return fragment;
+                replenishVw.setArguments(args);
+                
+                return replenishVw;
             }
 
             case ONETIME_POSN: {
-                OneTimeVw fragment = new OneTimeVw();
-                fragment.setItem(item);
+                oneTimeVw = new OneTimeVw();
+                oneTimeVw.setItem(item);
+                oneTimeVw.setViewType(viewType);
                 Bundle args = new Bundle();
                 // Our object is just an integer :-P
                 args.putInt(OneTimeVw.ARG_OBJECT, position + 1);
-                fragment.setArguments(args);
-                return fragment;
+                oneTimeVw.setArguments(args);
+                return oneTimeVw;
             }
 
             case ALWAYS_POSN: {
-                AlwaysVw fragment = new AlwaysVw();
-                fragment.setItem(item);
+                alwaysVw = new AlwaysVw();
+                alwaysVw.setItem(item);
+                alwaysVw.setViewType(viewType);
                 Bundle args = new Bundle();
                 // Our object is just an integer :-P
                 args.putInt(AlwaysVw.ARG_OBJECT, position + 1);
-                fragment.setArguments(args);
-                return fragment;
+                alwaysVw.setArguments(args);
+                return alwaysVw;
             }
 
             default:
@@ -68,6 +75,13 @@ public class PlannerAdapter extends FragmentStateAdapter {
         ReplenishVw fragment = new ReplenishVw();
         return fragment;
 
+    }
+    
+    public void save()
+    {
+        alwaysVw.save();
+        replenishVw.save();
+        oneTimeVw.save();
     }
 
     @Override

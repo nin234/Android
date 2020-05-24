@@ -977,7 +977,7 @@ public class SingleItemActivity extends AppCompatActivity
 
             finish();
         }
-        else if (item.getItemId() == R.id.add_item_easy_templ || item.getItemId() == R.id.add_new_item)
+        else if ( item.getItemId() == R.id.add_new_item)
         {
             switch (viewType)
             {
@@ -993,21 +993,7 @@ public class SingleItemActivity extends AppCompatActivity
             }
             finish();
         }
-        else if (item.getItemId() == R.id.share_templ)
-        {
-            switch (viewType)
-            {
-                case EASYGROC_TEMPL_LISTS:
-                {
-                    startEasyGrocTemplShareActivity();
-                }
-                break;
 
-                default:
-                    break;
-            }
-            finish();
-        }
         else if (item.getItemId() == R.id.delete_item)
         {
             switch (viewType)

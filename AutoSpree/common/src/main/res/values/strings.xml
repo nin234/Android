@@ -9,6 +9,7 @@
     <string name="check_list">Check Lists</string>
     <string name="undo">Undo</string>
     <string name="delete_item">Delete</string>
+    <string name="save_item">Save</string>
     <string name="redo">Redo</string>
     <string name="show_all">Show All</string>
     <string name="add_item_done">Done</string>
