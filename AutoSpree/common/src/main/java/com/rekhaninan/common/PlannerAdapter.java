@@ -76,13 +76,21 @@ public class PlannerAdapter extends FragmentStateAdapter {
         return fragment;
 
     }
-    
+
+    public void delete()
+    {
+        alwaysVw.delete();
+        replenishVw.delete();
+        oneTimeVw.delete();
+    }
+
     public void save()
     {
         alwaysVw.save();
         replenishVw.save();
         oneTimeVw.save();
     }
+
 
     @Override
     public int getItemCount() {

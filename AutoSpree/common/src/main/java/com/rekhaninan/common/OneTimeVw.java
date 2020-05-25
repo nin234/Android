@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import static com.rekhaninan.common.Constants.EASYGROC;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_ADD_ITEM;
+import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_DELETE_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_DISPLAY_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_EDIT_ITEM;
 
@@ -80,6 +81,11 @@ public class OneTimeVw extends Fragment {
 
 
 
+    }
+
+    public void delete()
+    {
+        DBOperations.getInstance().deleteDb(item, EASYGROC_TEMPL_DELETE_ITEM);
     }
 
     public void save()

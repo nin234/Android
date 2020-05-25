@@ -1,5 +1,6 @@
 package com.rekhaninan.common;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,15 +10,18 @@ import android.view.MenuItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import java.io.File;
 import java.util.List;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import static com.rekhaninan.common.Constants.ALWAYS_POSN;
 import static com.rekhaninan.common.Constants.CHECK_LIST_ADD;
 import static com.rekhaninan.common.Constants.CHECK_LIST_EDIT;
+import static com.rekhaninan.common.Constants.EASYGROC;
 import static com.rekhaninan.common.Constants.EASYGROC_EDIT_VIEW;
 import static com.rekhaninan.common.Constants.EASYGROC_SAVE_VIEW;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_ADD_ITEM;
@@ -169,6 +173,33 @@ public class PlannerActivity extends AppCompatActivity {
             intent.putExtra("item", itm);
             intent.putExtra("View", EASYGROC_EDIT_VIEW);
             startActivity(intent);
+        }
+        else if (item.getItemId() == R.id.delete_templ_item)
+        {
+            Log.d(getClass().getName(), "Showing delete confirm menu");
+            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+            alertDialog.setTitle("Delete");
+
+            String delMsg = "Delete "  + itm.getName() + " ?";
+            alertDialog.setMessage(delMsg);
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            adapter.delete();
+                            Intent intent = new Intent();
+                            intent.putExtra("refresh", "Needed");
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
+                    });
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+
+                        }
+                    });
+            alertDialog.show();
         }
         return  true;
 

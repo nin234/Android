@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
+import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
@@ -114,7 +115,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
 
     private View getTemplNameRowView(int txtHeight, final Item itm, final ViewGroup parent, int width)
     {
-        LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View vw = inflater.inflate(R.layout.label, parent, false);
 
         TextView label = (TextView) vw.findViewById(R.id.name);
@@ -140,7 +141,10 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                                       Intent intent = new Intent(ctxt, PlannerActivity.class);
                                       intent.putExtra("item", itm);
                                       intent.putExtra("View", EASYGROC_EDIT_VIEW);
-                                      ctxt.startActivity(intent);
+                                      Activity plannerAct = (Activity) ctxt;
+                                      plannerAct.startActivityForResult(intent, EASYGROC_TEMPL_DISPLAY_ITEM);
+
+
                                   }
                               }
         );

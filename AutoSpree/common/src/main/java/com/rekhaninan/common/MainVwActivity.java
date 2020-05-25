@@ -26,7 +26,7 @@ public class MainVwActivity extends AppCompatActivity {
     private String message;
     private int no_items;
     private String dbClassName;
-
+    private TabbedCollectionAdapter adapter;
 
     ViewPager2 viewPager;
     TabLayout tabLayout;
@@ -59,7 +59,7 @@ public class MainVwActivity extends AppCompatActivity {
 
             tabLayout = findViewById(R.id.tab_layout);
 
-            TabbedCollectionAdapter adapter = new TabbedCollectionAdapter(this);
+             adapter = new TabbedCollectionAdapter(this);
             adapter.appName = app_name;
             viewPager.setAdapter(adapter);
             new TabLayoutMediator(tabLayout, viewPager,
@@ -126,6 +126,10 @@ public class MainVwActivity extends AppCompatActivity {
 
     }
 
+    public void refresh()
+    {
+        adapter.refresh();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -260,7 +264,27 @@ public class MainVwActivity extends AppCompatActivity {
         mListView.setAdapter(adapter);
         return;
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode)
+        {
+            case EASYGROC_TEMPL_DISPLAY_ITEM:
+                if (resultCode == RESULT_OK)
+                {
+                    String refreshNeeded = data.getStringExtra("refresh");
+                    if (refreshNeeded.equals("Needed"))
+                    {
+                        refresh();
+                    }
+                }
+                break;
 
+            default:
+                break;
+        }
+
+    }
     @Override
     protected void onResume()
     {

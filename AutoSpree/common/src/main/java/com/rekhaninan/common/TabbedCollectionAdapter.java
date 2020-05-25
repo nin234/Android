@@ -13,6 +13,7 @@ import static com.rekhaninan.common.Constants.*;
 
 public class TabbedCollectionAdapter extends FragmentStateAdapter {
     public String appName;
+    private PlannerVwTabbed plannerVwTabbed;
     public TabbedCollectionAdapter(FragmentActivity frg)
     {
 
@@ -39,13 +40,13 @@ public class TabbedCollectionAdapter extends FragmentStateAdapter {
             }
 
             case PLANNER_POSN: {
-                PlannerVwTabbed fragment = new PlannerVwTabbed();
-                fragment.app_name = appName;
+                plannerVwTabbed  = new PlannerVwTabbed();
+                plannerVwTabbed.app_name = appName;
                 Bundle args = new Bundle();
                 // Our object is just an integer :-P
                 args.putInt(PlannerVwTabbed.ARG_OBJECT, position + 1);
-                fragment.setArguments(args);
-                return fragment;
+                plannerVwTabbed.setArguments(args);
+                return plannerVwTabbed;
             }
 
             case CONTACTS_POSN: {
@@ -84,5 +85,10 @@ public class TabbedCollectionAdapter extends FragmentStateAdapter {
     public int getItemCount() {
 
         return MAIN_PAGE_TABS;
+    }
+
+    public void refresh()
+    {
+        plannerVwTabbed.refresh();
     }
 }
