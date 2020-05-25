@@ -167,8 +167,9 @@ public class ArrayAdapterMainVw extends ArrayAdapter<Item> {
         return arryElems;
     }
 
-    public void setArryElems(List<Item> arryElems) {
-        this.arryElems = arryElems;
+    public void setArryElems(List<Item> newItems) {
+        arryElems.clear();
+        arryElems.addAll(newItems);
     }
 
     public void moveElements(int originalPosn, int newPosn)

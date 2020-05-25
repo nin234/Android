@@ -116,9 +116,9 @@ public class PlannerVwTabbed extends Fragment {
             case EASYGROC: {
                 Log.d(TAG, "Adding template list item");
                 AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                alertDialog.setTitle("Template List Create");
+                alertDialog.setTitle("New Planner");
 
-                String delMsg = "Enter name of the Store ";
+                String delMsg = "Please enter name of store ";
                 alertDialog.setMessage(delMsg);
                 final EditText input = new EditText(getContext());
                 input.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -136,7 +136,7 @@ public class PlannerVwTabbed extends Fragment {
                                 if (DBOperations.getInstance().itemExists(nameItem, EASYGROC_TEMPL_ADD_ITEM)) {
                                     AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
                                     alertDialog.setTitle("Error");
-                                    String err = "Template List " + nameItem.getName() + " exists. Choose different name";
+                                    String err = "Store " + nameItem.getName() + " exists. Choose different name";
                                     alertDialog.setMessage(err);
                                     alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                                             new DialogInterface.OnClickListener() {
