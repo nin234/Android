@@ -531,7 +531,6 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
 
             }
 
-            if (app_name.equals(EASYGROC)) {
 
                 java.util.List<Item> templInvList = DBOperations.getInstance().getTemplList(itm.getName() + ":INV", itm.getShare_id());
                 Log.i(TAG, "No of elements in inventory list for " + itm.getName() + ":INV for=" + templInvList.size());
@@ -544,7 +543,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                 for (Item scrItem : templScrList) {
                     mainLst.add(scrItem);
                 }
-            }
+
 
 
         Item nameItem = mainLst.get(0);
@@ -572,15 +571,14 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
             ++i;
         }
 
-        if (app_name.equals(EASYGROC))
-        {
+
             if (itm.getName() != null && itm.getName().length() > 0)
             {
 
                 Item scrtchItem = new Item();
                 scrtchItem.setName(itm.getName() + ":SCRTCH");
                 DBOperations.getInstance().deleteDb(scrtchItem, EASYGROC_ADD_ITEM);
-                java.util.List<Item> templInvList = DBOperations.getInstance().getTemplList(itm.getName() + ":INV", itm.getShare_id());
+                templInvList = DBOperations.getInstance().getTemplList(itm.getName() + ":INV", itm.getShare_id());
                 for (Item invItem : templInvList) {
                     if (invItem.getInventory() > 0)
                         continue;
@@ -588,7 +586,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                     DBOperations.getInstance().updateDb(invItem, EASYGROC_TEMPL_DISPLAY_ITEM);
                 }
             }
-        }
+
 
         Activity activity = (Activity) ctxt;
         activity.finish();
