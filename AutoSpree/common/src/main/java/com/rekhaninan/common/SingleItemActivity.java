@@ -509,6 +509,20 @@ public class SingleItemActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
+
+            case EASYGROC_BRAND_NEW_ADD_REQUEST:
+            {
+                if (resultCode == RESULT_OK) {
+                    String refreshNeeded = data.getStringExtra("refresh");
+                    Intent intent = new Intent();
+                    intent.putExtra("refresh", refreshNeeded);
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
+
+                }
+            }
+            break;
+
             case  NOTES_ACTIVITY_REQUEST:
             {
                 if (resultCode == RESULT_OK) {
@@ -800,25 +814,11 @@ public class SingleItemActivity extends AppCompatActivity
 
             ++i;
         }
-        String app_name = DBOperations.getInstance().getApp_name();
-        if (app_name.equals(EASYGROC))
-        {
-            if (itm.getName() != null && itm.getName().length() > 0)
-            {
 
-                Item scrtchItem = new Item();
-                scrtchItem.setName(itm.getName() + ":SCRTCH");
-                DBOperations.getInstance().deleteDb(scrtchItem, viewType);
-                java.util.List<Item> templInvList = DBOperations.getInstance().getTemplList(itm.getName() + ":INV", itm.getShare_id());
-                for (Item invItem : templInvList) {
-                    if (invItem.getInventory() > 0)
-                        continue;
-                    invItem.setInventory(10);
-                    DBOperations.getInstance().updateDb(invItem, EASYGROC_TEMPL_DISPLAY_ITEM);
-                }
-            }
-        }
-        startEasyGrocDisplayActivity(nameItem);
+        Intent intent = new Intent();
+        intent.putExtra("refresh", "Needed");
+        setResult(Activity.RESULT_OK, intent);
+        finish();
         return true;
 
     }
@@ -1072,6 +1072,15 @@ public class SingleItemActivity extends AppCompatActivity
                 case CHECK_LIST_ADD:
                 {
                    sendCheckListDisplayResult();
+                }
+                break;
+
+                case EASYGROC_ADD_ITEM:
+                {
+                    Intent intent = new Intent();
+                    intent.putExtra("refresh", "NotNeeded");
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
                 }
                 break;
 

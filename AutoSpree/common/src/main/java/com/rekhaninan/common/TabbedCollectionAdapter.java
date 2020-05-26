@@ -91,4 +91,6 @@ public class TabbedCollectionAdapter extends FragmentStateAdapter {
     {
         plannerVwTabbed.refresh();
     }
+
+
 }

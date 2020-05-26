@@ -4,6 +4,7 @@ package com.rekhaninan.common;
 
 import androidx.fragment.app.Fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,6 +23,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.List;
+
 import static com.rekhaninan.common.Constants.*;
 
 
@@ -37,7 +41,7 @@ public class MainVwTabbed extends Fragment {
     private ListView mListView;
     private static final String TAG="MainVwTabbed";
     public String app_name;
-
+    private ArrayAdapterMainVw adapter;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +73,7 @@ public class MainVwTabbed extends Fragment {
             mListView = (ListView) view.findViewById(R.id.recipe_list_view);
 // 1
 // 4
-            ArrayAdapterMainVw adapter = new ArrayAdapterMainVw(getContext(), R.layout.simple_list_1, mainLst);
+            adapter = new ArrayAdapterMainVw(getContext(), R.layout.simple_list_1, mainLst);
             //ArrayAdapter adapter = new ArrayAdapter(this, R.layout.simple_list_1, mainLst);
             adapter.setParams(app_name, MAINVW);
             mListView.setAdapter(adapter);
@@ -129,7 +133,8 @@ public class MainVwTabbed extends Fragment {
                     intent.putExtra("ViewType", EASYGROC_ADD_ITEM_OPTIONS);
                     Item itm = new Item();
                     intent.putExtra("item", itm);
-                    break;
+                    startActivityForResult(intent, EASYGROC_ADD_ITEM_REQUEST);
+                    return true;
 
                 default:
 
@@ -139,6 +144,35 @@ public class MainVwTabbed extends Fragment {
 
         }
         return true;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode)
+        {
+            case EASYGROC_ADD_ITEM_REQUEST:
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    String refreshNeeded = data.getStringExtra("refresh");
+                    if (refreshNeeded.equals("Needed"))
+                    {
+                        refresh();
+                    }
+                }
+                break;
+
+            default:
+                break;
+        }
+
+    }
+
+    public void refresh()
+    {
+
+        java.util.List<Item> mainLst = DBOperations.getInstance().getMainLst(MAINVW);
+        adapter.setArryElems(mainLst);
+        adapter.notifyDataSetChanged();
     }
 }
 

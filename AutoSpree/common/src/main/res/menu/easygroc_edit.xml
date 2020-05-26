@@ -3,35 +3,31 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         tools:context="com.rekhaninan.common.SingleItemActivity">
-        <item
-            android:id="@+id/edit_item"
-            android:orderInCategory="100"
-            android:icon="@drawable/ic_mode_edit_black_48dp"
-            android:title="@string/edit_item"
-            app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/undo"
         android:orderInCategory="100"
-        android:icon="@drawable/ic_undo_black_48dp"
         android:title="@string/undo"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/redo"
         android:orderInCategory="100"
-        android:icon="@drawable/ic_redo_black_48dp"
         android:title="@string/redo"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/showall"
         android:orderInCategory="100"
-        android:icon="@drawable/ic_unarchive_black_48dp"
         android:title="@string/show_all"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/delete_item"
         android:orderInCategory="100"
-        android:icon="@drawable/ic_delete_black_48dp"
         android:title="@string/delete_item"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/edit_item"
+        android:orderInCategory="100"
+        android:title="@string/edit_item"
         app:showAsAction="ifRoom" />
 
 

@@ -6,7 +6,6 @@
     <item
         android:id="@+id/add_item_done"
         android:orderInCategory="100"
-        android:icon="@drawable/ic_done_black_48dp"
         android:title="@string/add_item_done"
         app:showAsAction="ifRoom" />
 </menu>

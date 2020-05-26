@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -61,6 +62,7 @@ import static com.rekhaninan.common.Constants.EASYGROC_ADD_ITEM_OPTIONS;
 import static com.rekhaninan.common.Constants.EASYGROC_ADD_NEW_LIST;
 import static com.rekhaninan.common.Constants.EASYGROC_ADD_ROW_TWO;
 import static com.rekhaninan.common.Constants.EASYGROC_ADD_TEMPL_LIST;
+import static com.rekhaninan.common.Constants.EASYGROC_BRAND_NEW_ADD_REQUEST;
 import static com.rekhaninan.common.Constants.EASYGROC_DISPLAY_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_EDIT_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_EDIT_VIEW;
@@ -158,21 +160,32 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         return vw;
     }
 
-    private View getMainRowVw(int txtHeight, Item itm)
+    private View getMainRowVw(int txtHeight, final Item itm, ViewGroup parent, int width)
     {
-        TextView tv = new TextView(ctxt);
-        tv.setHeight(txtHeight);
-        tv.setText(itm.getName());
+        final LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View vw = inflater.inflate(R.layout.label, parent, false);
 
-        tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
-        tv.setTag(itm);
-        tv.setOnClickListener(new View.OnClickListener() {
+        TextView label = (TextView) vw.findViewById(R.id.name);
+        label.setText(itm.getName());
+        label.setHeight(txtHeight);
+        label.setWidth((width / 10) * 8);
+        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
+        label.setTag(itm);
+
+        ImageView disclosure = (ImageView) vw.findViewById(R.id.label_image_icon);
+        disclosure.setMaxHeight(txtHeight);
+        disclosure.setMaxWidth(width / 10);
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+        lp.setMargins((width / 10) * 8, 5, 5, 5);
+        disclosure.setLayoutParams(lp);
+
+        vw.setOnClickListener(new View.OnClickListener() {
                                   @Override
                                   public void onClick(View view) {
 
-                                      TextView tv = (TextView) view;
-                                      Item itm = (Item) tv.getTag();
-                                      Log.d(getClass().getName(), "Clicked row " + tv.getText());
+
+                                      Log.d(getClass().getName(), "Clicked row " + itm.getName());
                                       Intent intent = new Intent(ctxt, SingleItemActivity.class);
                                       if (vwType == MAINVW) {
                                           intent.putExtra("ViewType", EASYGROC_DISPLAY_ITEM);
@@ -204,7 +217,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                               }
 
         );
-        return tv;
+        return vw;
     }
 
     public View getView(Item itm, int position, ViewGroup parent)
@@ -233,7 +246,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
 
             case EASYGROC_TEMPL_LISTS:
             case MAINVW: {
-                return getMainRowVw(txtHeight, itm);
+                return getMainRowVw(txtHeight, itm, parent, width);
             }
 
             case EASYGROC_TEMPL_DELETE_ITEM:
@@ -304,21 +317,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                 {
                     case EASYGROC_ADD_NEW_LIST:
                     {
-                        View vw = getLabelView(parent, txtHeight, width, "Brand New List");
-                        vw.setOnClickListener(new View.OnClickListener() {
-                                                  @Override
-                                                  public void onClick(View view) {
-                                                      Log.d(getClass().getName(), "Clicked row Brand New List");
-                                                      Item itm = new Item();
-                                                      Intent intent = new Intent(ctxt, SingleItemActivity.class);
-                                                      intent.putExtra("ViewType", EASYGROC_ADD_ITEM);
-                                                      intent.putExtra("item", itm);
-                                                      ctxt.startActivity(intent);
-                                                  }
-                                              }
-
-                        );
-                        return vw;
+                        return getBrandNewListLineView(parent, txtHeight, width);
                     }
 
                     case EASYGROC_ADD_ROW_TWO:
@@ -356,9 +355,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                     }
 
                 }
-
             }
-
             case EASYGROC_DISPLAY_ITEM:
             {
                 switch (position)
@@ -496,6 +493,26 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         return null;
     }
 
+    private View getBrandNewListLineView(ViewGroup parent, int txtHeight, int width)
+    {
+        View vw = getLabelView(parent, txtHeight, width, "Brand New List");
+        vw.setOnClickListener(new View.OnClickListener() {
+                                  @Override
+                                  public void onClick(View view) {
+                                      Log.d(getClass().getName(), "Clicked row Brand New List");
+                                      Item itm = new Item();
+                                      Intent intent = new Intent(ctxt, SingleItemActivity.class);
+                                      intent.putExtra("ViewType", EASYGROC_ADD_ITEM);
+                                      intent.putExtra("item", itm);
+                                      Activity singleItemActivity = (Activity) ctxt;
+                                      singleItemActivity.startActivityForResult(intent, EASYGROC_BRAND_NEW_ADD_REQUEST);
+
+                                  }
+                              }
+
+        );
+        return vw;
+    }
     private void addEasyGrocItemFromTemplItem(Item itm)
     {
         SimpleDateFormat df = new SimpleDateFormat("MM/dd/yy HH:mm:ss");
@@ -589,6 +606,9 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
 
 
         Activity activity = (Activity) ctxt;
+        Intent intent = new Intent();
+        intent.putExtra("refresh", "Needed");
+        activity.setResult(Activity.RESULT_OK, intent);
         activity.finish();
     }
 
