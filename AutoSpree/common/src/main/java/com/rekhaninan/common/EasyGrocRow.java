@@ -2,6 +2,7 @@ package com.rekhaninan.common;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Parcelable;
@@ -31,9 +32,15 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.viewpager2.widget.ViewPager2;
 
 import static com.rekhaninan.common.Constants.ADD_CHECK_LIST_ACTIVITY_REQUEST;
@@ -335,13 +342,12 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                         vw.setOnClickListener(new View.OnClickListener() {
                                                   @Override
                                                   public void onClick(View view) {
-                                                      Log.d(getClass().getName(), "Clicked row Template item");
+
+                                                      Log.d(getClass().getName(), "Clicked row Template item="+name);
                                                       Item itmInt = new Item();
                                                       itmInt.setName(name);
-                                                      Intent intent = new Intent(ctxt, SingleItemActivity.class);
-                                                      intent.putExtra("ViewType", EASYGROC_ADD_ITEM);
-                                                      intent.putExtra("item", itmInt);
-                                                      ctxt.startActivity(intent);
+                                                      addEasyGrocItemFromTemplItem(itmInt);
+
                                                   }
                                               }
 
@@ -489,6 +495,105 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
 
         return null;
     }
+
+    private void addEasyGrocItemFromTemplItem(Item itm)
+    {
+        SimpleDateFormat df = new SimpleDateFormat("MM/dd/yy HH:mm:ss");
+        Calendar c = new GregorianCalendar();
+        String formattedDate = df.format(c.getTime());
+        String app_name = DBOperations.getInstance().getApp_name();
+        java.util.List<Item> mainLst = new ArrayList<Item>();
+
+        java.util.List<Item> templList = DBOperations.getInstance().getTemplList(itm.getName(), itm.getShare_id());
+            Item titleItem = new Item();
+            titleItem.setName(itm.getName() + " " + formattedDate);
+            mainLst.add(titleItem);
+            int month = c.get(Calendar.MONTH);
+            for (Item litm : templList) {
+                boolean bContinue = false;
+                if (app_name.equals(EASYGROC)) {
+                    if (litm.getEnd_month() > litm.getStart_month()) {
+                        if (month > litm.getEnd_month() || month < litm.getStart_month())
+                            bContinue = true;
+
+                    } else if (litm.getEnd_month() == litm.getStart_month()) {
+                        if (month != litm.getEnd_month())
+                            bContinue = true;
+                    } else {
+                        if (month < litm.getStart_month() && month > litm.getEnd_month())
+                            bContinue = true;
+                    }
+
+                    if (bContinue)
+                        continue;
+                }
+                mainLst.add(litm);
+
+            }
+
+            if (app_name.equals(EASYGROC)) {
+
+                java.util.List<Item> templInvList = DBOperations.getInstance().getTemplList(itm.getName() + ":INV", itm.getShare_id());
+                Log.i(TAG, "No of elements in inventory list for " + itm.getName() + ":INV for=" + templInvList.size());
+                for (Item invItem : templInvList) {
+                    if (invItem.getInventory() > 0)
+                        continue;
+                    mainLst.add(invItem);
+                }
+                java.util.List<Item> templScrList = DBOperations.getInstance().getTemplList(itm.getName() + ":SCRTCH", itm.getShare_id());
+                for (Item scrItem : templScrList) {
+                    mainLst.add(scrItem);
+                }
+            }
+
+
+        Item nameItem = mainLst.get(0);
+
+
+        String name = nameItem.getName();
+        int i=0;
+
+        for (Item itmL : mainLst)
+        {
+            if (i == 0) {
+                ++i;
+                continue;
+            }
+            if (itmL.getItem() == null || itmL.getItem().length() <= 0)
+            {
+                ++i;
+                continue;
+            }
+            itmL.setName(name);
+            itmL.setRowno(i);
+            itmL.setShare_id(ShareMgr.getInstance().getShare_id());
+            DBOperations.getInstance().insertDb(itmL, EASYGROC_ADD_ITEM);
+
+            ++i;
+        }
+
+        if (app_name.equals(EASYGROC))
+        {
+            if (itm.getName() != null && itm.getName().length() > 0)
+            {
+
+                Item scrtchItem = new Item();
+                scrtchItem.setName(itm.getName() + ":SCRTCH");
+                DBOperations.getInstance().deleteDb(scrtchItem, EASYGROC_ADD_ITEM);
+                java.util.List<Item> templInvList = DBOperations.getInstance().getTemplList(itm.getName() + ":INV", itm.getShare_id());
+                for (Item invItem : templInvList) {
+                    if (invItem.getInventory() > 0)
+                        continue;
+                    invItem.setInventory(10);
+                    DBOperations.getInstance().updateDb(invItem, EASYGROC_TEMPL_DISPLAY_ITEM);
+                }
+            }
+        }
+
+        Activity activity = (Activity) ctxt;
+        activity.finish();
+    }
+
 
     private View getAddEditViewWithSeasonPicker(final ViewGroup parent, final int txtHeight, final int width, final Item itm)
     {

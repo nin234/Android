@@ -95,8 +95,8 @@ public class MainVwTabbed extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
-        if (item.getItemId() == R.id.add_item) {
-            Log.d(getClass().getName(), "Creating new Item");
+        if (item.getItemId() == R.id.add_new_item) {
+            Log.d(getClass().getName(), "Creating new Item for app="+ app_name);
 
             Intent intent = new Intent(getActivity(), SingleItemActivity.class);
             SharedPreferences settings = getContext().getSharedPreferences("OHAutoSpree", Context.MODE_PRIVATE);
