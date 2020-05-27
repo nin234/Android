@@ -823,6 +823,92 @@ public class SingleItemActivity extends AppCompatActivity
 
     }
 
+    private boolean easyGrocTemplAddItemDone()
+    {
+        ArrayAdapterMainVw adapterMainVw = (ArrayAdapterMainVw) mListView.getAdapter();
+        List<Item> arryEl = adapterMainVw.getArryElems();
+        Item nameItem = arryEl.get(0);
+
+        if (nameItem.getName() == null || nameItem.getName().length() == 0 ) {
+            AlertDialog alertDialog = new AlertDialog.Builder(SingleItemActivity.this).create();
+            alertDialog.setTitle("Error");
+            alertDialog.setMessage("Name needed for list.");
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            return;
+                        }
+                    });
+            alertDialog.show();
+            return true;
+        }
+
+
+
+        String name = nameItem.getName();
+        int i=0;
+
+        for (Item itm : arryEl)
+        {
+            if (i == 0) {
+                ++i;
+                continue;
+            }
+            itm.setName(name);
+            if (itm.getItem() == null || itm.getItem().length() <= 0)
+            {
+                ++i;
+                continue;
+            }
+            itm.setRowno(i);
+
+            DBOperations.getInstance().insertDb(itm, viewType);
+
+            ++i;
+        }
+        String app_name = DBOperations.getInstance().getApp_name();
+        if (app_name.equals(EASYGROC)) {
+            startEasyGrocTemplDisplayActivity(nameItem);
+        }
+        else
+        {
+            Intent intent = new Intent();
+            setResult(RESULT_OK, intent);
+            finish();
+        }
+
+        return true;
+
+    }
+
+    private void easyGrocEditItemDone()
+    {
+        ArrayAdapterMainVw adapterMainVw = (ArrayAdapterMainVw) mListView.getAdapter();
+        List<Item> arryEl = adapterMainVw.getArryElems();
+        Item nameItem = arryEl.get(0);
+        String name = nameItem.getName();
+        long share_id = nameItem.getShare_id();
+        Log.d(TAG, "ShareId of edited list="+ share_id);
+        int i=0;
+        DBOperations.getInstance().deleteDb(nameItem, viewType);
+        for (Item itm : arryEl)
+        {
+            if (i == 0) {
+                ++i;
+                continue;
+            }
+            itm.setName(name);
+            itm.setShare_id(share_id);
+
+            DBOperations.getInstance().insertDb(itm, viewType);
+
+            ++i;
+        }
+        if (viewType != EASYGROC_EDIT_ITEM)
+            startEasyGrocTemplDisplayActivity(nameItem);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
@@ -851,89 +937,11 @@ public class SingleItemActivity extends AppCompatActivity
                 }
 
                 case EASYGROC_TEMPL_ADD_ITEM:
-                {
-                    ArrayAdapterMainVw adapterMainVw = (ArrayAdapterMainVw) mListView.getAdapter();
-                    List<Item> arryEl = adapterMainVw.getArryElems();
-                    Item nameItem = arryEl.get(0);
-
-                    if (nameItem.getName() == null || nameItem.getName().length() == 0 ) {
-                        AlertDialog alertDialog = new AlertDialog.Builder(SingleItemActivity.this).create();
-                        alertDialog.setTitle("Error");
-                        alertDialog.setMessage("Name needed for list.");
-                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                        return;
-                                    }
-                                });
-                        alertDialog.show();
-                        return true;
-                    }
-
-
-
-                    String name = nameItem.getName();
-                    int i=0;
-
-                    for (Item itm : arryEl)
-                    {
-                        if (i == 0) {
-                            ++i;
-                            continue;
-                        }
-                        itm.setName(name);
-                        if (itm.getItem() == null || itm.getItem().length() <= 0)
-                        {
-                            ++i;
-                            continue;
-                        }
-                        itm.setRowno(i);
-
-                        DBOperations.getInstance().insertDb(itm, viewType);
-
-                        ++i;
-                    }
-                    String app_name = DBOperations.getInstance().getApp_name();
-                    if (app_name.equals(EASYGROC)) {
-                        startEasyGrocTemplDisplayActivity(nameItem);
-                    }
-                    else
-                    {
-                        Intent intent = new Intent();
-                        setResult(RESULT_OK, intent);
-                        finish();
-                    }
-
-                }
-                break;
+                    return easyGrocTemplAddItemDone();
 
                 case EASYGROC_EDIT_ITEM:
                 case EASYGROC_TEMPL_EDIT_ITEM:
-                {
-                    ArrayAdapterMainVw adapterMainVw = (ArrayAdapterMainVw) mListView.getAdapter();
-                    List<Item> arryEl = adapterMainVw.getArryElems();
-                    Item nameItem = arryEl.get(0);
-                    String name = nameItem.getName();
-                    int i=0;
-                    DBOperations.getInstance().deleteDb(nameItem, viewType);
-                    for (Item itm : arryEl)
-                    {
-                        if (i == 0) {
-                            ++i;
-                            continue;
-                        }
-                        itm.setName(name);
-
-                        DBOperations.getInstance().insertDb(itm, viewType);
-
-                        ++i;
-                    }
-                    if (viewType == EASYGROC_EDIT_ITEM)
-                        startEasyGrocDisplayActivity(nameItem);
-                    else
-                         startEasyGrocTemplDisplayActivity(nameItem);
-                }
+                  easyGrocEditItemDone();
                 break;
 
                 default:
@@ -986,14 +994,11 @@ public class SingleItemActivity extends AppCompatActivity
                     startEasyGrocTemplListAddActivity();
                     return true;
                 }
-
-
                 default:
                     break;
             }
             finish();
         }
-
         else if (item.getItemId() == R.id.delete_item)
         {
             switch (viewType)
