@@ -898,6 +898,11 @@ public class SingleItemActivity extends AppCompatActivity
                 ++i;
                 continue;
             }
+            if (itm.getItem() == null || itm.getItem().length() <= 0)
+            {
+                ++i;
+                continue;
+            }
             itm.setName(name);
             itm.setShare_id(share_id);
 
