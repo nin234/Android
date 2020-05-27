@@ -25,6 +25,7 @@ public final class Constants {
     public static final int DELETE_TEMPL_ACTIVITY_REQUEST=13;
     public static final int EASYGROC_ADD_ITEM_REQUEST=14;
     public static final int EASYGROC_BRAND_NEW_ADD_REQUEST=15;
+    public static final int EASYGROC_DELETE_ITEM_REQUEST=16;
 
 
 

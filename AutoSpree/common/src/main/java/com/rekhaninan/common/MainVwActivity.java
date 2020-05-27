@@ -266,6 +266,7 @@ public class MainVwActivity extends AppCompatActivity {
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(getClass().getSimpleName(), "Processing activity result with request code=" + requestCode);
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode)
         {
@@ -279,7 +280,16 @@ public class MainVwActivity extends AppCompatActivity {
                     }
                 }
                 break;
-
+            case EASYGROC_DELETE_ITEM_REQUEST:
+                if (resultCode == RESULT_OK)
+                {
+                    String refreshNeeded = data.getStringExtra("refresh");
+                    if (refreshNeeded.equals("Needed"))
+                    {
+                        adapter.refreshMainVw();
+                    }
+                }
+                break;
             default:
                 break;
         }

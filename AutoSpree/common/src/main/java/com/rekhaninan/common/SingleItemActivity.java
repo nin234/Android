@@ -1245,18 +1245,14 @@ public class SingleItemActivity extends AppCompatActivity
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
-                        if (itm.getPicurl() != null && itm.getPicurl().length() > 0)
-                        {
-                            File picFile = new File(itm.getPicurl());
-                            String parent = picFile.getParent();
-                            String thumbnailsDir = parent + File.separator + "thumbnails";
-                            picFile.delete();
-                            File thumbFile = new File(thumbnailsDir, picFile.getName());
-                            thumbFile.delete();
-                        }
+
                         String app_name = DBOperations.getInstance().getApp_name();
                         DBOperations.getInstance().deleteDb(itm, viewType);
                     if (app_name.equals(EASYGROC)) {
+                        Intent intent = new Intent();
+                        intent.putExtra("refresh", "Needed");
+                        setResult(RESULT_OK, intent);
+                        Log.d(TAG, "Setting activity result of refresh Needed in EASYGROC item delete");
                         finish();
                     }
                     else

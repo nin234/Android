@@ -148,9 +148,11 @@ public class MainVwTabbed extends Fragment {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "Processing Activity result for request Code=" + requestCode);
         switch (requestCode)
         {
             case EASYGROC_ADD_ITEM_REQUEST:
+
                 if (resultCode == Activity.RESULT_OK)
                 {
                     String refreshNeeded = data.getStringExtra("refresh");

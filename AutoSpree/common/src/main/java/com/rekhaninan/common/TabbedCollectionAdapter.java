@@ -14,6 +14,8 @@ import static com.rekhaninan.common.Constants.*;
 public class TabbedCollectionAdapter extends FragmentStateAdapter {
     public String appName;
     private PlannerVwTabbed plannerVwTabbed;
+    private MainVwTabbed mainVwTabbed;
+
     public TabbedCollectionAdapter(FragmentActivity frg)
     {
 
@@ -30,13 +32,13 @@ public class TabbedCollectionAdapter extends FragmentStateAdapter {
         Log.d(getClass().getSimpleName(), "Creating fragment at=" + position);
         switch (position) {
             case  HOME_POSN: {
-                MainVwTabbed fragment = new MainVwTabbed();
-                fragment.app_name = appName;
+                mainVwTabbed = new MainVwTabbed();
+                mainVwTabbed.app_name = appName;
                 Bundle args = new Bundle();
                 // Our object is just an integer :-P
                 args.putInt(MainVwTabbed.ARG_OBJECT, position + 1);
-                fragment.setArguments(args);
-                return fragment;
+                mainVwTabbed.setArguments(args);
+                return mainVwTabbed;
             }
 
             case PLANNER_POSN: {
@@ -90,6 +92,11 @@ public class TabbedCollectionAdapter extends FragmentStateAdapter {
     public void refresh()
     {
         plannerVwTabbed.refresh();
+    }
+
+    public void refreshMainVw()
+    {
+        mainVwTabbed.refresh();
     }
 
 

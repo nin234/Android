@@ -63,6 +63,7 @@ import static com.rekhaninan.common.Constants.EASYGROC_ADD_NEW_LIST;
 import static com.rekhaninan.common.Constants.EASYGROC_ADD_ROW_TWO;
 import static com.rekhaninan.common.Constants.EASYGROC_ADD_TEMPL_LIST;
 import static com.rekhaninan.common.Constants.EASYGROC_BRAND_NEW_ADD_REQUEST;
+import static com.rekhaninan.common.Constants.EASYGROC_DELETE_ITEM_REQUEST;
 import static com.rekhaninan.common.Constants.EASYGROC_DISPLAY_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_EDIT_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_EDIT_VIEW;
@@ -197,9 +198,15 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                                       intent.putExtra("item", itm);
 
                                       String app_name = DBOperations.getInstance().getApp_name();
-                                      if (app_name.equals(EASYGROC))
+                                      if (app_name.equals(EASYGROC) && vwType   == EASYGROC_TEMPL_LISTS)
                                       {
                                           ctxt.startActivity(intent);
+
+                                      }
+                                      else if (app_name.equals(EASYGROC) && vwType   == MAINVW)
+                                      {
+                                          Activity mainVwTabbed = (Activity) ctxt;
+                                          mainVwTabbed.startActivityForResult(intent, EASYGROC_DELETE_ITEM_REQUEST);
                                       }
                                       else
                                       {
