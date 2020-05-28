@@ -249,6 +249,7 @@ public class ArrayAdapterMainVw extends ArrayAdapter<Item> {
                 itmElem.setRowno(itmElem.getRowno()-1);
             }
         }
+        --nSize;
     }
 
     public int getCount()

@@ -207,11 +207,13 @@ public class SingleItemActivity extends AppCompatActivity
 
                 setContentView(R.layout.activity_single_item);
                 String app_name = DBOperations.getInstance().getApp_name();
+                int rowno=0;
                 if (itm.getName() != null && itm.getName().length() > 0)
                 {
                     java.util.List<Item> templList = DBOperations.getInstance().getTemplList(itm.getName(), itm.getShare_id());
                     Item titleItem = new Item();
                     titleItem.setName(itm.getName() + " " + formattedDate);
+                    titleItem.setRowno(rowno++);
                     mainLst.add(titleItem);
                     int month = c.get(Calendar.MONTH);
                     for (Item litm : templList)
@@ -233,6 +235,7 @@ public class SingleItemActivity extends AppCompatActivity
                             if (bContinue)
                                 continue;
                         }
+                        litm.setRowno(rowno++);
                         mainLst.add(litm);
 
                     }
@@ -244,10 +247,12 @@ public class SingleItemActivity extends AppCompatActivity
                         for (Item invItem : templInvList) {
                             if (invItem.getInventory() > 0)
                                 continue;
+                            invItem.setRowno(rowno++);
                             mainLst.add(invItem);
                         }
                         java.util.List<Item> templScrList = DBOperations.getInstance().getTemplList(itm.getName() + ":SCRTCH", itm.getShare_id());
                         for (Item scrItem : templScrList) {
+                            scrItem.setRowno(rowno++);
                             mainLst.add(scrItem);
                         }
                     }
@@ -1149,9 +1154,12 @@ public class SingleItemActivity extends AppCompatActivity
     {
         ArrayAdapterMainVw adapterMainVw = (ArrayAdapterMainVw) mListView.getAdapter();
         int indx = adapterMainVw.undoPop();
-        if (indx == -1)
-            return;
+
         List<Item> arryEl = adapterMainVw.getArryElems();
+        if (indx == -1 || indx >= arryEl.size())
+        {
+            return;
+        }
         Item itm = arryEl.get(indx);
         itm.setHidden(!itm.isHidden());
         adapterMainVw.redoPush(indx);
@@ -1163,9 +1171,11 @@ public class SingleItemActivity extends AppCompatActivity
     {
         ArrayAdapterMainVw adapterMainVw = (ArrayAdapterMainVw) mListView.getAdapter();
         int indx = adapterMainVw.redoPop();
-        if (indx == -1)
-            return;
         List<Item> arryEl = adapterMainVw.getArryElems();
+        if (indx == -1 || indx >= arryEl.size())
+        {
+            return;
+        }
         Item itm = arryEl.get(indx);
         itm.setHidden(!itm.isHidden());
         adapterMainVw.notifyDataSetChanged();

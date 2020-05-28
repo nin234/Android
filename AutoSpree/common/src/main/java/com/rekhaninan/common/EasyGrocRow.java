@@ -575,7 +575,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
 
         String name = nameItem.getName();
         int i=0;
-
+        Log.d(TAG, "Inserting into db new list="+ name);
         for (Item itmL : mainLst)
         {
             if (i == 0) {
@@ -584,12 +584,14 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
             }
             if (itmL.getItem() == null || itmL.getItem().length() <= 0)
             {
-                ++i;
                 continue;
             }
             itmL.setName(name);
             itmL.setRowno(i);
             itmL.setShare_id(ShareMgr.getInstance().getShare_id());
+
+            Log.d(TAG, "Inserting into db item="+ itmL.getItem() +
+                    " share_id="+itmL.getShare_id()+ " rowno=" + itmL.getRowno());
             DBOperations.getInstance().insertDb(itmL, EASYGROC_ADD_ITEM);
 
             ++i;
@@ -1035,7 +1037,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         {
             label.setText(" ");
         }
-        Log.d(TAG, "getLabelSwitchView text=" + itm.getItem());
+        Log.d(TAG, "getLabelSwitchView text=" + itm.getItem() + " rowno="+ itm.getRowno());
         label.setHeight(txtHeight);
         label.setWidth((width / 10) * 8);
         label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
@@ -1050,14 +1052,14 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                              itm.setHidden(false);
                               adapter.notifyDataSetChanged();
                             adapter.undoPush(itm.getRowno());
-                            Log.d(TAG, "Toggled tag to false in " + itm.getItem());
+                            Log.d(TAG, "Toggled tag to false in " + itm.getItem() + " rowno=" + itm.getRowno());
                         }
                         else
                         {
                             itm.setHidden(true);
                             adapter.undoPush(itm.getRowno());
                             adapter.notifyDataSetChanged();
-                            Log.d(TAG, "Toggled tag to true in " + itm.getItem());
+                            Log.d(TAG, "Toggled tag to true in " + itm.getItem() + " rowno=" + itm.getRowno());
                         }
 
                     }
