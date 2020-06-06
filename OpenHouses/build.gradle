@@ -7,6 +7,8 @@ buildscript {
             url 'https://maven.google.com/'
             name 'Google'
         }
+        google()
+        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.6.3'
@@ -14,16 +16,16 @@ buildscript {
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
         classpath 'com.google.gms:google-services:3.0.0'
+        classpath 'com.amplifyframework:amplify-tools-gradle-plugin:1.0.1'
     }
 }
 
 allprojects {
     repositories {
         jcenter()
-        flatDir {
-            dirs 'common-release'
-        }
+
         google()
+        mavenCentral()
     }
 }
 
@@ -31,3 +33,4 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
+apply plugin: 'com.amplifyframework.amplifytools'

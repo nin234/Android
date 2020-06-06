@@ -1,9 +1,11 @@
 package com.rekhaninan.openhouses;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
 import com.rekhaninan.common.MainVwActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 

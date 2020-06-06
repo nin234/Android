@@ -646,6 +646,7 @@ public class ShareActivity extends AppCompatActivity {
 
                     Intent intent = new Intent();
                     intent.putExtra("contact_name", newContact.getName());
+                    intent.putExtra("refresh", "Needed");
                     setResult(RESULT_OK, intent);
                     finish();
 
@@ -676,11 +677,14 @@ public class ShareActivity extends AppCompatActivity {
         {
             ArrayAdapterMainVw  adapter = (ArrayAdapterMainVw)mListView.getAdapter();
             final Item newContact = adapter.getNewContact();
+
             if (newContact.getName().equals("ME"))
             {
                 Log.i(TAG, "Cannot delete ME share Id");
                 return true;
             }
+
+
             AlertDialog alertDialog = new AlertDialog.Builder(ShareActivity.this).create();
             alertDialog.setTitle("Delete");
             String delMsg = "Delete "  + newContact.getShare_id();
