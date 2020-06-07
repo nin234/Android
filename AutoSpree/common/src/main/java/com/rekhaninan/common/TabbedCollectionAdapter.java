@@ -15,6 +15,7 @@ public class TabbedCollectionAdapter extends FragmentStateAdapter {
     public String appName;
     private PlannerVwTabbed plannerVwTabbed;
     private MainVwTabbed mainVwTabbed;
+    private ContactsVwTabbed contactsVwTabbed;
 
     public TabbedCollectionAdapter(FragmentActivity frg)
     {
@@ -52,13 +53,13 @@ public class TabbedCollectionAdapter extends FragmentStateAdapter {
             }
 
             case CONTACTS_POSN: {
-                ContactsVwTabbed fragment = new ContactsVwTabbed();
-                fragment.app_name = appName;
+                contactsVwTabbed = new ContactsVwTabbed();
+                contactsVwTabbed.app_name = appName;
                 Bundle args = new Bundle();
                 // Our object is just an integer :-P
                 args.putInt(ContactsVwTabbed.ARG_OBJECT, position + 1);
-                fragment.setArguments(args);
-                return fragment;
+                contactsVwTabbed.setArguments(args);
+                return contactsVwTabbed;
             }
 
             case SHARE_POSN: {
@@ -99,5 +100,6 @@ public class TabbedCollectionAdapter extends FragmentStateAdapter {
         mainVwTabbed.refresh();
     }
 
+    public void refreshContactVw() {contactsVwTabbed.refresh();}
 
 }

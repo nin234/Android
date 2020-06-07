@@ -1,5 +1,6 @@
 package com.rekhaninan.common;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -287,6 +288,18 @@ public class MainVwActivity extends AppCompatActivity {
                     if (refreshNeeded.equals("Needed"))
                     {
                         adapter.refreshMainVw();
+                    }
+                }
+                break;
+
+            case DELETE_CONTACT_ITEM_ACTIVITY_REQUEST:
+
+                if (resultCode == RESULT_OK)
+                {
+                    String refreshNeeded = data.getStringExtra("refresh");
+                    if (refreshNeeded.equals("Needed"))
+                    {
+                        adapter.refreshContactVw();
                     }
                 }
                 break;

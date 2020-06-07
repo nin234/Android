@@ -219,7 +219,10 @@ public class ShareActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "Processing activity result in ShareActivity requestCode=" + requestCode
+                + " resultCode="+ resultCode);
         if (requestCode == GET_CONTACTS_ACTIVITY_REQUEST)
         {
             if(resultCode == RESULT_OK)
@@ -707,6 +710,7 @@ public class ShareActivity extends AppCompatActivity {
                             updateFriendList();
                             Intent intent = new Intent();
                             intent.putExtra("contact_name", newContact.getName());
+                            intent.putExtra("refresh", "Needed");
                             setResult(RESULT_OK, intent);
                             finish();
                             return;

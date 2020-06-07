@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import static com.rekhaninan.common.Constants.ADD_CONTACT_ITEM_ACTIVITY_REQUEST;
 import static com.rekhaninan.common.Constants.CONTACTS_ITEM_ADD;
 import static com.rekhaninan.common.Constants.CONTACTS_MAINVW;
+import static com.rekhaninan.common.Constants.DELETE_CONTACT_ITEM_ACTIVITY_REQUEST;
 import static com.rekhaninan.common.Constants.EASYGROC;
 import static com.rekhaninan.common.Constants.EASYGROC_ADD_ITEM_REQUEST;
 import static com.rekhaninan.common.Constants.MAINVW;
@@ -80,7 +81,6 @@ public class ContactsVwTabbed extends Fragment {
         switch (requestCode)
         {
             case ADD_CONTACT_ITEM_ACTIVITY_REQUEST:
-
                 if (resultCode == Activity.RESULT_OK)
                 {
                     String refreshNeeded = data.getStringExtra("refresh");
