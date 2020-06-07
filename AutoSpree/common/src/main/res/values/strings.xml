@@ -2,13 +2,13 @@
     <string name="app_name">Common</string>
     <string name="edit_message">Enter a message</string>
     <string name="button_send">Send</string>
-    <string name="new_item">Add</string>
+    <string name="new_item">ADD</string>
     <string name="planner_tab">Planner</string>
     <string name="home_tab">Home</string>
     <string name="templ_list">planner</string>
     <string name="check_list">Check Lists</string>
     <string name="undo">Undo</string>
-    <string name="delete_item">Delete</string>
+    <string name="delete_item">DELETE</string>
     <string name="save_item">Save</string>
     <string name="redo">Redo</string>
     <string name="show_all">Show All</string>

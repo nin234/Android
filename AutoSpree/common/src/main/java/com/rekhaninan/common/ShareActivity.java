@@ -42,6 +42,7 @@ public class ShareActivity extends AppCompatActivity {
     private final String TAG = "ShareActivity";
     private int viewType;
     private Item selectedItem;
+    private boolean meContact;
     ArrayList<String> selectedImages;
 
 
@@ -57,6 +58,8 @@ public class ShareActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        meContact = false;
+        Log.d(TAG, "Starting share activity viewType="+ viewType);
         switch (viewType) {
 
             case SHARE_MAINVW:
@@ -159,6 +162,10 @@ public class ShareActivity extends AppCompatActivity {
                 Log.i(TAG, "Displaying contact item name=" + itm.getName() + " share_id=" + itm.getShare_id());
                 for (int i=0; i < 5; ++i)
                     mainLst.add(itm);
+                if (itm.getName().equals("ME"))
+                {
+                    meContact = true;
+                }
                 mListView = (ListView) findViewById(R.id.recipe_list_view);
                 ArrayAdapterMainVw adapter = new ArrayAdapterMainVw(this, R.layout.simple_list_1, mainLst);
                 adapter.setParams(app_name, CONTACTS_ITEM_DISPLAY);
@@ -178,7 +185,7 @@ public class ShareActivity extends AppCompatActivity {
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-
+        Log.d(TAG, "Creating share activity menu for viewType="+ viewType);
         switch (viewType) {
             case SHARE_MAINVW:
             case SHARE_TEMPL_MAINVW:
@@ -198,7 +205,9 @@ public class ShareActivity extends AppCompatActivity {
                 break;
 
             case CONTACTS_ITEM_DISPLAY:
-                inflater.inflate(R.menu.delete_item, menu);
+                if (meContact == false) {
+                    inflater.inflate(R.menu.delete_item, menu);
+                }
                 break;
 
             default:
