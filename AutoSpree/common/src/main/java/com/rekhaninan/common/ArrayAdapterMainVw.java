@@ -101,8 +101,9 @@ public class ArrayAdapterMainVw extends ArrayAdapter<Item> {
 
         for (Item itmElem : arryElems)
         {
-            if (itmElem.getRowno() == i)
+            if (itmElem == null || itmElem.getRowno() == i)
                 continue;
+
             itmElem.setSelected(false);
             itmElem.resetChkBox();
         }

@@ -155,6 +155,10 @@ public class Item implements Parcelable  {
     public void resetChkBox()
     {
 
+        if (cbx == null)
+        {
+            return;
+        }
         cbx.setChecked(false);
     }
 
@@ -218,6 +222,7 @@ public class Item implements Parcelable  {
         end_month = 11;
         inventory = 10;
         showSeasonPicker = false;
+
     }
 
     public Item (Parcel source)
