@@ -13,6 +13,7 @@
     <string name="redo">Redo</string>
     <string name="show_all">Show All</string>
     <string name="add_item_done">Done</string>
+    <string name="send_items">Send</string>
     <string name="edit_item">Edit</string>
     <string name="title_activity_maps">Map</string>
     <string name="share_item">share</string>

@@ -211,7 +211,7 @@ public class ShareActivity extends AppCompatActivity {
                 break;
 
             case CONTACTS_VW:
-                inflater.inflate(R.menu.add_item, menu);
+                inflater.inflate(R.menu.send_item, menu);
                 break;
 
             case CONTACTS_MAINVW:
@@ -250,11 +250,6 @@ public class ShareActivity extends AppCompatActivity {
                 {
                     case EASYGROC: {
                         switch (viewType ) {
-
-                            case SHARE_MAINVW: {
-                                shareEasyGrocItem(contactsLst);
-                            }
-                            break;
 
                             case SHARE_TEMPL_MAINVW:
                             {
@@ -510,55 +505,6 @@ public class ShareActivity extends AppCompatActivity {
 
     }
 
-    private void shareEasyGrocItem(java.util.ArrayList<Item> contactsLst)
-    {
-        String shrMsg = new String();
-        for (Item contact : contactsLst)
-        {
-            if (contact.getName().equals("ME"))
-                continue;
-            shrMsg += Long.toString(contact.getShare_id());
-            shrMsg += ";";
-        }
-
-        if (shrMsg == null || shrMsg.length() <=0)
-        {
-          Log.d(TAG, "No contact to share to");
-            return;
-        }
-
-        if (selectedItem.getPicurl() != null && selectedItem.getPicurl().length() > 0)
-        {
-
-            String picMetaStr = shrMsg + selectedItem.getName();
-            ShareMgr.getInstance().sharePicture(selectedItem.getPicurl(), picMetaStr, selectedItem.getShare_id());
-        }
-        else {
-            shrMsg += CONTACTITEMSEPARATOR;
-            java.util.List<Item> list = DBOperations.getInstance().getList(selectedItem.getName(), selectedItem.getShare_id());
-            if (list.size() == 0)
-            {
-                Log.d(TAG, "No elements in the sharing list");
-            }
-            Item firstEl = list.get(0);
-            shrMsg += Long.toString(firstEl.getShare_id());
-            shrMsg += KEYVALSEPARATOR;
-            shrMsg += Long.toString(firstEl.getShare_id());
-            shrMsg += ITEMSEPARATOR;
-
-            for (Item selItem : list)
-            {
-
-                shrMsg += Integer.toString(selItem.getRowno());
-                shrMsg += KEYVALSEPARATOR;
-                shrMsg += selItem.getItem();
-                shrMsg += ITEMSEPARATOR;
-            }
-            ShareMgr.getInstance().shareItem(shrMsg, selectedItem.getName());
-        }
-
-        return;
-    }
 
     private void OnOHASpreeItemSelected()
     {
@@ -608,7 +554,25 @@ public class ShareActivity extends AppCompatActivity {
         // Handle item selection
         Log.d(TAG, "Menu item selected");
 
-        if (item.getItemId() == R.id.select_items) {
+        if (item.getItemId() == R.id.send_items)
+        {
+                ArrayAdapterMainVw  adapter = (ArrayAdapterMainVw)mListView.getAdapter();
+                java.util.ArrayList<Item> contactsLst = adapter.getSelectedList();
+                Intent intent = new Intent();
+                if (contactsLst.size() > 0) {
+                    Log.i(TAG, "Setting contacts no=" + contactsLst.size());
+                    intent.putParcelableArrayListExtra("contactslist", contactsLst);
+                    setResult(RESULT_OK, intent);
+                }
+                else
+                {
+                    setResult(RESULT_CANCELED, intent);
+                }
+
+                finish();
+
+        }
+        else if (item.getItemId() == R.id.select_items) {
 
             switch (app_name)
             {
@@ -641,24 +605,7 @@ public class ShareActivity extends AppCompatActivity {
         {
             switch (viewType)
             {
-                case CONTACTS_VW:
-                {
-                        ArrayAdapterMainVw  adapter = (ArrayAdapterMainVw)mListView.getAdapter();
-                        java.util.ArrayList<Item> contactsLst = adapter.getSelectedList();
-                        Intent intent = new Intent();
-                        if (contactsLst.size() > 0) {
-                            Log.i(TAG, "Setting contacts no=" + contactsLst.size());
-                            intent.putParcelableArrayListExtra("contactslist", contactsLst);
-                            setResult(RESULT_OK, intent);
-                        }
-                        else
-                        {
-                            setResult(RESULT_CANCELED, intent);
-                        }
 
-                    finish();
-                }
-                break;
 
                 case CONTACTS_ITEM_ADD:
                 {
