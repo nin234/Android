@@ -492,7 +492,7 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
                                       Item itm = (Item) tv.getTag();
                                       CheckBox cbxi = itm.getCbx();
                                       cbxi.setChecked(!cbxi.isChecked());
-                                      Log.d(TAG, "Toggling checkbok " + itm.isSelected() + " cbx=" + cbxi.isChecked());
+                                      Log.d(TAG, "Toggling checkbox of shareItem " + itm.isSelected() + " cbx=" + cbxi.isChecked());
                                       itm.setSelected(cbxi.isChecked());
                                       if (cbxi.isChecked())
                                       {
@@ -515,7 +515,7 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
 
                                        CheckBox cbxi = (CheckBox) view;
                                        Item itm = (Item) cbxi.getTag();
-                                       Log.d(TAG, "Toggling checkbok " + itm.isSelected() + " cbx=" + cbxi.isChecked());
+                                       Log.d(TAG, "Toggling checkbox " + itm.isSelected() + " cbx=" + cbxi.isChecked());
                                        itm.setSelected(cbxi.isChecked());
                                        if (cbxi.isChecked())
                                        {

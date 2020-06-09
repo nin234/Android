@@ -3,6 +3,8 @@ package com.rekhaninan.common;
 import android.content.DialogInterface;
 import android.content.Intent;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +16,10 @@ import android.widget.ListView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 import static com.rekhaninan.common.Constants.ADD_CONTACT_ITEM_ACTIVITY_REQUEST;
 import static com.rekhaninan.common.Constants.AUTOSPREE;
@@ -102,7 +108,18 @@ public class ShareActivity extends AppCompatActivity {
             {
 
                 setContentView(R.layout.activity_main_vw);
-                java.util.List<Item> mainLst = DBOperations.getInstance().getMainLst(CONTACTS_VW);
+                java.util.List<Item> lst = DBOperations.getInstance().getMainLst(CONTACTS_VW);
+                java.util.List<Item> mainLst = new ArrayList<>();
+
+                for (Item item : lst)
+                {
+                    if (item.getName().equals("ME"))
+                    {
+                        continue;
+                    }
+                    mainLst.add(item);
+                }
+
                 if (mainLst == null)
                 {
                     AlertDialog alertDialog = new AlertDialog.Builder(ShareActivity.this).create();
@@ -120,6 +137,7 @@ public class ShareActivity extends AppCompatActivity {
                     alertDialog.show();
                     return;
                 }
+
                 mListView = (ListView) findViewById(R.id.recipe_list_view);
                 ArrayAdapterMainVw adapter = new ArrayAdapterMainVw(this, R.layout.simple_list_1, mainLst);
                 adapter.setParams(app_name, CONTACTS_VW);
@@ -668,14 +686,6 @@ public class ShareActivity extends AppCompatActivity {
                 default:
                     break;
             }
-        }
-        else if (item.getItemId() == R.id.manage_contacts)
-        {
-            Log.i(TAG, "Selected menu item manage contacts");
-            Intent intent = new Intent(this, ShareActivity.class);
-            intent.putExtra("app_name", app_name);
-            intent.putExtra("ViewType", CONTACTS_MAINVW);
-            startActivity(intent);
         }
         else if (item.getItemId() == R.id.add_new_item)
         {

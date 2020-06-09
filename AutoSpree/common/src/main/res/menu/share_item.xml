@@ -5,14 +5,8 @@
     <item
         android:id="@+id/select_items"
         android:orderInCategory="100"
-        android:icon="@drawable/ic_select_all_black_48dp"
         android:title="@string/select_item"
         app:showAsAction="ifRoom" />
-    <item
-    android:id="@+id/manage_contacts"
-    android:orderInCategory="100"
-    android:icon="@drawable/ic_contacts_black_48dp"
-    android:title="@string/contact_mgr"
-    app:showAsAction="ifRoom" />
+
 
 </menu>
