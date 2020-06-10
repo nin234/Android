@@ -34,6 +34,7 @@ public class ShareVwTabbed extends Fragment {
     private ListView mListView;
     private final String TAG = "ShareVwTabbed";
     private Item selectedItem;
+    private  ArrayAdapterMainVw adapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,7 +60,7 @@ public class ShareVwTabbed extends Fragment {
 
 
         mListView = (ListView) view.findViewById(R.id.recipe_list_view);
-        ArrayAdapterMainVw adapter = new ArrayAdapterMainVw(getContext(), R.layout.simple_list_1, mainLst);
+        adapter = new ArrayAdapterMainVw(getContext(), R.layout.simple_list_1, mainLst);
         adapter.setParams(app_name, SHARE_MAINVW);
         mListView.setAdapter(adapter);
     }
@@ -105,10 +106,12 @@ public class ShareVwTabbed extends Fragment {
                    {
                        msg += contact.getName() + ", ";
                    }
+
                } else {
                     msg = "Failed to share item, no contacts selected";
 
                }
+               adapter.notifyDataSetChanged();
                AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
                alertDialog.setTitle("Share Items");
                alertDialog.setMessage(msg);
