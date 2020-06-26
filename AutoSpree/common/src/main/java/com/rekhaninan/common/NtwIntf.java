@@ -1,8 +1,17 @@
 package com.rekhaninan.common;
 
 
+import android.content.Context;
+import android.content.res.AssetManager;
+import android.os.SystemClock;
+
+import org.apache.http.conn.ssl.X509HostnameVerifier;
+
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
@@ -10,6 +19,22 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.SocketChannel;
+import java.security.KeyStore;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLHandshakeException;
+import javax.net.ssl.SSLSession;
+import javax.security.cert.Certificate;
+
+import java.security.SecureRandom;
+import java.security.cert.CertificateFactory;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManagerFactory;
+import javax.security.cert.X509Certificate;
 
 import static com.rekhaninan.common.Constants.AUTOSPREE;
 import static com.rekhaninan.common.Constants.CHECK_INTERVAL;
@@ -28,6 +53,13 @@ public class NtwIntf {
     private SocketChannel socket;
     private ReadableByteChannel wrappedChannel;
     private long lastChecked;
+    private boolean useSSL;
+    private Context ctxt;
+    private SSLContext sslContext;
+    private PrintWriter out = null;
+    private BufferedReader in = null;
+    private SSLSocket socketSSL;
+
 
     private final String TAG="NtwIntf";
 
@@ -38,17 +70,26 @@ public class NtwIntf {
         {
             case EASYGROC:
                     connectAddr = "easygroclist.ddns.net";
-                    connectPort = 16791;
+                    if (useSSL)
+                        connectPort = 16805;
+                    else
+                        connectPort = 16791;
                 break;
 
             case OPENHOUSES:
                     connectAddr = "openhouses.ddns.net";
-                    connectPort = 16789;
+                    if (useSSL)
+                        connectPort = 16803;
+                    else
+                        connectPort = 16789;
                 break;
 
             case AUTOSPREE:
                 connectAddr = "autospree.ddns.net";
-                connectPort = 16790;
+                if (useSSL)
+                    connectPort = 16804;
+                else
+                    connectPort = 16790;
                 break;
 
             default:
@@ -57,15 +98,51 @@ public class NtwIntf {
         Log.i(TAG, "Setting connection details for app=" + app_name + " connectAddr=" + connectAddr + " connectPort=" + connectPort);
     }
 
-    public NtwIntf ()
+    public NtwIntf (Context ctx)
     {
         try {
-            lastChecked = System.currentTimeMillis();
-            socket = SocketChannel.open();
-            socket.socket().setSoTimeout(1000);
-            socket.configureBlocking(true);
-            socket.socket().setReceiveBufferSize(MAX_BUF);
-            socket.socket().setTcpNoDelay(true);
+            useSSL = true;
+            if (useSSL) {
+                ctxt = ctx;
+                CertificateFactory cf = CertificateFactory.getInstance("X.509");
+                AssetManager am = ctxt.getAssets();
+                InputStream caInput = am.open("servercert.der");
+                java.security.cert.Certificate ca;
+                try {
+                    ca = cf.generateCertificate(caInput);
+                    System.out.println("certificate details=" + ((java.security.cert.X509Certificate) ca).getSubjectDN());
+                } finally {
+                    caInput.close();
+                }
+
+// Create a KeyStore containing our trusted CAs
+                String keyStoreType = KeyStore.getDefaultType();
+                Log.i(TAG, "KeyStoreType=" + keyStoreType);
+                KeyStore keyStore = KeyStore.getInstance(keyStoreType);
+                keyStore.load(null, null);
+                keyStore.setCertificateEntry("ca", ca);
+
+// Create a TrustManager that trusts the CAs in our KeyStore
+                String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
+                TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
+
+
+                tmf.init(keyStore);
+
+// Create an SSLContext that uses our TrustManager
+                sslContext = SSLContext.getInstance("TLS");
+                sslContext.init(null, tmf.getTrustManagers(), new SecureRandom());
+                Log.d(TAG, "SSL Context initialized");
+
+
+            }
+
+                lastChecked = System.currentTimeMillis();
+                socket = SocketChannel.open();
+                socket.socket().setSoTimeout(1000);
+                socket.configureBlocking(true);
+                socket.socket().setReceiveBufferSize(MAX_BUF);
+                socket.socket().setTcpNoDelay(true);
 
         }
         catch (IOException excp)
@@ -83,18 +160,32 @@ public class NtwIntf {
     {
 
         try {
-
-            if ( !socket.isConnected())
+            if (useSSL)
             {
-                return;
-            }
-            long now = System.currentTimeMillis();
-            if (now < lastChecked + CHECK_INTERVAL) {
-                return;
-            }
+                if (socketSSL == null || !socketSSL.isConnected()) {
+                    return;
+                }
+                long now = System.currentTimeMillis();
+                if (now < lastChecked + CHECK_INTERVAL) {
+                    return;
+                }
 
-            socket.close();
-            Log.i(TAG, "Closing idle socket");
+                socketSSL.close();
+                Log.i(TAG, "Closing idle socket");
+
+            }
+            else {
+                if (!socket.isConnected()) {
+                    return;
+                }
+                long now = System.currentTimeMillis();
+                if (now < lastChecked + CHECK_INTERVAL) {
+                    return;
+                }
+
+                socket.close();
+                Log.i(TAG, "Closing idle socket");
+            }
         }
         catch (IOException excp)
         {
@@ -109,19 +200,36 @@ public class NtwIntf {
 
     public boolean sendMsg (ByteBuffer msg)
     {
-        if ( !socket.isConnected())
+        if (useSSL)
         {
-            if (!connect()){
+            if (socketSSL == null || !socketSSL.isConnected()) {
+                if (!connect()) {
 
-                Log.d (TAG, "Failed to connect to socket");
-                return false;
+                    Log.d(TAG, "Failed to connect to socket");
+                    return false;
+                }
+
             }
+        }
+        else {
+            if (!socket.isConnected()) {
+                if (!connect()) {
 
+                    Log.d(TAG, "Failed to connect to socket");
+                    return false;
+                }
+
+            }
         }
 
         try {
             msg.flip();
             Log.i(TAG, "Number of bytes to write to socket=" + msg.remaining());
+            if (useSSL)
+            {
+                socketSSL.getOutputStream().write(msg.array());
+                return true;
+            }
             while (msg.hasRemaining()) {
                 int n = socket.write(msg);
                 lastChecked = System.currentTimeMillis();
@@ -145,15 +253,28 @@ public class NtwIntf {
 
     boolean getResp(ByteBuffer resp)
     {
-        try
-        {
+        try {
 
-        if (!socket.isConnected())
-        {
-           // Log.e(TAG, "Socket not connected");
-            return false;
-        }
+            if (useSSL)
+            {
+                if (socketSSL == null || !socketSSL.isConnected())
+                {
+                    Log.i(TAG, "SSL Socket not connected");
+                    return false;
+                }
+            }
+            else {
+                if (!socket.isConnected()) {
+                    // Log.e(TAG, "Socket not connected");
+                    return false;
+                }
+            }
 
+            if (wrappedChannel == null)
+            {
+                Log.d(TAG, "NUll wrapped channel");
+                return false;
+            }
            //Log.i(TAG, "reading nbytes=" + resp.remaining() + " from socket");
         int bytesRead = wrappedChannel.read(resp);
             if (bytesRead > 0) {
@@ -166,6 +287,8 @@ public class NtwIntf {
                // Log.e(TAG, "Bytes read=" + bytesRead);
                 return false;
             }
+
+
         }
         catch (SocketTimeoutException excp)
         {
@@ -188,20 +311,67 @@ public class NtwIntf {
     boolean connect()
     {
         try {
-            socket = SocketChannel.open();
-            socket.socket().setSoTimeout(1000);
-            socket.configureBlocking(true);
-            socket.socket().setReceiveBufferSize(MAX_BUF);
-            socket.socket().setTcpNoDelay(true);
-            Log.i(TAG, "Connecting to socket");
-             boolean isConnected =  socket.connect (new InetSocketAddress( connectAddr, connectPort));
-            while (!socket.finishConnect());
-            InputStream inStream = socket.socket().getInputStream();
-            wrappedChannel = Channels.newChannel(inStream);
-            Log.i(TAG, "Connected to socket");
+            if (useSSL)
+            {
+                Log.d(TAG, "Connecting to ssl socket connectAddr=" + connectAddr + " connectPort=" + connectPort);
+                SSLSocketFactory factory = sslContext.getSocketFactory();
+
+                socketSSL =
+                        (SSLSocket)factory.createSocket(connectAddr, connectPort);
+                Log.d(TAG, "Connected to ssl socket connectAddr=" + connectAddr + " connectPort=" + connectPort);
+                socketSSL.setReceiveBufferSize(MAX_BUF);
+
+                socketSSL.setTcpNoDelay(true);
+
+                socketSSL.setSoTimeout(1000);
+
+                //HttpsURLConnection.setDefaultHostnameVerifier(new X509HostnameVerifier());
+                HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
+
+                Log.d(TAG, "Getting  ssl session connectAddr=" + connectAddr + " connectPort=" + connectPort);
+                SystemClock.sleep(4000);
+                SSLSession s = socketSSL.getSession();
+
+                Log.d(TAG, "Got  ssl  session after sleep connectAddr=" + s.getPeerHost() + " connectPort=" + s.getPeerPort()
+                + " protocol=" + s.getProtocol() + " principal=" + s.getPeerPrincipal());
+
+// Verify that the certicate hostname is for mail.google.com
+// This is due to lack of SNI support in the current SSLSocket.
+/*
+               if (!hv.verify(connectAddr, s)) {
+                    throw new SSLHandshakeException("Expected , " + connectAddr +
+                            " found " + s.getPeerPrincipal());
+                }
+
+*/
+
+                Log.d(TAG, "Host Name verified for  session connectAddr=" + connectAddr + " connectPort=" + connectPort);
+                InputStream inStream = socketSSL.getInputStream();
+                wrappedChannel = Channels.newChannel(inStream);
+
+
+                Log.i(TAG, "Connected to SSL socket=" + socketSSL.isConnected());
+            }
+            else {
+                socket = SocketChannel.open();
+                socket.socket().setSoTimeout(1000);
+                socket.configureBlocking(true);
+                socket.socket().setReceiveBufferSize(MAX_BUF);
+                socket.socket().setTcpNoDelay(true);
+                Log.i(TAG, "Connecting to socket");
+                boolean isConnected = socket.connect(new InetSocketAddress(connectAddr, connectPort));
+                while (!socket.finishConnect()) ;
+                InputStream inStream = socket.socket().getInputStream();
+                wrappedChannel = Channels.newChannel(inStream);
+                Log.i(TAG, "Connected to socket");
+            }
             return true;
 
 
+        }
+        catch (SSLHandshakeException excp)
+        {
+            Log.e (TAG, "connect Caught SSLHandshakeException " + excp.getMessage(), excp);
         }
         catch (UnknownHostException excp)
         {

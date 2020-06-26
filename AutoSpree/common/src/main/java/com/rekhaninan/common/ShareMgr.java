@@ -142,7 +142,7 @@ public class ShareMgr extends Thread {
     private ShareMgr ()
     {
 
-        ntwIntf = new NtwIntf();
+
         piclen =0;
         picurl = null;
         fos =null;
@@ -567,6 +567,7 @@ public class ShareMgr extends Thread {
         msgsToSend = shareDBIntf.refreshItemData();
         imgsToSend = shareDBIntf.refreshImages();
         imgsMetaData = shareDBIntf.refreshImagesMetaData();
+
         INSTANCE.start();
     }
 
@@ -690,7 +691,7 @@ public class ShareMgr extends Thread {
 
 
 
-        ntwIntf = new NtwIntf();
+        ntwIntf = new NtwIntf(ctxt);
         pDecoder = new MessageDecoder();
         ntwIntf.setConnectionDetails(app_name);
         pDecoder.setApp_name(app_name);
