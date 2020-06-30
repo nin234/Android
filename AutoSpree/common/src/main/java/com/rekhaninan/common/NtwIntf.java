@@ -24,6 +24,7 @@ import java.security.KeyStore;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLHandshakeException;
+import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSession;
 import javax.security.cert.Certificate;
 
@@ -106,11 +107,11 @@ public class NtwIntf {
                 ctxt = ctx;
                 CertificateFactory cf = CertificateFactory.getInstance("X.509");
                 AssetManager am = ctxt.getAssets();
-                InputStream caInput = am.open("servercert.der");
+                InputStream caInput = am.open("server.der");
                 java.security.cert.Certificate ca;
                 try {
                     ca = cf.generateCertificate(caInput);
-                    System.out.println("certificate details=" + ((java.security.cert.X509Certificate) ca).getSubjectDN());
+                    System.out.println("certificate file=server.der details=" + ((java.security.cert.X509Certificate) ca).getSubjectDN());
                 } finally {
                     caInput.close();
                 }
@@ -228,6 +229,7 @@ public class NtwIntf {
             if (useSSL)
             {
                 socketSSL.getOutputStream().write(msg.array());
+                Log.i(TAG, "Wrote to SSL socket buffer bytes=" + msg.array().length);
                 return true;
             }
             while (msg.hasRemaining()) {
@@ -259,7 +261,7 @@ public class NtwIntf {
             {
                 if (socketSSL == null || !socketSSL.isConnected())
                 {
-                    Log.i(TAG, "SSL Socket not connected");
+                 //   Log.i(TAG, "SSL Socket not connected");
                     return false;
                 }
             }
@@ -313,23 +315,32 @@ public class NtwIntf {
         try {
             if (useSSL)
             {
-                Log.d(TAG, "Connecting to ssl socket connectAddr=" + connectAddr + " connectPort=" + connectPort);
+                socket = SocketChannel.open();
+                socket.socket().setSoTimeout(1000);
+                socket.configureBlocking(true);
+                socket.socket().setReceiveBufferSize(MAX_BUF);
+                socket.socket().setTcpNoDelay(true);
+                Log.i(TAG, "Connecting to socket");
+                boolean isConnected = socket.connect(new InetSocketAddress(connectAddr, connectPort));
+                while (!socket.finishConnect()) ;
+                Log.d(TAG, "Connected to  socket connectAddr=" + connectAddr + " connectPort=" + connectPort);
                 SSLSocketFactory factory = sslContext.getSocketFactory();
 
                 socketSSL =
-                        (SSLSocket)factory.createSocket(connectAddr, connectPort);
+                        (SSLSocket)factory.createSocket(socket.socket(), connectAddr, connectPort, true);
                 Log.d(TAG, "Connected to ssl socket connectAddr=" + connectAddr + " connectPort=" + connectPort);
-                socketSSL.setReceiveBufferSize(MAX_BUF);
+                //socketSSL.setReceiveBufferSize(MAX_BUF);
 
-                socketSSL.setTcpNoDelay(true);
+                //socketSSL.setTcpNoDelay(true);
 
-                socketSSL.setSoTimeout(1000);
+                //socketSSL.setSoTimeout(1000);
 
                 //HttpsURLConnection.setDefaultHostnameVerifier(new X509HostnameVerifier());
                 HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
-
+                SystemClock.sleep(1000);
+                //socketSSL.startHandshake();
                 Log.d(TAG, "Getting  ssl session connectAddr=" + connectAddr + " connectPort=" + connectPort);
-                SystemClock.sleep(4000);
+                //SystemClock.sleep(1000);
                 SSLSession s = socketSSL.getSession();
 
                 Log.d(TAG, "Got  ssl  session after sleep connectAddr=" + s.getPeerHost() + " connectPort=" + s.getPeerPort()
@@ -368,6 +379,10 @@ public class NtwIntf {
             return true;
 
 
+        }
+        catch (SSLPeerUnverifiedException excp)
+        {
+            Log.e (TAG, "connect Caught SSLPeerUnverifiedException " + excp.getMessage(), excp);
         }
         catch (SSLHandshakeException excp)
         {

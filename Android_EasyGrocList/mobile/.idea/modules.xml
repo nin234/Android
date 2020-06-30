@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/112018260/Android_EasyGrocList.iml" filepath="$PROJECT_DIR$/.idea/modules/112018260/Android_EasyGrocList.iml" group="Android_EasyGrocList" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1302630708/common-debug.iml" filepath="$PROJECT_DIR$/.idea/modules/-1302630708/common-debug.iml" group="Android_EasyGrocList/common-debug" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mobile.iml" filepath="$PROJECT_DIR$/.idea/modules/mobile.iml" group="Android_EasyGrocList/mobile" />
+    </modules>
+  </component>
+</project>
