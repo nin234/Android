@@ -149,14 +149,13 @@ public class PlannerVwTabbed extends Fragment {
                                     return;
                                 }
 
-                                String templateName = input.getText().toString();
                                 dialog.cancel();
-                                if (templateName.matches("[A-Za-z0-9]+")) {
-                                    Item templNameItm = new Item();
-                                    templNameItm.setName(templateName);
-                                    DBOperations.getInstance().insertDb(templNameItm, EASYGROC_TEMPL_NAME_ADD_ITEM);
-                                    refresh();
-                                }
+                                String templateName = input.getText().toString();
+                                Item templNameItm = new Item();
+                                templNameItm.setName(templateName);
+                                DBOperations.getInstance().insertDb(templNameItm, EASYGROC_TEMPL_NAME_ADD_ITEM);
+                                Log.d(TAG, "Inserted new store=" + templateName);
+                                refresh();
 
 
                             }
