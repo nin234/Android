@@ -25,6 +25,7 @@ import static com.rekhaninan.common.Constants.CONTACTS_VW;
 import static com.rekhaninan.common.Constants.GET_CONTACTS_ACTIVITY_REQUEST;
 import static com.rekhaninan.common.Constants.ITEMSEPARATOR;
 import static com.rekhaninan.common.Constants.KEYVALSEPARATOR;
+import static com.rekhaninan.common.Constants.MAINVW;
 import static com.rekhaninan.common.Constants.SHARE_MAINVW;
 
 public class ShareVwTabbed extends Fragment {
@@ -35,6 +36,7 @@ public class ShareVwTabbed extends Fragment {
     private final String TAG = "ShareVwTabbed";
     private Item selectedItem;
     private  ArrayAdapterMainVw adapter;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -177,5 +179,17 @@ public class ShareVwTabbed extends Fragment {
 
         return;
     }
+    public void refresh()
+    {
+        Log.d(TAG, "Refreshing Share View");
+        java.util.List<Item> mainLst = DBOperations.getInstance().getMainLst(SHARE_MAINVW);
+        adapter.setArryElems(mainLst);
+        adapter.notifyDataSetChanged();
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        refresh();
+    }
 }

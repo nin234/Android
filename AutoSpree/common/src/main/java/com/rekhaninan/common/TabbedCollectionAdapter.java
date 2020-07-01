@@ -16,6 +16,7 @@ public class TabbedCollectionAdapter extends FragmentStateAdapter {
     private PlannerVwTabbed plannerVwTabbed;
     private MainVwTabbed mainVwTabbed;
     private ContactsVwTabbed contactsVwTabbed;
+    private ShareVwTabbed shareVwTabbed;
 
     public TabbedCollectionAdapter(FragmentActivity frg)
     {
@@ -63,13 +64,13 @@ public class TabbedCollectionAdapter extends FragmentStateAdapter {
             }
 
             case SHARE_POSN: {
-                ShareVwTabbed fragment = new ShareVwTabbed();
-                fragment.app_name = appName;
+                shareVwTabbed = new ShareVwTabbed();
+                shareVwTabbed.app_name = appName;
                 Bundle args = new Bundle();
                 // Our object is just an integer :-P
                 args.putInt(ShareVwTabbed.ARG_OBJECT, position + 1);
-                fragment.setArguments(args);
-                return fragment;
+                shareVwTabbed.setArguments(args);
+                return shareVwTabbed;
             }
 
             default:
@@ -101,5 +102,7 @@ public class TabbedCollectionAdapter extends FragmentStateAdapter {
     }
 
     public void refreshContactVw() {contactsVwTabbed.refresh();}
+
+    public void refreshShareVw() {shareVwTabbed.refresh();}
 
 }

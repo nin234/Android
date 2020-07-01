@@ -190,4 +190,5 @@ public class PlannerVwTabbed extends Fragment {
 
     }
 
-    }
+
+}

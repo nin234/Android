@@ -42,6 +42,7 @@ public class MainVwTabbed extends Fragment {
     private static final String TAG="MainVwTabbed";
     public String app_name;
     private ArrayAdapterMainVw adapter;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -171,7 +172,7 @@ public class MainVwTabbed extends Fragment {
 
     public void refresh()
     {
-
+        Log.d(TAG, "Refreshing Home View");
         java.util.List<Item> mainLst = DBOperations.getInstance().getMainLst(MAINVW);
         adapter.setArryElems(mainLst);
         adapter.notifyDataSetChanged();
