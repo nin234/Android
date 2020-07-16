@@ -132,7 +132,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         label.setText(itm.getName());
         label.setHeight(txtHeight);
         label.setWidth((width / 10) * 8);
-        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
+        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.35f);
         label.setTag(itm);
 
         ImageView disclosure = (ImageView) vw.findViewById(R.id.label_image_icon);
@@ -170,7 +170,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         label.setText(itm.getName());
         label.setHeight(txtHeight);
         label.setWidth((width / 10) * 8);
-        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
+        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.35f);
         label.setTag(itm);
 
         ImageView disclosure = (ImageView) vw.findViewById(R.id.label_image_icon);
@@ -1040,7 +1040,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         Log.d(TAG, "getLabelSwitchView text=" + itm.getItem() + " rowno="+ itm.getRowno());
         label.setHeight(txtHeight);
         label.setWidth((width / 10) * 8);
-        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
+        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.35f);
         Switch onoff = (Switch) vw.findViewById(R.id.done);
         onoff.setOnCheckedChangeListener(
                 new CompoundButton.OnCheckedChangeListener() {

@@ -153,38 +153,7 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
 
                case CONTACTS_MAINVW:
                {
-                   LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                   View vw = inflater.inflate(R.layout.no_label, parent, false);
-                   TextView tv = (TextView) vw.findViewById(R.id.name);
-                   tv.setHeight(txtHeight);
-                   String itemname = itm.getName();
-                   if (itemname == null || itemname.length() <=0)
-                   {
-                       itemname = Long.toString(itm.getShare_id());
-                   }
-                   Log.d(TAG, "Setting item name=" + itemname + " in CONTACTS_MAINVW");
-                   tv.setText(itemname);
-                   tv.setTag(itm);
-                   tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
-                   tv.setOnClickListener(new View.OnClickListener() {
-                                             @Override
-                                             public void onClick(View view) {
-
-                                                 TextView tv = (TextView) view;
-                                                 Item itm = (Item) tv.getTag();
-                                                 Log.d(getClass().getName(), "Clicked row " + tv.getText());
-                                                 Intent intent = new Intent(ctxt, ShareActivity.class);
-                                                 intent.putExtra("ViewType", CONTACTS_ITEM_DISPLAY);
-                                                 intent.putExtra("app_name", app_name);
-                                                 intent.putExtra("item", itm);
-                                                 Activity itemAct = (Activity) ctxt;
-                                                 itemAct.startActivityForResult(intent, DELETE_CONTACT_ITEM_ACTIVITY_REQUEST);
-
-                                             }
-                                         }
-
-                   );
-                   return vw;
+                    return getContactMainVwRow(parent, txtHeight, width, itm);
                }
 
                case CONTACTS_VW:
@@ -452,6 +421,52 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
 
            return null;
        }
+
+    public View getContactMainVwRow (ViewGroup parent , int txtHeight,  int width, Item itm)
+    {
+        final LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View vw = inflater.inflate(R.layout.label, parent, false);
+
+
+        ImageView disclosure = (ImageView) vw.findViewById(R.id.label_image_icon);
+        disclosure.setMaxHeight(txtHeight);
+        disclosure.setMaxWidth(width / 10);
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+        lp.setMargins((width / 10) * 8, 5, 5, 5);
+        disclosure.setLayoutParams(lp);
+        String itemname = itm.getName();
+        if (itemname == null || itemname.length() <=0)
+        {
+            itemname = Long.toString(itm.getShare_id());
+        }
+        Log.d(TAG, "Setting item name=" + itemname + " in CONTACTS_MAINVW");
+        TextView tv = (TextView) vw.findViewById(R.id.name);
+        tv.setHeight(txtHeight);
+        tv.setWidth((width / 10) * 8);
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.35f);
+        tv.setText(itemname);
+        tv.setTag(itm);
+        tv.setOnClickListener(new View.OnClickListener() {
+                                  @Override
+                                  public void onClick(View view) {
+
+                                      TextView tv = (TextView) view;
+                                      Item itm = (Item) tv.getTag();
+                                      Log.d(getClass().getName(), "Clicked row " + tv.getText());
+                                      Intent intent = new Intent(ctxt, ShareActivity.class);
+                                      intent.putExtra("ViewType", CONTACTS_ITEM_DISPLAY);
+                                      intent.putExtra("app_name", app_name);
+                                      intent.putExtra("item", itm);
+                                      Activity itemAct = (Activity) ctxt;
+                                      itemAct.startActivityForResult(intent, DELETE_CONTACT_ITEM_ACTIVITY_REQUEST);
+
+                                  }
+                              }
+
+        );
+        return vw;
+    }
 
     private void mapRowSetOnClick(final Item itm)
     {
