@@ -174,7 +174,7 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
                    tv.setTag(itm);
 
                    //tv.setText(Item, TextView.BufferType.EDITABLE);
-                   tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+                   tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.35f );
 
                    tv.setOnClickListener(new View.OnClickListener() {
 
@@ -497,7 +497,7 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
         tv.setTag(itm);
 
         //tv.setText(Item, TextView.BufferType.EDITABLE);
-        tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.35f);
         tv.setOnClickListener(new View.OnClickListener() {
 
                                   @Override
