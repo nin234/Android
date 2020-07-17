@@ -831,6 +831,7 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
             if (itm.getName() != null && itm.getName().length() > 0)
                 name_value.setText(itm.getName());
             name_value.setKeyListener(null);
+            name_value.setBackgroundResource(android.R.color.transparent);
         }
 
         if (edit) {
@@ -879,6 +880,7 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
             if (itm.getShare_id() != 0)
                 name_value.setText(Long.toString(itm.getShare_id()));
             name_value.setKeyListener(null);
+            name_value.setBackgroundResource(android.R.color.transparent);
         }
         if (edit) {
             name_value.addTextChangedListener(new TextWatcher() {
