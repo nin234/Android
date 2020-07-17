@@ -964,13 +964,6 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View vw = inflater.inflate(R.layout.label_switch_inv, parent, false);
         TextView label = (TextView) vw.findViewById(R.id.listItem_inv);
-        if (itm != null && itm.getItem() != null) {
-            label.setText(itm.getItem());
-        }
-        else
-        {
-            label.setText(" ");
-        }
         label.setHeight(txtHeight);
         label.setWidth((width / 10) * 8);
         label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.35f);
@@ -982,6 +975,14 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         else
         {
             onoff.setChecked(false);
+        }
+        if (itm != null && itm.getItem() != null) {
+            label.setText(itm.getItem());
+        }
+        else
+        {
+            label.setText(" ");
+            onoff.setVisibility(View.INVISIBLE);
         }
 
         onoff.setOnCheckedChangeListener(
