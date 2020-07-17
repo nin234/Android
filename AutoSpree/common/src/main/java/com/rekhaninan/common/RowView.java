@@ -856,7 +856,7 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
         }
         name_value.setHeight(txtHeight);
         name_value.setWidth((width/4)*3);
-        name_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+        name_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 3);
         return vw;
     }
 
@@ -911,7 +911,7 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
         }
         name_value.setHeight(txtHeight);
         name_value.setWidth((width/4)*3);
-        name_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+        name_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 3);
 
         return vw;
     }
