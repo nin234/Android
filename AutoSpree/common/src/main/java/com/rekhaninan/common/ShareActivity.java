@@ -34,6 +34,7 @@ import static com.rekhaninan.common.Constants.GET_CONTACTS_ACTIVITY_REQUEST;
 import static com.rekhaninan.common.Constants.ITEMSEPARATOR;
 import static com.rekhaninan.common.Constants.KEYVALSEPARATOR;
 import static com.rekhaninan.common.Constants.OPENHOUSES;
+import static com.rekhaninan.common.Constants.RESULT_NO_CONTACT_SELECTED;
 import static com.rekhaninan.common.Constants.SHARE_MAINVW;
 import static com.rekhaninan.common.Constants.SHARE_PICTURE_ACTIVITY_REQUEST;
 import static com.rekhaninan.common.Constants.SHARE_PICTURE_VW;
@@ -566,7 +567,7 @@ public class ShareActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    setResult(RESULT_CANCELED, intent);
+                    setResult(RESULT_NO_CONTACT_SELECTED, intent);
                 }
 
                 finish();

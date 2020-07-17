@@ -135,6 +135,9 @@ public final class Constants {
 
     public static final int SUCCESS_RESULT = 0;
     public static final int FAILURE_RESULT = 1;
+
+    public static final int RESULT_NO_CONTACT_SELECTED = 10;
+
     public static final String PACKAGE_NAME =
             "com.rekhaninan.common";
     public static final String RECEIVER = PACKAGE_NAME + ".RECEIVER";

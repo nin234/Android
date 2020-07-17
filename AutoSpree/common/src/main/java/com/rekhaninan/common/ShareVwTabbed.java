@@ -26,6 +26,7 @@ import static com.rekhaninan.common.Constants.GET_CONTACTS_ACTIVITY_REQUEST;
 import static com.rekhaninan.common.Constants.ITEMSEPARATOR;
 import static com.rekhaninan.common.Constants.KEYVALSEPARATOR;
 import static com.rekhaninan.common.Constants.MAINVW;
+import static com.rekhaninan.common.Constants.RESULT_NO_CONTACT_SELECTED;
 import static com.rekhaninan.common.Constants.SHARE_MAINVW;
 
 public class ShareVwTabbed extends Fragment {
@@ -99,7 +100,9 @@ public class ShareVwTabbed extends Fragment {
         Log.d(TAG, "Processing Activity result for request Code=" + requestCode);
         switch (requestCode) {
            case GET_CONTACTS_ACTIVITY_REQUEST: {
+               Log.d(TAG, "GET_CONTACTS_ACTIVITY_REQUEST result code=" + resultCode);
                String msg;
+               boolean bShowAlert = true;
                if (resultCode == Activity.RESULT_OK) {
                    java.util.ArrayList<Item> contactsLst = data.getParcelableArrayListExtra("contactslist");
                    shareEasyGrocItem(contactsLst);
@@ -109,22 +112,29 @@ public class ShareVwTabbed extends Fragment {
                        msg += contact.getName() + ", ";
                    }
 
-               } else {
+               } else if (resultCode == RESULT_NO_CONTACT_SELECTED){
                     msg = "Failed to share item, no contacts selected";
 
                }
+               else
+               {
+                   msg="cxled";
+                   bShowAlert = false;
+               }
                adapter.notifyDataSetChanged();
-               AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-               alertDialog.setTitle("Share Items");
-               alertDialog.setMessage(msg);
-               alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                       new DialogInterface.OnClickListener() {
-                           public void onClick(DialogInterface dialog, int which) {
-                               dialog.dismiss();
-                               return;
-                           }
-                       });
-               alertDialog.show();
+               if (bShowAlert) {
+                   AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                   alertDialog.setTitle("Share Items");
+                   alertDialog.setMessage(msg);
+                   alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                           new DialogInterface.OnClickListener() {
+                               public void onClick(DialogInterface dialog, int which) {
+                                   dialog.dismiss();
+                                   return;
+                               }
+                           });
+                   alertDialog.show();
+               }
            }
                break;
 
