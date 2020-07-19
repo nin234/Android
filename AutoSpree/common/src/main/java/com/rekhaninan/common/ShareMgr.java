@@ -1,5 +1,5 @@
 package com.rekhaninan.common;
-
+import android.content.Context;
 import android.content.Context;
 
 import android.content.SharedPreferences;
@@ -38,7 +38,14 @@ import static com.rekhaninan.common.Constants.MAINVW;
 import static com.rekhaninan.common.Constants.MAX_BUF;
 import static com.rekhaninan.common.Constants.OPENHOUSES;
 import static com.rekhaninan.common.Constants.RCV_BUF_LEN;
+import android.content.SharedPreferences;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 /**
  * Created by ninanthomas on 2/12/17.
@@ -555,9 +562,14 @@ public class ShareMgr extends Thread {
     public void  start_thr(Context ctx, String appname)
     {
         Log.i(TAG, "Starting share mgr thread");
+
         handler = new Handler(Looper.getMainLooper());
         Log.i(TAG, "Got handler handle");
         ctxt = ctx;
+        SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
+        String devTkn = sharing.getString("token", "None");
+        Log.d(TAG, "Current device token=" + devTkn);
+        getCurrentToken();
         share_id = 0;
         app_name = appname;
         setShId();
@@ -569,6 +581,36 @@ public class ShareMgr extends Thread {
         imgsMetaData = shareDBIntf.refreshImagesMetaData();
 
         INSTANCE.start();
+    }
+
+    void getCurrentToken()
+    {
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.d(TAG, "getInstanceId failed" + task.getException());
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        String token = task.getResult().getToken();
+                        Log.i(TAG, "Got  token=" + token );
+                        SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
+                        String devTkn = sharing.getString("token", "None");
+                        Log.i(TAG, "Current token=" + devTkn );
+                        if (!token.equals(devTkn)) {
+                            Log.i(TAG, "Setting update token to true");
+                            SharedPreferences.Editor editor = sharing.edit();
+                            editor.putString("token", token);
+                            editor.putBoolean("update", true);
+                            editor.commit();
+                            ShareMgr.getInstance().setbUpdateTkn(true);
+                        }
+                        // Log and toast
+                    }
+                });
     }
 
     public void refreshMainVw()
