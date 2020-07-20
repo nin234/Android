@@ -180,7 +180,6 @@ public class MainVwTabbed extends Fragment {
             intent.putExtra("ViewType", HELP_SCREEN_VIEW);
             Item itm = new Item();
             intent.putExtra("item", itm);
-            startActivityForResult(intent, EASYGROC_ADD_ITEM_REQUEST);
             intent.putExtra("HelpText", helpText);
             startActivity(intent);
         }
