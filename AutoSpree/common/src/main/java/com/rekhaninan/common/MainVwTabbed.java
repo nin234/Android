@@ -119,7 +119,7 @@ public class MainVwTabbed extends Fragment {
         if (app_name.equals(EASYGROC))
         {
             Log.d(TAG, "Inflating main_easygro_menu in MainVwTabbed");
-            inflater.inflate(R.menu.add_single_item, menu);
+            inflater.inflate(R.menu.add_help, menu);
         }
         else {
             Log.d(TAG, "Inflating main_menu");
