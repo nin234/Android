@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.text.InputType;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,6 +36,7 @@ import java.io.File;
 import java.util.List;
 
 import android.os.ResultReceiver;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -89,6 +91,9 @@ public class SingleItemActivity extends AppCompatActivity
 
         Log.i(getClass().getName(), "Added name to mainLst " + itm.getName());
         switch (viewType) {
+            case HELP_SCREEN_VIEW:
+                setUpHelpScreen(intent);
+                break;
             case AUTOSPREE_ADD_ITEM:
             case OPENHOUSES_ADD_ITEM: {
                 setContentView(R.layout.activity_single_item);
@@ -430,6 +435,15 @@ public class SingleItemActivity extends AppCompatActivity
         }
 
 
+    }
+
+    private void setUpHelpScreen(Intent intent)
+    {
+        setContentView(R.layout.help_screen);
+        final TextView helpTextView = (TextView) findViewById(R.id.help_text_id);
+        String helpText = intent.getStringExtra("HelpText");
+        helpTextView.setText(helpText);
+        helpTextView.setMovementMethod(new ScrollingMovementMethod());
     }
 
     private void createTemplDeleteAdapter()
