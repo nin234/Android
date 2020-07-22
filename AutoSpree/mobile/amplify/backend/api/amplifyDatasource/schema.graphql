@@ -1,10 +1,35 @@
-type Task @model {
-  id: ID!
-  title: String!
-  description: String
-  status: String
+type EasyGrocListItems @model
+@key(fields: ["userID", "name", "masterList"])
+{
+  name: String!
+  date: String!
+  masterList: String!
+  userID: String!
+  add:  Boolean!
 }
-type Note @model {
-  id: ID!
-  content: String!
+
+type Query
+{
+  itemsByUserID(userID: String!):[EasyGrocListItems]
 }
+
+type UserInfo @model
+@key(fields: ["userID"])
+{
+  share_id: Int!
+  date: String!
+  userID: String!
+  verified: Boolean!
+  placeholder1: String
+  placeholder2: String
+  placeholder3: String
+}
+
+type AccountLink @model
+@key(fields: ["code"])
+{
+  code: Int!
+  date: String!
+  userID: String!
+}
+

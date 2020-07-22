@@ -12,6 +12,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuInflater;
 
+import com.amplifyframework.AmplifyException;
+import com.amplifyframework.api.aws.AWSApiPlugin;
+import com.amplifyframework.core.Amplify;
+import com.amplifyframework.datastore.AWSDataStorePlugin;
 import com.google.android.material.tabs.TabLayout;
 
 import static com.rekhaninan.common.Constants.*;
@@ -39,10 +43,14 @@ public class MainVwActivity extends AppCompatActivity {
             Log.d(getClass().getSimpleName(), "Starting onCreate of MainVwActivity");
             super.onCreate(savedInstanceState);
             Intent intent = getIntent();
+
             Log.d(getClass().getSimpleName(), "Starting onCreate of MainVwActivity1");
             String APP_NAME = "APP_NAME";
             message = intent.getStringExtra(APP_NAME);
             app_name = message;
+            if (app_name.equals(EASYGROC)) {
+                initializeAmplify();
+            }
             PermissionsManager.getInstance().requestPermissionIfReqd(getApplicationContext(), this);
             dbClassName = "com.rekhaninan.common.";
             dbClassName +=   message;
@@ -148,6 +156,19 @@ public class MainVwActivity extends AppCompatActivity {
 
          */
         return true;
+    }
+
+    private void initializeAmplify()
+    {
+        try {
+            Amplify.addPlugin(new AWSApiPlugin());
+            Amplify.addPlugin(new AWSDataStorePlugin());
+            Amplify.configure(getApplicationContext());
+
+            android.util.Log.i("EasyGrocAmplifyApp", "Initialized Amplify");
+        } catch (AmplifyException e) {
+            android.util.Log.e("EasyGrocAmplifyApp", "Could not initialize Amplify", e);
+        }
     }
 
     @Override

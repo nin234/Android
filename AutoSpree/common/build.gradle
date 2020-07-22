@@ -34,8 +34,11 @@ dependencies {
     implementation "androidx.viewpager2:viewpager2:1.0.0"
     implementation 'com.google.firebase:firebase-messaging:20.1.7'
     implementation 'com.google.android.material:material:1.1.0-alpha10'
+    implementation 'com.amplifyframework:core:1.0.0'
+    implementation 'com.amplifyframework:aws-datastore:1.0.0'
+    implementation 'com.amplifyframework:aws-api:1.0.0'
+
 }
 
 
-
-
+apply plugin: 'com.amplifyframework.amplifytools'

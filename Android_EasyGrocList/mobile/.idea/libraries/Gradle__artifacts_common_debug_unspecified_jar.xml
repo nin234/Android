@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: artifacts:common-debug:unspecified@jar">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../common-debug/build/.transforms/df9657e7f83d951b93f035e2259b2b7d/jetified-common-debug/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/../common-debug/build/.transforms/df9657e7f83d951b93f035e2259b2b7d/jetified-common-debug/res" />
+      <root url="jar://$PROJECT_DIR$/../common-debug/build/.transforms/b7ceb899888fd00b2fb24fcc53a76e3c/jetified-common-debug/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../common-debug/build/.transforms/b7ceb899888fd00b2fb24fcc53a76e3c/jetified-common-debug/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
