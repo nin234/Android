@@ -9,5 +9,10 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
     android:id="@+id/help_screen"
     android:orderInCategory="100"
     android:title="@string/help"
-    app:showAsAction="ifRoom" />
+    app:showAsAction="never" />
+    <item
+        android:id="@+id/alexa_button"
+        android:orderInCategory="100"
+        android:title="@string/alexa"
+        app:showAsAction="never" />
 </menu>

@@ -63,7 +63,6 @@ public class MainVwActivity extends AppCompatActivity {
             //setContentView(R.layout.activity_main_vw);
 
             setContentView(R.layout.tabbed_main);
-
             viewPager = findViewById(R.id.pager);
 
             tabLayout = findViewById(R.id.tab_layout);

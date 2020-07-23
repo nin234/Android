@@ -76,6 +76,7 @@ public class MainVwTabbed extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setHasOptionsMenu(true);
     }
 
@@ -175,15 +176,29 @@ public class MainVwTabbed extends Fragment {
 
         }
         else if (item.getItemId() == R.id.help_screen) {
-            Log.d(getClass().getName(), "Creating new Item for app=" + app_name);
-            Intent intent = new Intent(getActivity(), SingleItemActivity.class);
-            intent.putExtra("ViewType", HELP_SCREEN_VIEW);
-            Item itm = new Item();
-            intent.putExtra("item", itm);
-            intent.putExtra("HelpText", helpText);
-            startActivity(intent);
+            showHelpScreen();
+        }
+        else if (item.getItemId() == R.id.alexa_button)
+        {
+            showAlexaDialog();
         }
         return true;
+    }
+
+    private void showAlexaDialog()
+    {
+
+    }
+
+    private void showHelpScreen()
+    {
+        Log.d(getClass().getName(), "Creating new Item for app=" + app_name);
+        Intent intent = new Intent(getActivity(), SingleItemActivity.class);
+        intent.putExtra("ViewType", HELP_SCREEN_VIEW);
+        Item itm = new Item();
+        intent.putExtra("item", itm);
+        intent.putExtra("HelpText", helpText);
+        startActivity(intent);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
