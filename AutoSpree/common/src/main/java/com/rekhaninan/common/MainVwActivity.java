@@ -48,9 +48,6 @@ public class MainVwActivity extends AppCompatActivity {
             String APP_NAME = "APP_NAME";
             message = intent.getStringExtra(APP_NAME);
             app_name = message;
-            if (app_name.equals(EASYGROC)) {
-                initializeAmplify();
-            }
             PermissionsManager.getInstance().requestPermissionIfReqd(getApplicationContext(), this);
             dbClassName = "com.rekhaninan.common.";
             dbClassName +=   message;
@@ -157,18 +154,7 @@ public class MainVwActivity extends AppCompatActivity {
         return true;
     }
 
-    private void initializeAmplify()
-    {
-        try {
-            Amplify.addPlugin(new AWSApiPlugin());
-            Amplify.addPlugin(new AWSDataStorePlugin());
-            Amplify.configure(getApplicationContext());
 
-            android.util.Log.i("EasyGrocAmplifyApp", "Initialized Amplify");
-        } catch (AmplifyException e) {
-            android.util.Log.e("EasyGrocAmplifyApp", "Could not initialize Amplify", e);
-        }
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

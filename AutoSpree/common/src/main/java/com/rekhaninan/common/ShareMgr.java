@@ -76,6 +76,7 @@ public class ShareMgr extends Thread {
     private long lastIdSentTime;
     private long lastTokenUpdateSentTime;
     private boolean bNtwConnected;
+    private AppSyncInterface appSyncInterface;
 
     public int getUploadPicOffset() {
         return uploadPicOffset;
@@ -156,6 +157,7 @@ public class ShareMgr extends Thread {
         picsofar = 0;
         pictureFile = null;
         failed_attempts = 0;
+
 
     }
 
@@ -572,6 +574,9 @@ public class ShareMgr extends Thread {
         getCurrentToken();
         share_id = 0;
         app_name = appname;
+        if (app_name.equals(EASYGROC)) {
+            appSyncInterface = new AppSyncInterface(ctxt);
+        }
         setShId();
         Log.i(TAG, "setShId done");
         shareDBIntf = new ShareDBIntf();
