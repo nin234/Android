@@ -49,6 +49,11 @@ public class AppSyncInterface {
         );
     }
 
+    void getAlexaItems()
+    {
+
+    }
+
     void initializeAWSAppSync()
     {
         try {

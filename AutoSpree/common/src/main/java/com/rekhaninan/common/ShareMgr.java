@@ -749,6 +749,8 @@ public class ShareMgr extends Thread {
 
         bUpdateTkn = sharing.getBoolean("update", true);
         Log.i(TAG, "update token=" + bUpdateTkn);
+        appSyncInterface.getAlexaItems();
+
         getItems();
         for (;;)
         {
