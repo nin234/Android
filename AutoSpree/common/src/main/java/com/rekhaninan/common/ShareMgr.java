@@ -618,6 +618,9 @@ public class ShareMgr extends Thread {
                 });
     }
 
+    public boolean isAlexaAccountLinked() {return appSyncInterface.isAccountLinked();}
+
+    public void getAlexaUserID(int code) {appSyncInterface.getUserID(code);}
     public void refreshMainVw()
     {
         Runnable refreshMainVwRunnable = new Runnable() {
