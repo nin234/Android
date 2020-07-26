@@ -50,6 +50,27 @@ public class Item implements Parcelable  {
     private CheckBox cbx;
     private int rating;
     private boolean showSeasonPicker;
+    private boolean add;
+    private String masterList;
+
+    public String getMasterList() {
+        return masterList;
+    }
+
+    public void setMasterList(String masterList) {
+        this.masterList = masterList;
+    }
+
+
+
+    public boolean isAdd() {
+        return add;
+    }
+
+    public void setAdd(boolean add) {
+        this.add = add;
+    }
+
 
 
 
