@@ -9,10 +9,13 @@ import androidx.arch.core.internal.FastSafeIterableMap;
 
 import com.amplifyframework.AmplifyException;
 import com.amplifyframework.api.aws.AWSApiPlugin;
+import com.amplifyframework.api.graphql.model.ModelMutation;
 import com.amplifyframework.api.graphql.model.ModelQuery;
+import com.amplifyframework.api.graphql.model.ModelSubscription;
 import com.amplifyframework.core.Amplify;
 import com.amplifyframework.datastore.generated.model.AccountLink;
 import com.amplifyframework.datastore.generated.model.EasyGrocListItems;
+import com.amplifyframework.datastore.generated.model.UserInfo;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,6 +50,7 @@ public class AppSyncInterface {
                     SharedPreferences.Editor editor = sharing.edit();
                     editor.putString("alexaUserID", accountLink.getUserId());
                     editor.commit();
+                    storeShareIdInAWS(accountLink.getUserId(), accountLink);
                     AlertDialog alertDialog = new AlertDialog.Builder(ctxt).create();
                     alertDialog.setTitle("Alexa linked");
                     String linkedMsg = "EasyGrocList iPhone App and Alexa skill are linked." +
@@ -66,6 +70,65 @@ public class AppSyncInterface {
         );
     }
 
+    private void storeShareIdInAWS(String alexaUserID, AccountLink accountLink)
+    {
+        long share_id =ShareMgr.getInstance().getShare_id();
+        long seconds = System.currentTimeMillis() / 1000l;
+        String secsSince1970 = Long.toString(seconds);
+        UserInfo userInfo = UserInfo.builder().shareId(new Integer((int)share_id)).date(secsSince1970).
+                userId(alexaUserID).verified(true).build();
+        Amplify.API.mutate (
+        ModelMutation.create(userInfo),
+                response -> {
+                    Log.d("TAG", "Added share_id alexaUserId link to AWS: ");
+                    deleteCodeToUserIDLinkInAWS( accountLink);
+                },
+                error -> {
+                    Log.e("TAG", "Failed to add share_id, alexaUserId link to AWS, trying update", error);
+
+                    Amplify.API.mutate(
+                            ModelMutation.update(userInfo),
+                            response -> {
+                                Log.i("TAG", "Updated share_id alexaUserId link to AWS: ");
+                                deleteCodeToUserIDLinkInAWS(accountLink);
+                            },
+                            errorU->  Log.e("TAG", "Failed to update share_id to alexaUserId link  to AWS", error)
+                    );
+                }
+                );
+    }
+
+    private void deleteCodeToUserIDLinkInAWS(AccountLink accountLink)
+    {
+
+        Amplify.API.mutate (
+            ModelMutation.delete(accountLink),
+                response->Log.d(TAG, "Deleted alexaCode=" + accountLink.getCode() + " from AccountLink table"),
+                error->Log.e(TAG, "Failed to delete alexaCode=" + accountLink.getCode() + " from AccountLink table", error)
+        );
+    }
+   public void subscribeAlexaItems()
+   {
+       SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
+       String userID = sharing.getString("alexaUserID", "None");
+       if (userID.equals("None"))
+       {
+           return;
+       }
+    //Can't implement for now as AWS doesnot offer a server level filtering for the data returned
+        //Amplify.API.subscribe(ModelSubscription.);
+   }
+
+    private  void deleteAlexaItemInAWS (EasyGrocListItems alexaItem)
+    {
+        Amplify.API.mutate (
+                ModelMutation.delete(alexaItem),
+                response->Log.d(TAG, "Deleted alexaItem=" + alexaItem.getName() + " masterList=" +
+                        alexaItem.getMasterList()+ " from AWS"),
+                error->Log.e(TAG, "Failed to delete alexaIteme=" +alexaItem.getName() + " masterList=" +
+                        alexaItem.getMasterList()+ " from AWS", error)
+        );
+    }
     public void getAlexaItems()
     {
         SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
@@ -89,6 +152,9 @@ public class AppSyncInterface {
                         cacheAlexaItem(alexaItem);
                     }
                     storeAlexaItems();
+                    for (EasyGrocListItems alexaItem : response.getData()) {
+                        deleteAlexaItemInAWS(alexaItem);
+                    }
                 },
                 error -> Log.e("TAG", "Query failure", error)
         );
