@@ -1,1 +1,16 @@
-{}
+{
+  "api": {
+    "plugins": {
+      "awsAPIPlugin": {
+        "EASYGROCLIST": {
+          "endpointType": "GraphQL",
+          "endpoint": "https://eodjdlqytbdwhfivrjxg7vaelq.appsync-api.us-east-1.amazonaws.com/graphql",
+          "region": "us-east-1",
+          "authorizationType": "API_KEY",
+          "apiKey": "da2-e5kr23c44vhftawuy6nghjqm5i",
+          "clientDatabasePrefix": "AppSyncSimpleTransform-esylst_API_KEY"
+        }
+      }
+    }
+  }
+}

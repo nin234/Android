@@ -40,8 +40,9 @@ public class AppSyncInterface {
     private java.util.List<Item> mainMasterLst ;
     void getUserID(int alexaCode)
     {
+        Log.d(TAG, "Getting Alexa userID with code=" + alexaCode);
         Amplify.API.query(
-                ModelQuery.list(AccountLink.class, AccountLink.ID.eq(alexaCode)),
+                ModelQuery.list(AccountLink.class, AccountLink.CODE.eq(alexaCode)),
                 response-> {
                 for (AccountLink accountLink : response.getData()) {
                 Log.d(TAG, "Added to SharedPreferences alexaUserID=" + accountLink.getUserId() +
