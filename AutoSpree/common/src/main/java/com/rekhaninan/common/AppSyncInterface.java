@@ -147,6 +147,7 @@ public class AppSyncInterface {
         }
         Log.d(TAG, "Getting alexa items for UserID=" + userID);
         mainLst = new ArrayList<Item>();
+        mainMasterLst = new ArrayList<Item>();
         SimpleDateFormat df = new SimpleDateFormat("MM/dd/yy HH:mm:ss");
         Calendar c = new GregorianCalendar();
         String formattedDate = df.format(c.getTime());

@@ -20,20 +20,18 @@ import static com.amplifyframework.core.model.query.predicate.QueryField.field;
 @ModelConfig(pluralName = "EasyGrocListItems")
 @Index(name = "undefined", fields = {"userID","name","masterList"})
 public final class EasyGrocListItems implements Model {
-  public static final QueryField ID = field("id");
   public static final QueryField NAME = field("name");
   public static final QueryField DATE = field("date");
   public static final QueryField MASTER_LIST = field("masterList");
   public static final QueryField USER_ID = field("userID");
   public static final QueryField ADD = field("add");
-  private final @ModelField(targetType="ID", isRequired = true) String id;
   private final @ModelField(targetType="String", isRequired = true) String name;
   private final @ModelField(targetType="String", isRequired = true) String date;
   private final @ModelField(targetType="String", isRequired = true) String masterList;
   private final @ModelField(targetType="String", isRequired = true) String userID;
   private final @ModelField(targetType="Boolean", isRequired = true) Boolean add;
   public String getId() {
-      return id;
+      return userID;
   }
   
   public String getName() {
@@ -56,8 +54,7 @@ public final class EasyGrocListItems implements Model {
       return add;
   }
   
-  private EasyGrocListItems(String id, String name, String date, String masterList, String userID, Boolean add) {
-    this.id = id;
+  private EasyGrocListItems(String name, String date, String masterList, String userID, Boolean add) {
     this.name = name;
     this.date = date;
     this.masterList = masterList;
@@ -73,8 +70,7 @@ public final class EasyGrocListItems implements Model {
         return false;
       } else {
       EasyGrocListItems easyGrocListItems = (EasyGrocListItems) obj;
-      return ObjectsCompat.equals(getId(), easyGrocListItems.getId()) &&
-              ObjectsCompat.equals(getName(), easyGrocListItems.getName()) &&
+      return       ObjectsCompat.equals(getName(), easyGrocListItems.getName()) &&
               ObjectsCompat.equals(getDate(), easyGrocListItems.getDate()) &&
               ObjectsCompat.equals(getMasterList(), easyGrocListItems.getMasterList()) &&
               ObjectsCompat.equals(getUserId(), easyGrocListItems.getUserId()) &&
@@ -85,7 +81,6 @@ public final class EasyGrocListItems implements Model {
   @Override
    public int hashCode() {
     return new StringBuilder()
-      .append(getId())
       .append(getName())
       .append(getDate())
       .append(getMasterList())
@@ -99,7 +94,6 @@ public final class EasyGrocListItems implements Model {
    public String toString() {
     return new StringBuilder()
       .append("EasyGrocListItems {")
-      .append("id=" + String.valueOf(getId()) + ", ")
       .append("name=" + String.valueOf(getName()) + ", ")
       .append("date=" + String.valueOf(getDate()) + ", ")
       .append("masterList=" + String.valueOf(getMasterList()) + ", ")
@@ -121,7 +115,6 @@ public final class EasyGrocListItems implements Model {
    * @param id the id of the existing item this instance will represent
    * @return an instance of this model with only ID populated
    * @throws IllegalArgumentException Checks that ID is in the proper format
-   */
   public static EasyGrocListItems justId(String id) {
     try {
       UUID.fromString(id); // Check that ID is in the UUID format - if not an exception is thrown
@@ -141,9 +134,10 @@ public final class EasyGrocListItems implements Model {
       null
     );
   }
-  
+   */
+
   public CopyOfBuilder copyOfBuilder() {
-    return new CopyOfBuilder(id,
+    return new CopyOfBuilder(
       name,
       date,
       masterList,
@@ -177,12 +171,11 @@ public final class EasyGrocListItems implements Model {
 
   public interface BuildStep {
     EasyGrocListItems build();
-    BuildStep id(String id) throws IllegalArgumentException;
+   // BuildStep id(String id) throws IllegalArgumentException;
   }
   
 
   public static class Builder implements NameStep, DateStep, MasterListStep, UserIdStep, AddStep, BuildStep {
-    private String id;
     private String name;
     private String date;
     private String masterList;
@@ -190,10 +183,8 @@ public final class EasyGrocListItems implements Model {
     private Boolean add;
     @Override
      public EasyGrocListItems build() {
-        String id = this.id != null ? this.id : UUID.randomUUID().toString();
-        
+
         return new EasyGrocListItems(
-          id,
           name,
           date,
           masterList,
@@ -242,7 +233,6 @@ public final class EasyGrocListItems implements Model {
      * @param id id
      * @return Current Builder instance, for fluent method chaining
      * @throws IllegalArgumentException Checks that ID is in the proper format
-     */
     public BuildStep id(String id) throws IllegalArgumentException {
         this.id = id;
         
@@ -255,12 +245,12 @@ public final class EasyGrocListItems implements Model {
         
         return this;
     }
+     */
   }
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, String name, String date, String masterList, String userId, Boolean add) {
-      super.id(id);
+    private CopyOfBuilder(String name, String date, String masterList, String userId, Boolean add) {
       super.name(name)
         .date(date)
         .masterList(masterList)
