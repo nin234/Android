@@ -20,18 +20,18 @@ import static com.amplifyframework.core.model.query.predicate.QueryField.field;
 @ModelConfig(pluralName = "AccountLinks")
 @Index(name = "undefined", fields = {"code"})
 public final class AccountLink implements Model {
-  public static final QueryField ID = field("id");
   public static final QueryField CODE = field("code");
   public static final QueryField DATE = field("date");
   public static final QueryField USER_ID = field("userID");
-  private final @ModelField(targetType="ID", isRequired = true) String id;
   private final @ModelField(targetType="Int", isRequired = true) Integer code;
   private final @ModelField(targetType="String", isRequired = true) String date;
   private final @ModelField(targetType="String", isRequired = true) String userID;
-  public String getId() {
-      return id;
+
+  public String getId()
+  {
+      return Integer.toString(code);
   }
-  
+
   public Integer getCode() {
       return code;
   }
@@ -44,8 +44,7 @@ public final class AccountLink implements Model {
       return userID;
   }
   
-  private AccountLink(String id, Integer code, String date, String userID) {
-    this.id = id;
+  private AccountLink(Integer code, String date, String userID) {
     this.code = code;
     this.date = date;
     this.userID = userID;
@@ -59,8 +58,7 @@ public final class AccountLink implements Model {
         return false;
       } else {
       AccountLink accountLink = (AccountLink) obj;
-      return ObjectsCompat.equals(getId(), accountLink.getId()) &&
-              ObjectsCompat.equals(getCode(), accountLink.getCode()) &&
+      return      ObjectsCompat.equals(getCode(), accountLink.getCode()) &&
               ObjectsCompat.equals(getDate(), accountLink.getDate()) &&
               ObjectsCompat.equals(getUserId(), accountLink.getUserId());
       }
@@ -69,7 +67,6 @@ public final class AccountLink implements Model {
   @Override
    public int hashCode() {
     return new StringBuilder()
-      .append(getId())
       .append(getCode())
       .append(getDate())
       .append(getUserId())
@@ -81,7 +78,6 @@ public final class AccountLink implements Model {
    public String toString() {
     return new StringBuilder()
       .append("AccountLink {")
-      .append("id=" + String.valueOf(getId()) + ", ")
       .append("code=" + String.valueOf(getCode()) + ", ")
       .append("date=" + String.valueOf(getDate()) + ", ")
       .append("userID=" + String.valueOf(getUserId()))
@@ -101,7 +97,6 @@ public final class AccountLink implements Model {
    * @param id the id of the existing item this instance will represent
    * @return an instance of this model with only ID populated
    * @throws IllegalArgumentException Checks that ID is in the proper format
-   */
   public static AccountLink justId(String id) {
     try {
       UUID.fromString(id); // Check that ID is in the UUID format - if not an exception is thrown
@@ -119,9 +114,10 @@ public final class AccountLink implements Model {
       null
     );
   }
-  
+   */
+
   public CopyOfBuilder copyOfBuilder() {
-    return new CopyOfBuilder(id,
+    return new CopyOfBuilder(
       code,
       date,
       userID);
@@ -143,21 +139,19 @@ public final class AccountLink implements Model {
 
   public interface BuildStep {
     AccountLink build();
-    BuildStep id(String id) throws IllegalArgumentException;
+    //BuildStep id(String id) throws IllegalArgumentException;
   }
   
 
+  //public static class Builder implements CodeStep, DateStep, UserIdStep, BuildStep {
   public static class Builder implements CodeStep, DateStep, UserIdStep, BuildStep {
-    private String id;
     private Integer code;
     private String date;
     private String userID;
     @Override
      public AccountLink build() {
-        String id = this.id != null ? this.id : UUID.randomUUID().toString();
-        
+
         return new AccountLink(
-          id,
           code,
           date,
           userID);
@@ -190,7 +184,6 @@ public final class AccountLink implements Model {
      * @param id id
      * @return Current Builder instance, for fluent method chaining
      * @throws IllegalArgumentException Checks that ID is in the proper format
-     */
     public BuildStep id(String id) throws IllegalArgumentException {
         this.id = id;
         
@@ -203,12 +196,12 @@ public final class AccountLink implements Model {
         
         return this;
     }
+     */
   }
-  
+
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, Integer code, String date, String userId) {
-      super.id(id);
+    private CopyOfBuilder( Integer code, String date, String userId) {
       super.code(code)
         .date(date)
         .userId(userId);
@@ -229,5 +222,4 @@ public final class AccountLink implements Model {
       return (CopyOfBuilder) super.userId(userId);
     }
   }
-  
 }

@@ -577,6 +577,7 @@ public class ShareMgr extends Thread {
         if (app_name.equals(EASYGROC)) {
             appSyncInterface = new AppSyncInterface(ctxt);
         }
+
         setShId();
         Log.i(TAG, "setShId done");
         shareDBIntf = new ShareDBIntf();

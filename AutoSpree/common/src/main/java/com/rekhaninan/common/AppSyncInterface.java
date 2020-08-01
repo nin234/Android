@@ -42,30 +42,37 @@ public class AppSyncInterface {
     {
         Log.d(TAG, "Getting Alexa userID with code=" + alexaCode);
         Amplify.API.query(
-                ModelQuery.list(AccountLink.class, AccountLink.CODE.eq(alexaCode)),
+                "EASYGROCLIST",
+                ModelQuery.list(AccountLink.class, AccountLink.CODE.eq(new Integer(alexaCode))),
                 response-> {
-                for (AccountLink accountLink : response.getData()) {
-                Log.d(TAG, "Added to SharedPreferences alexaUserID=" + accountLink.getUserId() +
-                        " alexaCode=" + accountLink.getId());
-                    SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharing.edit();
-                    editor.putString("alexaUserID", accountLink.getUserId());
-                    editor.commit();
-                    storeShareIdInAWS(accountLink.getUserId(), accountLink);
-                    AlertDialog alertDialog = new AlertDialog.Builder(ctxt).create();
-                    alertDialog.setTitle("Alexa linked");
-                    String linkedMsg = "EasyGrocList iPhone App and Alexa skill are linked." +
-                            " You can start adding items to lists from Alexa compatible devices via voice interface";
-                    alertDialog.setMessage(linkedMsg);
-                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    return;
-                                }
-                            });
-                    alertDialog.show();
-        }
+                    if (response.getData() == null)
+                    {
+                        Log.d(TAG, "Null response for AccountLinK AWS amplify query");
+                    }
+                    else {
+                        for (AccountLink accountLink : response.getData()) {
+                            Log.d(TAG, "Added to SharedPreferences alexaUserID=" + accountLink.getUserId() +
+                                    " alexaCode=" + accountLink.getCode());
+                            SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharing.edit();
+                            editor.putString("alexaUserID", accountLink.getUserId());
+                            editor.commit();
+                            storeShareIdInAWS(accountLink.getUserId(), accountLink);
+                            AlertDialog alertDialog = new AlertDialog.Builder(ctxt).create();
+                            alertDialog.setTitle("Alexa linked");
+                            String linkedMsg = "EasyGrocList iPhone App and Alexa skill are linked." +
+                                    " You can start adding items to lists from Alexa compatible devices via voice interface";
+                            alertDialog.setMessage(linkedMsg);
+                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                            return;
+                                        }
+                                    });
+                            alertDialog.show();
+                        }
+                    }
     },
     error -> Log.e(TAG, "getUserID Query failure", error)
         );
@@ -138,6 +145,7 @@ public class AppSyncInterface {
         {
             return;
         }
+        Log.d(TAG, "Getting alexa items for UserID=" + userID);
         mainLst = new ArrayList<Item>();
         SimpleDateFormat df = new SimpleDateFormat("MM/dd/yy HH:mm:ss");
         Calendar c = new GregorianCalendar();
