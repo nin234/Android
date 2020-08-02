@@ -154,7 +154,7 @@ public class AppSyncInterface {
         plainListName = "List " + formattedDate;
         rowNo = 1;
         Amplify.API.query(
-                ModelQuery.list(EasyGrocListItems.class, EasyGrocListItems.NAME.contains(userID)),
+                ModelQuery.list(EasyGrocListItems.class, EasyGrocListItems.USER_ID.contains(userID)),
                 response -> {
                     for (EasyGrocListItems alexaItem : response.getData()) {
                         Log.i("TAG", "Received from alexa name=" + alexaItem.getName() +
@@ -310,7 +310,8 @@ public class AppSyncInterface {
         item.setItem(alexaItem.getName());
         item.setAdd(alexaItem.getAdd());
         item.setMasterList(alexaItem.getMasterList());
-        item.setDate(Integer.parseInt(alexaItem.getDate()));
+        long date = Long.parseLong(alexaItem.getDate()) ;
+        item.setDate((int)(date/1000));
         mainMasterLst.add(item);
     }
 
@@ -365,7 +366,8 @@ public class AppSyncInterface {
         item.setShare_id(ShareMgr.getInstance().getShare_id());
         item.setItem(alexaItem.getName());
         item.setAdd(alexaItem.getAdd());
-        item.setDate(Integer.parseInt(alexaItem.getDate()));
+        long date = Long.parseLong(alexaItem.getDate()) ;
+        item.setDate((int)(date/1000));
         mainLst.add(item);
 
     }
@@ -380,6 +382,7 @@ public class AppSyncInterface {
             android.util.Log.i("EasyGrocAmplifyApp", "Initialized Amplify");
         } catch (AmplifyException e) {
             android.util.Log.e("EasyGrocAmplifyApp", "Could not initialize Amplify", e);
+
         }
     }
 
