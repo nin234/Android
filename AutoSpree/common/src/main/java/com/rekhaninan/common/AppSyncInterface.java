@@ -162,9 +162,11 @@ public class AppSyncInterface {
                         cacheAlexaItem(alexaItem);
                     }
                     storeAlexaItems();
+                    /*
                     for (EasyGrocListItems alexaItem : response.getData()) {
                         deleteAlexaItemInAWS(alexaItem);
                     }
+                     */
                 },
                 error -> Log.e("TAG", "Query failure", error)
         );
@@ -174,6 +176,33 @@ public class AppSyncInterface {
     {
         storePlainListItems();
         storeMasterListItems();
+    }
+
+    private String getNormalizedListName(List<Item> templNameLst, String alexaMasterList)
+    {
+        String alexaNormalizedList = NshareUtil.removeNonAlphanumeric(alexaMasterList);
+
+        for (Item templNameItem : templNameLst)
+        {
+            String templNameNormalized = NshareUtil.removeNonAlphanumeric(templNameItem.getName());
+            if (templNameNormalized.equalsIgnoreCase(alexaNormalizedList))
+            {
+                return templNameItem.getName();
+            }
+        }
+        String emptyString = new String();
+        return emptyString;
+    }
+
+    private boolean normalizedNameCompare(String alexaName, String name)
+    {
+        String alexaNormalizedName = NshareUtil.removeNonAlphanumeric(alexaName);
+        String normalizedName = NshareUtil.removeNonAlphanumeric(name);
+        if (alexaNormalizedName.equalsIgnoreCase(normalizedName))
+        {
+            return true;
+        }
+        return  false;
     }
 
     private void storeMasterListItems()
@@ -204,14 +233,38 @@ public class AppSyncInterface {
                 mlistMap.put(item.getMasterList(), itemMap);
             }
         }
+
+        List<Item> templNameLst = DBOperations.getInstance().getTemplNameLst();
         for (Map.Entry<String, Map<String, Item>> entry : mlistMap.entrySet()) {
-            String masterList = entry.getKey();
+            String masterList = getNormalizedListName(templNameLst,entry.getKey()) ;
+            if (masterList == null || masterList.isEmpty())
+                continue;
             Map<String, Item> itemMap  = entry.getValue();
             // ...
-            long share_id =ShareMgr.getInstance().getShare_id();
-            java.util.List<Item> templList = DBOperations.getInstance().getTemplList(masterList, share_id);
-            java.util.List<Item> templListInv = DBOperations.getInstance().getTemplList(masterList+ ":INV", share_id);
-            java.util.List<Item> templListScr = DBOperations.getInstance().getTemplList(masterList+ ":SCRTCH", share_id);
+
+            java.util.List<Item> templList = DBOperations.getInstance().getTemplList(masterList, 0);
+            java.util.List<Item> templListInv = DBOperations.getInstance().getTemplList(masterList+ ":INV", 0);
+            java.util.List<Item> templListScr = DBOperations.getInstance().getTemplList(masterList+ ":SCRTCH", 0);
+
+            for (Item item : templList)
+            {
+                Log.d(TAG, "Always item=" + item.getItem() +" masterList=" + item.getName());
+            }
+
+            for (Item item : templListInv)
+            {
+                Log.d(TAG, "Replenish item=" + item.getItem() +" masterList=" + item.getName());
+            }
+
+            for (Item item : templListScr)
+            {
+                Log.d(TAG, "Scratch item=" + item.getItem() +" masterList=" + item.getName());
+            }
+
+            for (Item item : itemMap.values())
+            {
+                Log.d(TAG, "Alexa item=" + item.getItem() + " masterList=" + item.getName());
+            }
             boolean bChangeReplenish = false;
             boolean bChangeScrtch = false;
             for (Item item : itemMap.values())
@@ -219,7 +272,11 @@ public class AppSyncInterface {
                 boolean bFound = false;
                 for (Item always : templList)
                 {
-                    if (always.getItem().equals(item.getItem()))
+                    if (always.getItem() == null)
+                    {
+                        continue;
+                    }
+                    if (normalizedNameCompare(item.getItem(), always.getItem()))
                     {
                         bFound = true;
                         break;
@@ -229,24 +286,28 @@ public class AppSyncInterface {
                     continue;
                 for (Item replenish : templListInv)
                 {
-                    if (replenish.getItem().equals(item.getItem()))
+                    if (replenish.getItem() == null)
+                    {
+                        continue;
+                    }
+                    if (normalizedNameCompare(item.getItem(), replenish.getItem()))
                     {
                         bFound = true;
-
+                        Log.d(TAG, "Changing inventory for item=" + item.getItem() + " isAdd="+ item.isAdd());
                         if (item.isAdd())
-                        {
-                            int inv = replenish.getInventory();
-                            if (inv != 10) {
-                                bChangeReplenish = true;
-                                replenish.setInventory(10);
-                            }
-                        }
-                        else
                         {
                             int inv = replenish.getInventory();
                             if (inv != 0) {
                                 bChangeReplenish = true;
                                 replenish.setInventory(0);
+                            }
+                        }
+                        else
+                        {
+                            int inv = replenish.getInventory();
+                            if (inv != 10) {
+                                bChangeReplenish = true;
+                                replenish.setInventory(10);
                             }
                         }
                         break;
@@ -258,7 +319,11 @@ public class AppSyncInterface {
                 int indx = 0;
                 for (Item oneTime : templListScr)
                 {
-                    if (oneTime.getItem().equals(item.getItem()))
+                    if (oneTime.getItem() == null)
+                    {
+                        continue;
+                    }
+                    if (normalizedNameCompare(item.getItem(), oneTime.getItem()))
                     {
                         if (!item.isAdd())
                         {
@@ -283,7 +348,6 @@ public class AppSyncInterface {
             {
                 Item nameItem = new Item();
                 nameItem.setName(masterList + ":SCRTCH");
-                nameItem.setShare_id(share_id);
                 DBOperations.getInstance().deleteDb(nameItem, EASYGROC_TEMPL_EDIT_ITEM);
                 for (Item oneTime : templListScr)
                     DBOperations.getInstance().insertDb(oneTime, EASYGROC_TEMPL_EDIT_ITEM);
@@ -293,7 +357,6 @@ public class AppSyncInterface {
             {
                 Item nameItem = new Item();
                 nameItem.setName(masterList + ":INV");
-                nameItem.setShare_id(share_id);
                 DBOperations.getInstance().deleteDb(nameItem, EASYGROC_TEMPL_EDIT_ITEM);
                 for (Item replenish : templListInv)
                     DBOperations.getInstance().insertDb(replenish, EASYGROC_TEMPL_EDIT_ITEM);
