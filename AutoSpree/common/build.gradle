@@ -37,6 +37,9 @@ dependencies {
     implementation 'com.amplifyframework:core:1.0.0'
     implementation 'com.amplifyframework:aws-datastore:1.0.0'
     implementation 'com.amplifyframework:aws-api:1.0.0'
+    implementation 'com.amazonaws:aws-android-sdk-core:2.17.1'
+    implementation 'com.amazonaws:aws-android-sdk-ddb:2.17.1'
+    implementation 'com.amazonaws:aws-android-sdk-ddb-document:2.17.1'
 
 }
 

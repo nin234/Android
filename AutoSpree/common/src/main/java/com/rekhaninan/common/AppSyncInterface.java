@@ -1,5 +1,6 @@
 package com.rekhaninan.common;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -7,6 +8,14 @@ import android.content.SharedPreferences;
 import androidx.appcompat.app.AlertDialog;
 import androidx.arch.core.internal.FastSafeIterableMap;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.mobileconnectors.dynamodbv2.document.Table;
+import com.amazonaws.mobileconnectors.dynamodbv2.document.datatype.Primitive;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amplifyframework.AmplifyException;
 import com.amplifyframework.api.aws.AWSApiPlugin;
 import com.amplifyframework.api.graphql.model.ModelMutation;
@@ -38,9 +47,19 @@ public class AppSyncInterface {
     private int rowNo;
     private java.util.List<Item> mainLst ;
     private java.util.List<Item> mainMasterLst ;
+    private Activity activity;
+    private CognitoCachingCredentialsProvider credentialsProvider;
+    private Table easyGrocListItemsTable;
+    private AmazonDynamoDB client;
+
+    public void setActivity(Activity activity) {
+        this.activity = activity;
+    }
+
     void getUserID(int alexaCode)
     {
         Log.d(TAG, "Getting Alexa userID with code=" + alexaCode);
+
         Amplify.API.query(
                 "EASYGROCLIST",
                 ModelQuery.list(AccountLink.class, AccountLink.CODE.eq(new Integer(alexaCode))),
@@ -58,19 +77,7 @@ public class AppSyncInterface {
                             editor.putString("alexaUserID", accountLink.getUserId());
                             editor.commit();
                             storeShareIdInAWS(accountLink.getUserId(), accountLink);
-                            AlertDialog alertDialog = new AlertDialog.Builder(ctxt).create();
-                            alertDialog.setTitle("Alexa linked");
-                            String linkedMsg = "EasyGrocList iPhone App and Alexa skill are linked." +
-                                    " You can start adding items to lists from Alexa compatible devices via voice interface";
-                            alertDialog.setMessage(linkedMsg);
-                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                            return;
-                                        }
-                                    });
-                            alertDialog.show();
+                            displayLinkedAlert();
                         }
                     }
     },
@@ -106,6 +113,31 @@ public class AppSyncInterface {
                 );
     }
 
+    private void displayLinkedAlert()
+    {
+        activity.runOnUiThread(new Runnable() {
+            public void run() {
+
+                AlertDialog alertDialog = new AlertDialog.Builder(ctxt).create();
+                alertDialog.setTitle("Alexa linked");
+                String linkedMsg = "EasyGrocList Android App and Alexa skill are linked." +
+                        " You can start adding items to lists from Alexa compatible devices via voice interface." +
+                        "IMPORTANT NOTE: ALWAYS Restart Android app to download alexa added items";
+                alertDialog.setMessage(linkedMsg);
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                return;
+                            }
+                        });
+                alertDialog.show();
+            }
+        });
+
+    }
+
+
     private void deleteCodeToUserIDLinkInAWS(AccountLink accountLink)
     {
 
@@ -127,15 +159,20 @@ public class AppSyncInterface {
         //Amplify.API.subscribe(ModelSubscription.);
    }
 
-    private  void deleteAlexaItemInAWS (EasyGrocListItems alexaItem)
+    private  void deleteAlexaItemInAWS (EasyGrocListItems alexaItem, String userID)
     {
+        easyGrocListItemsTable.deleteItem(new Primitive(alexaItem.getUserId()), new Primitive(alexaItem.getName()+ "#" +
+                alexaItem.getMasterList()));
+        Log.d(TAG, "Deleted alexaItem=" + alexaItem.getName() + " masterList=" + alexaItem.getMasterList());
+        /*
         Amplify.API.mutate (
-                ModelMutation.delete(alexaItem),
+                ModelMutation.delete(alexaItem ),
                 response->Log.d(TAG, "Deleted alexaItem=" + alexaItem.getName() + " masterList=" +
-                        alexaItem.getMasterList()+ " from AWS"),
+                        alexaItem.getMasterList()+ " from AWS response=" + response),
                 error->Log.e(TAG, "Failed to delete alexaIteme=" +alexaItem.getName() + " masterList=" +
                         alexaItem.getMasterList()+ " from AWS", error)
         );
+         */
     }
     public void getAlexaItems()
     {
@@ -143,6 +180,7 @@ public class AppSyncInterface {
         String userID = sharing.getString("alexaUserID", "None");
         if (userID.equals("None"))
         {
+            Log.d(TAG, "UserID not set, skipping getAlexaItems");
             return;
         }
         Log.d(TAG, "Getting alexa items for UserID=" + userID);
@@ -162,11 +200,9 @@ public class AppSyncInterface {
                         cacheAlexaItem(alexaItem);
                     }
                     storeAlexaItems();
-                    /*
                     for (EasyGrocListItems alexaItem : response.getData()) {
-                        deleteAlexaItemInAWS(alexaItem);
+                        deleteAlexaItemInAWS(alexaItem, userID);
                     }
-                     */
                 },
                 error -> Log.e("TAG", "Query failure", error)
         );
@@ -369,7 +405,7 @@ public class AppSyncInterface {
         Item item = new Item();
         item.setRowno(rowNo++);
         item.setName(plainListName);
-        item.setShare_id(ShareMgr.getInstance().getShare_id());
+        item.setShare_id(0);
         item.setItem(alexaItem.getName());
         item.setAdd(alexaItem.getAdd());
         item.setMasterList(alexaItem.getMasterList());
@@ -459,10 +495,56 @@ public class AppSyncInterface {
         return true;
     }
 
+    void initializeDynamoDB()
+    {
+        try {
+
+            SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
+            String aUserId = sharing.getString("alexaUserID", "None");
+            if (aUserId.equals("None")) {
+                return;
+            }
+            Log.d(TAG, "Creating CognitoCachingCredentialsProvider");
+
+       /* credentialsProvider = new CognitoCachingCredentialsProvider(
+                ctxt,
+                "us-east-1:af98a9a4-80f8-4de2-a8a2-e5a29d51663b", // Identity pool ID
+                Regions.US_EAST_1 // Region
+        );
+
+        */
+            Log.d(TAG, "Creating AmazonDynamoDBClient");
+
+            client = new AmazonDynamoDBClient(new BasicAWSCredentials("AKIAYKMMXWGL3P3JM24S",
+                    "xKtSe0DV4OE2F8iYZB4UFIsCkvtEcrSuaJcgUtmp"));
+        /*
+        client =  new AmazonDynamoDBClient(new AWSCredentials() {
+            @Override
+            public String getAWSAccessKeyId() {
+                return "AKIAYKMMXWGL3P3JM24S";
+            }
+
+            @Override
+            public String getAWSSecretKey() {
+                return "xKtSe0DV4OE2F8iYZB4UFIsCkvtEcrSuaJcgUtmp";
+            }
+        });
+        */
+            Log.d(TAG, "Loading EasyGrocListItems table");
+            easyGrocListItemsTable = Table.loadTable(client, "EasyGrocListItems-tbezpre3sndnnchllezvfcojdi-esylst");
+            Log.d(TAG, "Loaded EasyGrocListItems table");
+        }
+        catch (Exception excp)
+        {
+            Log.d(TAG, "Caught exception=" + excp);
+        }
+    }
+
     AppSyncInterface(Context ctx)
     {
         ctxt = ctx;
 
         initializeAWSAppSync();
+        initializeDynamoDB();
     }
 }

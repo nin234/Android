@@ -1,4 +1,5 @@
 package com.rekhaninan.common;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Context;
 
@@ -78,6 +79,10 @@ public class ShareMgr extends Thread {
     private boolean bNtwConnected;
     private AppSyncInterface appSyncInterface;
 
+    public void setActivity(Activity act) {
+        activity = act;
+    }
+
     public int getUploadPicOffset() {
         return uploadPicOffset;
     }
@@ -114,6 +119,7 @@ public class ShareMgr extends Thread {
     private boolean bSendPicMetaData;
 
     private long share_id;
+    private Activity activity;
 
 
     private ConcurrentLinkedQueue<ByteBuffer> msgsToSend;
@@ -574,9 +580,6 @@ public class ShareMgr extends Thread {
         getCurrentToken();
         share_id = 0;
         app_name = appname;
-        if (app_name.equals(EASYGROC)) {
-            appSyncInterface = new AppSyncInterface(ctxt);
-        }
 
         setShId();
         Log.i(TAG, "setShId done");
@@ -750,6 +753,10 @@ public class ShareMgr extends Thread {
 
         bUpdateTkn = sharing.getBoolean("update", true);
         Log.i(TAG, "update token=" + bUpdateTkn);
+        if (app_name.equals(EASYGROC)) {
+            appSyncInterface = new AppSyncInterface(ctxt);
+            appSyncInterface.setActivity(activity);
+        }
         appSyncInterface.getAlexaItems();
 
         getItems();

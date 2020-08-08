@@ -55,6 +55,7 @@ public class MainVwActivity extends AppCompatActivity {
             Log.d(getClass().getSimpleName(), dbClassName);
             DBOperations.getInstance().initDb(dbClassName, this);
             ShareMgr.getInstance().start_thr(this, app_name);
+            ShareMgr.getInstance().setActivity(this);
             Log.d(TAG, "Getting main list from DB MAINVW=" + MAINVW);
             DBOperations.getInstance().setApp_name(app_name);
             //setContentView(R.layout.activity_main_vw);
