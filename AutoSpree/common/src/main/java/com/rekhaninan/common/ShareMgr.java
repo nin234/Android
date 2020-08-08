@@ -624,7 +624,14 @@ public class ShareMgr extends Thread {
 
     public boolean isAlexaAccountLinked() {return appSyncInterface.isAccountLinked();}
 
-    public void getAlexaUserID(int code) {appSyncInterface.getUserID(code);}
+    public void getAlexaUserID(int code)
+    {
+        if (appSyncInterface == null) {
+            appSyncInterface = new AppSyncInterface(ctxt);
+            appSyncInterface.setActivity(activity);
+        }
+        appSyncInterface.getUserID(code);
+    }
     public void refreshMainVw()
     {
         Runnable refreshMainVwRunnable = new Runnable() {
@@ -727,6 +734,20 @@ public class ShareMgr extends Thread {
         return;
     }
 
+    private void downLoadAlexaItems()
+    {
+        SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
+        String aUserId = sharing.getString("alexaUserID", "None");
+        if (aUserId.equals("None")) {
+            return;
+        }
+        if (app_name.equals(EASYGROC)) {
+            appSyncInterface = new AppSyncInterface(ctxt);
+            appSyncInterface.setActivity(activity);
+        }
+        appSyncInterface.getAlexaItems();
+    }
+
     @Override
     public void run() {
         uploadPicOffset = 0;
@@ -753,12 +774,8 @@ public class ShareMgr extends Thread {
 
         bUpdateTkn = sharing.getBoolean("update", true);
         Log.i(TAG, "update token=" + bUpdateTkn);
-        if (app_name.equals(EASYGROC)) {
-            appSyncInterface = new AppSyncInterface(ctxt);
-            appSyncInterface.setActivity(activity);
-        }
-        appSyncInterface.getAlexaItems();
 
+        downLoadAlexaItems();
         getItems();
         for (;;)
         {

@@ -12,6 +12,7 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.dynamodbv2.document.Table;
+import com.amazonaws.mobileconnectors.dynamodbv2.document.datatype.Document;
 import com.amazonaws.mobileconnectors.dynamodbv2.document.datatype.Primitive;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
@@ -49,7 +50,6 @@ public class AppSyncInterface {
     private java.util.List<Item> mainMasterLst ;
     private Activity activity;
     private CognitoCachingCredentialsProvider credentialsProvider;
-    private Table easyGrocListItemsTable;
     private AmazonDynamoDB client;
 
     public void setActivity(Activity activity) {
@@ -90,28 +90,20 @@ public class AppSyncInterface {
         long share_id =ShareMgr.getInstance().getShare_id();
         long seconds = System.currentTimeMillis() / 1000l;
         String secsSince1970 = Long.toString(seconds);
-        UserInfo userInfo = UserInfo.builder().shareId(new Integer((int)share_id)).date(secsSince1970).
-                userId(alexaUserID).verified(true).build();
-        Amplify.API.mutate (
-        ModelMutation.create(userInfo),
-                response -> {
-                    Log.d("TAG", "Added share_id alexaUserId link to AWS: ");
-                    deleteCodeToUserIDLinkInAWS( accountLink);
-                },
-                error -> {
-                    Log.e("TAG", "Failed to add share_id, alexaUserId link to AWS, trying update", error);
+        Table userInfo = Table.loadTable(client, "UserInfo-tbezpre3sndnnchllezvfcojdi-esylst");
+        Document userInfoItem = new Document();
+        userInfoItem.put("verified", true);
+        userInfoItem.put("share_id", (int)share_id);
+        userInfoItem.put("userID", alexaUserID);
+        userInfoItem.put("date", secsSince1970);
 
-                    Amplify.API.mutate(
-                            ModelMutation.update(userInfo),
-                            response -> {
-                                Log.i("TAG", "Updated share_id alexaUserId link to AWS: ");
-                                deleteCodeToUserIDLinkInAWS(accountLink);
-                            },
-                            errorU->  Log.e("TAG", "Failed to update share_id to alexaUserId link  to AWS", error)
-                    );
-                }
-                );
+        userInfo.putItem(userInfoItem);
+        Log.d(TAG, "Stored userInfo in AWS share_id=" + share_id + " date="+ secsSince1970
+                + " userID=" + alexaUserID);
+
     }
+
+
 
     private void displayLinkedAlert()
     {
@@ -161,6 +153,8 @@ public class AppSyncInterface {
 
     private  void deleteAlexaItemInAWS (EasyGrocListItems alexaItem, String userID)
     {
+       Table easyGrocListItemsTable = Table.loadTable(client, "EasyGrocListItems-tbezpre3sndnnchllezvfcojdi-esylst");
+        Log.d(TAG, "Loaded EasyGrocListItems table");
         easyGrocListItemsTable.deleteItem(new Primitive(alexaItem.getUserId()), new Primitive(alexaItem.getName()+ "#" +
                 alexaItem.getMasterList()));
         Log.d(TAG, "Deleted alexaItem=" + alexaItem.getName() + " masterList=" + alexaItem.getMasterList());
@@ -499,40 +493,12 @@ public class AppSyncInterface {
     {
         try {
 
-            SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
-            String aUserId = sharing.getString("alexaUserID", "None");
-            if (aUserId.equals("None")) {
-                return;
-            }
-            Log.d(TAG, "Creating CognitoCachingCredentialsProvider");
 
-       /* credentialsProvider = new CognitoCachingCredentialsProvider(
-                ctxt,
-                "us-east-1:af98a9a4-80f8-4de2-a8a2-e5a29d51663b", // Identity pool ID
-                Regions.US_EAST_1 // Region
-        );
-
-        */
-            Log.d(TAG, "Creating AmazonDynamoDBClient");
 
             client = new AmazonDynamoDBClient(new BasicAWSCredentials("AKIAYKMMXWGL3P3JM24S",
                     "xKtSe0DV4OE2F8iYZB4UFIsCkvtEcrSuaJcgUtmp"));
-        /*
-        client =  new AmazonDynamoDBClient(new AWSCredentials() {
-            @Override
-            public String getAWSAccessKeyId() {
-                return "AKIAYKMMXWGL3P3JM24S";
-            }
 
-            @Override
-            public String getAWSSecretKey() {
-                return "xKtSe0DV4OE2F8iYZB4UFIsCkvtEcrSuaJcgUtmp";
-            }
-        });
-        */
-            Log.d(TAG, "Loading EasyGrocListItems table");
-            easyGrocListItemsTable = Table.loadTable(client, "EasyGrocListItems-tbezpre3sndnnchllezvfcojdi-esylst");
-            Log.d(TAG, "Loaded EasyGrocListItems table");
+
         }
         catch (Exception excp)
         {

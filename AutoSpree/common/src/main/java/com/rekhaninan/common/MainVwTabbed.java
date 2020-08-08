@@ -192,8 +192,6 @@ public class MainVwTabbed extends Fragment {
     private void showAlexaDialog()
     {
         Log.d(TAG, "Showing Alexa dialog");
-        if (ShareMgr.getInstance().isAlexaAccountLinked())
-            return;
         AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
         alertDialog.setTitle("Alexa code");
 
