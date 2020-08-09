@@ -137,6 +137,11 @@ public class MainVwActivity extends AppCompatActivity {
         adapter.refresh();
     }
 
+    public void refreshMainVw()
+    {
+        adapter.refreshMainVw();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         /*

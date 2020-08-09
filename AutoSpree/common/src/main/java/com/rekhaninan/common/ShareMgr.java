@@ -79,7 +79,7 @@ public class ShareMgr extends Thread {
     private boolean bNtwConnected;
     private AppSyncInterface appSyncInterface;
 
-    public void setActivity(Activity act) {
+    public void setActivity(MainVwActivity act) {
         activity = act;
     }
 
@@ -119,7 +119,7 @@ public class ShareMgr extends Thread {
     private boolean bSendPicMetaData;
 
     private long share_id;
-    private Activity activity;
+    private MainVwActivity activity;
 
 
     private ConcurrentLinkedQueue<ByteBuffer> msgsToSend;

@@ -48,11 +48,11 @@ public class AppSyncInterface {
     private int rowNo;
     private java.util.List<Item> mainLst ;
     private java.util.List<Item> mainMasterLst ;
-    private Activity activity;
+    private MainVwActivity activity;
     private CognitoCachingCredentialsProvider credentialsProvider;
     private AmazonDynamoDB client;
 
-    public void setActivity(Activity activity) {
+    public void setActivity(MainVwActivity activity) {
         this.activity = activity;
     }
 
@@ -449,6 +449,20 @@ public class AppSyncInterface {
                 DBOperations.getInstance().insertDb(item, EASYGROC_ADD_ITEM);
             }
         }
+        if (mainLst.size() > 0)
+        {
+          refreshMainVw();
+        }
+    }
+
+    private void  refreshMainVw()
+    {
+        Log.d(TAG, "Refreshing mainVw after loading alexa items");
+        activity.runOnUiThread(new Runnable() {
+            public void run() {
+                activity.refreshMainVw();
+            }
+        });
     }
 
     private void cacheAlexaItem(EasyGrocListItems alexaItem)
@@ -507,10 +521,11 @@ public class AppSyncInterface {
         try {
 
 
+            String accessId = ctxt.getString(R.string.aws_access_id);
+            String secretKey = ctxt.getString(R.string.aws_secret_key);
 
-            client = new AmazonDynamoDBClient(new BasicAWSCredentials("AKIAYKMMXWGL3P3JM24S",
-                    "xKtSe0DV4OE2F8iYZB4UFIsCkvtEcrSuaJcgUtmp"));
-
+              client = new AmazonDynamoDBClient(new BasicAWSCredentials(accessId,
+                     secretKey));
 
         }
         catch (Exception excp)
