@@ -347,10 +347,15 @@ public class AppSyncInterface {
                     continue;
 
                 int indx = 0;
+                int nullindx = -1;
                 for (Item oneTime : templListScr)
                 {
                     if (oneTime.getItem() == null)
                     {
+                        if (nullindx == -1)
+                        {
+                            nullindx = indx;
+                        }
                         continue;
                     }
                     if (normalizedNameCompare(item.getItem(), oneTime.getItem()))
@@ -369,7 +374,15 @@ public class AppSyncInterface {
                     continue;
 
                 item.setName(masterList + ":SCRTCH");
-                templListScr.add(item);
+                if (nullindx != -1)
+                {
+                    Item scrItem = templListScr.get(nullindx);
+                    scrItem.setItem(item.getItem());
+                }
+                else {
+                    item.setRowno(indx);
+                    templListScr.add(item);
+                }
                 bChangeScrtch = true;
 
             }
