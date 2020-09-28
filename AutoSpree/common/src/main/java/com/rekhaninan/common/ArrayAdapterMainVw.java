@@ -25,7 +25,6 @@ public class ArrayAdapterMainVw extends ArrayAdapter<Item> {
     private RowView rowView;
 
 
-
     private List<Item> arryElems;
     final int INVALID_ID = -1;
     HashMap<Item, Integer> mIdMap = new HashMap<Item, Integer>();

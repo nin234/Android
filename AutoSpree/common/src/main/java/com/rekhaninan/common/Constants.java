@@ -27,6 +27,9 @@ public final class Constants {
     public static final int EASYGROC_BRAND_NEW_ADD_REQUEST=15;
     public static final int EASYGROC_DELETE_ITEM_REQUEST=16;
     public static final int HELP_SCREEN_REQUEST=17;
+    public static final int OPENHOUSES_ADD_ITEM_REQUEST=18;
+    public static final int AUTOSPREE_ADD_ITEM_REQUEST=19;
+
 
 
 

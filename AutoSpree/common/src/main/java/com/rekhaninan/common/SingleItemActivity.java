@@ -753,7 +753,10 @@ public class SingleItemActivity extends AppCompatActivity
             DBOperations.getInstance().insertDb(item, EASYGROC_ADD_ITEM);
             ++i;
         }
-        startDisplayActivity();
+        Intent intent = new Intent();
+        intent.putExtra("refresh", "Needed");
+        setResult(Activity.RESULT_OK, intent);
+        finish();
     }
 
     private void

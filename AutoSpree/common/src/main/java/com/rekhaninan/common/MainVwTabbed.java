@@ -129,7 +129,7 @@ public class MainVwTabbed extends Fragment {
         }
         else {
             Log.d(TAG, "Inflating main_menu");
-            inflater.inflate(R.menu.main_menu, menu);
+            inflater.inflate(R.menu.add, menu);
         }
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -150,7 +150,9 @@ public class MainVwTabbed extends Fragment {
                     item_name += item_no;
                     Item itm = new Item();
                     itm.setName(item_name);
+                    itm.setShare_id(ShareMgr.getInstance().getShare_id());
                     intent.putExtra("item", itm);
+                    startActivityForResult(intent, AUTOSPREE_ADD_ITEM_REQUEST);
                 }
                 break;
 
@@ -163,21 +165,22 @@ public class MainVwTabbed extends Fragment {
                     itm.setName(item_name);
                     itm.setShare_id(ShareMgr.getInstance().getShare_id());
                     intent.putExtra("item", itm);
+                    startActivityForResult(intent, OPENHOUSES_ADD_ITEM_REQUEST);
                 }
                 break;
 
-                case EASYGROC:
+                case EASYGROC: {
                     intent.putExtra("ViewType", EASYGROC_ADD_ITEM_OPTIONS);
                     Item itm = new Item();
                     intent.putExtra("item", itm);
                     startActivityForResult(intent, EASYGROC_ADD_ITEM_REQUEST);
-                    return true;
+                }
+                break;
 
                 default:
 
                     break;
             }
-            startActivity(intent);
 
         }
         else if (item.getItemId() == R.id.help_screen) {
@@ -240,6 +243,8 @@ public class MainVwTabbed extends Fragment {
         Log.d(TAG, "Processing Activity result for request Code=" + requestCode);
         switch (requestCode)
         {
+            case AUTOSPREE_ADD_ITEM_REQUEST:
+            case OPENHOUSES_ADD_ITEM_REQUEST:
             case EASYGROC_ADD_ITEM_REQUEST:
 
                 if (resultCode == Activity.RESULT_OK)

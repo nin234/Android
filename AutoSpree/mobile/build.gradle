@@ -5,12 +5,12 @@ android {
         config {
             keyAlias 'autospreekey'
             keyPassword 'cr67Klp'
-            storeFile file('/Users/ninanthomas/Dropbox/nshare/androidkeystores/autospree')
+            storeFile file('/Users/ninan/Dropbox/nshare/androidkeystores/autospree')
             storePassword 'j2SnRa34'
         }
     }
     compileSdkVersion 29
-    buildToolsVersion '28.0.3'
+    buildToolsVersion '30.0.0'
     defaultConfig {
         applicationId "com.rekhaninan.autospree"
         minSdkVersion 25
@@ -25,6 +25,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
+            isDefault = false
         }
         debug {
             debuggable true
