@@ -1218,6 +1218,10 @@ public class SingleItemActivity extends AppCompatActivity
                         }
                         DBOperations.getInstance().deleteDb(itm, viewType);
                         DBOperations.getInstance().deleteDb(itm, EASYGROC_EDIT_ITEM);
+                        Intent intent = new Intent();
+                        intent.putExtra("refresh", "Needed");
+                        setResult(RESULT_OK, intent);
+                        Log.d(TAG, "Setting activity result of refresh Needed in  item delete");
                         finish();
                         return;
                     }
@@ -1323,22 +1327,23 @@ public class SingleItemActivity extends AppCompatActivity
     private void startDisplayActivity() {
 
         Intent intent = new Intent(this, SingleItemActivity.class);
+        intent.putExtra("item", itm);
+        intent.putParcelableArrayListExtra("check_list", checkLst);
         switch (viewType)
         {
             case OPENHOUSES_ADD_ITEM:
             case OPENHOUSES_EDIT_ITEM:
                 intent.putExtra("ViewType", OPENHOUSES_DISPLAY_ITEM);
+                startActivity(intent);
                 break;
             case AUTOSPREE_ADD_ITEM:
             case AUTOSPREE_EDIT_ITEM:
                 intent.putExtra("ViewType", AUTOSPREE_DISPLAY_ITEM);
+                startActivityForResult(intent, AUTOSPREE_DISPLAY_ITEM_REQUEST);
                 break;
             default:
                 break;
         }
-        intent.putExtra("item", itm);
-        intent.putParcelableArrayListExtra("check_list", checkLst);
-        startActivity(intent);
         return;
     }
 

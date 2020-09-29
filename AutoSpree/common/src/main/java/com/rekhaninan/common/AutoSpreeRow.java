@@ -1,5 +1,6 @@
 package com.rekhaninan.common;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
@@ -116,7 +117,8 @@ public class AutoSpreeRow extends RowView
                                                   list = new ArrayList<Item>();
                                               }
                                               intent.putParcelableArrayListExtra("check_list", (ArrayList<Item>)list);
-                                              ctxt.startActivity(intent);
+                                              Activity itemAct = (Activity) ctxt;
+                                              itemAct.startActivityForResult(intent, AUTOSPREE_DISPLAY_ITEM_REQUEST);
                                           }
                                       }
 

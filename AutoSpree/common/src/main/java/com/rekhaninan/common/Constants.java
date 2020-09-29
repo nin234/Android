@@ -29,6 +29,8 @@ public final class Constants {
     public static final int HELP_SCREEN_REQUEST=17;
     public static final int OPENHOUSES_ADD_ITEM_REQUEST=18;
     public static final int AUTOSPREE_ADD_ITEM_REQUEST=19;
+    public static final int OPENHOUSES_DISPLAY_ITEM_REQUEST=20;
+    public static final int AUTOSPREE_DISPLAY_ITEM_REQUEST=21;
 
 
 
