@@ -27,15 +27,19 @@ import androidx.fragment.app.Fragment;
 import static com.rekhaninan.common.Constants.ADD_TEMPL_CHECKLIST_ACTIVITY_REQUEST;
 import static com.rekhaninan.common.Constants.AUTOSPREE;
 import static com.rekhaninan.common.Constants.AUTOSPREE_ADD_ITEM;
+import static com.rekhaninan.common.Constants.AUTOSPREE_ADD_ITEM_REQUEST;
+import static com.rekhaninan.common.Constants.AUTOSPREE_DISPLAY_ITEM_REQUEST;
 import static com.rekhaninan.common.Constants.CONTACTS_MAINVW;
 import static com.rekhaninan.common.Constants.EASYGROC;
 import static com.rekhaninan.common.Constants.EASYGROC_ADD_ITEM_OPTIONS;
+import static com.rekhaninan.common.Constants.EASYGROC_ADD_ITEM_REQUEST;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_ADD_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_LISTS;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_NAME_ADD_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_NAME_LISTS;
 import static com.rekhaninan.common.Constants.OPENHOUSES;
 import static com.rekhaninan.common.Constants.OPENHOUSES_ADD_ITEM;
+import static com.rekhaninan.common.Constants.OPENHOUSES_ADD_ITEM_REQUEST;
 
 public class PlannerVwTabbed extends Fragment {
     public String app_name;
@@ -57,7 +61,13 @@ public class PlannerVwTabbed extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_main_vw, container, false);
+
+        if (app_name.equals(EASYGROC)) {
+            return inflater.inflate(R.layout.activity_main_vw, container, false);
+        }
+        else {
+            return inflater.inflate(R.layout.activity_single_item, container, false);
+        }
     }
 
     @Override
@@ -66,20 +76,25 @@ public class PlannerVwTabbed extends Fragment {
         List<Item> mainLst = DBOperations.getInstance().getTemplNameLst();
         Log.i(TAG, "No of elements in Templ name list=" + mainLst.size());
 
-        mListView = (ListView) view.findViewById(R.id.recipe_list_view);
-        adapter = new ArrayAdapterMainVw(getActivity(), R.layout.simple_list_1, mainLst);
-        adapter.setParams(app_name, EASYGROC_TEMPL_NAME_LISTS);
-        adapter.setFragment(this);
-        mListView.setAdapter(adapter);
+        if (app_name.equals(EASYGROC)) {
+            mListView = (ListView) view.findViewById(R.id.recipe_list_view);
+            adapter = new ArrayAdapterMainVw(getActivity(), R.layout.simple_list_1, mainLst);
+            adapter.setParams(app_name, EASYGROC_TEMPL_NAME_LISTS);
+            adapter.setFragment(this);
+            mListView.setAdapter(adapter);
+        }
+        else {
+            mListView = (ListView) view.findViewById(R.id.add_item_view);
+            adapter = new ArrayAdapterMainVw(getActivity(), R.layout.simple_list_1, mainLst);
+            adapter.setParams(EASYGROC, EASYGROC_TEMPL_LISTS);
+            mListView.setAdapter(adapter);
+        }
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (app_name.equals(EASYGROC))
-        {
-            Log.d(TAG, "Inflating main_easygro_menu in PlannerVwTabbed");
-            inflater.inflate(R.menu.add_single_item, menu);
-        }
+         Log.d(TAG, "Inflating add_single_item in PlannerVwTabbed");
+         inflater.inflate(R.menu.add_single_item, menu);
 
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -97,6 +112,11 @@ public class PlannerVwTabbed extends Fragment {
                     addTemplListName();
                     break;
 
+                case OPENHOUSES:
+                case AUTOSPREE:
+                    addNewCheckList();;
+                    break;
+
                 default:
 
                     break;
@@ -107,6 +127,40 @@ public class PlannerVwTabbed extends Fragment {
         return true;
     }
 
+    private void addNewCheckList()
+    {
+        Intent intent = new Intent(getActivity(), SingleItemActivity.class);
+        intent.putExtra("ViewType", EASYGROC_TEMPL_ADD_ITEM);
+        Item easyItem = new Item();
+
+        List<Item>  mainLst = DBOperations.getInstance().getTemplNameLst();
+        String name = "Check List ";
+        name += Integer.toString(mainLst.size()+1);
+        easyItem.setName(name);
+        intent.putExtra("item", easyItem);
+        startActivityForResult(intent, ADD_TEMPL_CHECKLIST_ACTIVITY_REQUEST);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "Processing Activity result for request Code=" + requestCode);
+        switch (requestCode)
+        {
+            case ADD_TEMPL_CHECKLIST_ACTIVITY_REQUEST: {
+
+                if (resultCode == Activity.RESULT_OK) {
+                    String refreshNeeded = data.getStringExtra("refresh");
+                    if (refreshNeeded.equals("Needed")) {
+                        refresh();
+                    }
+                }
+            }
+            break;
+
+            default:
+                break;
+        }
+    }
     private void addTemplListName()
     {
 

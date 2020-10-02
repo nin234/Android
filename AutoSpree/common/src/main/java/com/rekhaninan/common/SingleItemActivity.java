@@ -582,12 +582,12 @@ public class SingleItemActivity extends AppCompatActivity
             break;
 
             case DELETE_TEMPL_CHECKLIST_ACTIVITY_REQUEST:
-            case ADD_TEMPL_CHECKLIST_ACTIVITY_REQUEST:
             case DELETE_TEMPL_ACTIVITY_REQUEST:
             {
                 finish();
             }
             break;
+
 
             default:
                 break;
@@ -896,8 +896,10 @@ public class SingleItemActivity extends AppCompatActivity
         else
         {
             Intent intent = new Intent();
-            setResult(RESULT_OK, intent);
+            intent.putExtra("refresh", "Needed");
+            setResult(Activity.RESULT_OK, intent);
             finish();
+
         }
 
         return true;
