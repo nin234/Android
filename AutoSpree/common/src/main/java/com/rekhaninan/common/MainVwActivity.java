@@ -316,6 +316,20 @@ public class MainVwActivity extends AppCompatActivity {
                     }
                 }
                 break;
+
+            case CHECKLIST_EDIT_DELETE_REQUEST:
+            {
+                if (resultCode == RESULT_OK)
+                {
+                    String refreshNeeded = data.getStringExtra("refresh");
+                    if (refreshNeeded.equals("Needed"))
+                    {
+                        adapter.refresh();
+                    }
+                }
+            }
+            break;
+
             default:
                 break;
         }

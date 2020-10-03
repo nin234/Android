@@ -938,6 +938,34 @@ public class SingleItemActivity extends AppCompatActivity
             startEasyGrocTemplDisplayActivity(nameItem);
     }
 
+    private void checkLstDeleteItem()
+    {
+        Log.d(getClass().getName(), "Showing delete confirm menu");
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle("Delete");
+
+        String delMsg = "Delete "  + itm.getName() + " ?";
+        alertDialog.setMessage(delMsg);
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        DBOperations.getInstance().deleteDb(itm, viewType);
+                        Intent intent = new Intent();
+                        intent.putExtra("refresh", "Needed");
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
+                });
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                    }
+                });
+        alertDialog.show();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
@@ -981,7 +1009,7 @@ public class SingleItemActivity extends AppCompatActivity
         }
         else if (item.getItemId() == R.id.delete_templ_item)
         {
-            startEasyGrocTemplDeleteActivity();
+            checkLstDeleteItem();
         }
         else if (item.getItemId() == R.id.delete_templ_item_confirm)
         {

@@ -50,6 +50,7 @@ import static com.rekhaninan.common.Constants.ALWAYS_POSN;
 import static com.rekhaninan.common.Constants.AUTOSPREE_ADD_ITEM;
 import static com.rekhaninan.common.Constants.AUTOSPREE_DISPLAY_ITEM;
 import static com.rekhaninan.common.Constants.AUTOSPREE_EDIT_ITEM;
+import static com.rekhaninan.common.Constants.CHECKLIST_EDIT_DELETE_REQUEST;
 import static com.rekhaninan.common.Constants.CHECK_LIST_ADD;
 import static com.rekhaninan.common.Constants.CHECK_LIST_DISPLAY;
 import static com.rekhaninan.common.Constants.CHECK_LIST_EDIT;
@@ -186,7 +187,6 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                                   public void onClick(View view) {
 
 
-                                      Log.d(getClass().getName(), "Clicked row " + itm.getName());
                                       Intent intent = new Intent(ctxt, SingleItemActivity.class);
                                       if (vwType == MAINVW) {
                                           intent.putExtra("ViewType", EASYGROC_DISPLAY_ITEM);
@@ -198,6 +198,11 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                                       intent.putExtra("item", itm);
 
                                       String app_name = DBOperations.getInstance().getApp_name();
+
+                                      Log.d(getClass().getName(), "Starting activity on templ row click" +
+                                              " name="
+                                              + itm.getName() + " share_id=" + itm.getShare_id() + " app=" +
+                                              app_name + " vwType=" + vwType);
                                       if (app_name.equals(EASYGROC) && vwType   == EASYGROC_TEMPL_LISTS)
                                       {
                                           ctxt.startActivity(intent);
@@ -213,7 +218,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                                           if (vwType == EASYGROC_TEMPL_LISTS)
                                           {
                                               Activity itemAct = (Activity) ctxt;
-                                              itemAct.startActivityForResult(intent, DELETE_TEMPL_CHECKLIST_ACTIVITY_REQUEST);
+                                              itemAct.startActivityForResult(intent, CHECKLIST_EDIT_DELETE_REQUEST);
                                           }
                                           else
                                           {
