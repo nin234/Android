@@ -32,6 +32,7 @@ public final class Constants {
     public static final int OPENHOUSES_DISPLAY_ITEM_REQUEST=20;
     public static final int AUTOSPREE_DISPLAY_ITEM_REQUEST=21;
     public static final  int CHECKLIST_EDIT_DELETE_REQUEST=22;
+    public static final  int CHECKLIST_EDIT_REQUEST=23;
 
 
 

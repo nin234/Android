@@ -588,6 +588,14 @@ public class SingleItemActivity extends AppCompatActivity
             }
             break;
 
+            case CHECKLIST_EDIT_REQUEST:
+            {
+                Intent intent = new Intent();
+                intent.putExtra("refresh", "Needed");
+                setResult(Activity.RESULT_OK, intent);
+                finish();
+            }
+            break;
 
             default:
                 break;
@@ -913,7 +921,7 @@ public class SingleItemActivity extends AppCompatActivity
         Item nameItem = arryEl.get(0);
         String name = nameItem.getName();
         long share_id = nameItem.getShare_id();
-        Log.d(TAG, "ShareId of edited list="+ share_id);
+        Log.d(TAG, "ShareId of edited list="+ share_id + " viewType=" + viewType);
         int i=0;
         DBOperations.getInstance().deleteDb(nameItem, viewType);
         for (Item itm : arryEl)
@@ -930,12 +938,25 @@ public class SingleItemActivity extends AppCompatActivity
             itm.setName(name);
             itm.setShare_id(share_id);
 
+            //Log.d(TAG, "")
             DBOperations.getInstance().insertDb(itm, viewType);
 
             ++i;
         }
-        if (viewType != EASYGROC_EDIT_ITEM)
-            startEasyGrocTemplDisplayActivity(nameItem);
+        if (viewType != EASYGROC_EDIT_ITEM) {
+
+            String app_name = DBOperations.getInstance().getApp_name();
+            if (app_name.equals(EASYGROC)) {
+                startEasyGrocTemplDisplayActivity(nameItem);
+            }
+            else
+            {
+                Intent intent = new Intent();
+                intent.putExtra("refresh", "Needed");
+                setResult(Activity.RESULT_OK, intent);
+                finish();
+            }
+        }
     }
 
     private void checkLstDeleteItem()
@@ -1522,7 +1543,15 @@ public class SingleItemActivity extends AppCompatActivity
         intent.putExtra("ViewType", EASYGROC_TEMPL_EDIT_ITEM);
         intent.putExtra("item", itm);
         //edit activity
-        startActivity(intent);
+        String app_name = DBOperations.getInstance().getApp_name();
+        if (app_name.equals(EASYGROC)) {
+            startActivity(intent);
+        }
+        else
+        {
+            Activity itemAct = (Activity) this;
+            itemAct.startActivityForResult(intent, CHECKLIST_EDIT_REQUEST);
+        }
         return;
     }
 
