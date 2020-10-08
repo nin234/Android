@@ -96,7 +96,7 @@ public class AutoSpreeRow extends RowView
                 Log.d(TAG, "In AutoSpreeRow setting car name=" + carname);
                 tv.setText(carname);
                 tv.setTag(itm);
-
+                tv.setWidth(width);
                 //tv.setText(Item, TextView.BufferType.EDITABLE);
                 tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
 

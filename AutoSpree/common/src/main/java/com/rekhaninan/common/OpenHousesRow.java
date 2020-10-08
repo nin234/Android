@@ -81,7 +81,7 @@ public class OpenHousesRow extends RowView {
                 tv.setText(housename);
                 tv.setTag(itm);
                 //tv.setText(Item, TextView.BufferType.EDITABLE);
-
+                tv.setWidth(width);
                 tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
 
                 tv.setOnClickListener(new View.OnClickListener() {

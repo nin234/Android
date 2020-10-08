@@ -18,16 +18,25 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import java.io.File;
+import java.util.ArrayList;
+
+import static android.app.Activity.RESULT_OK;
 import static com.rekhaninan.common.Constants.ADD_CONTACT_ITEM_ACTIVITY_REQUEST;
+import static com.rekhaninan.common.Constants.AUTOSPREE;
 import static com.rekhaninan.common.Constants.CONTACTITEMSEPARATOR;
 import static com.rekhaninan.common.Constants.CONTACTS_ITEM_ADD;
 import static com.rekhaninan.common.Constants.CONTACTS_VW;
+import static com.rekhaninan.common.Constants.EASYGROC;
 import static com.rekhaninan.common.Constants.GET_CONTACTS_ACTIVITY_REQUEST;
 import static com.rekhaninan.common.Constants.ITEMSEPARATOR;
 import static com.rekhaninan.common.Constants.KEYVALSEPARATOR;
 import static com.rekhaninan.common.Constants.MAINVW;
+import static com.rekhaninan.common.Constants.OPENHOUSES;
 import static com.rekhaninan.common.Constants.RESULT_NO_CONTACT_SELECTED;
 import static com.rekhaninan.common.Constants.SHARE_MAINVW;
+import static com.rekhaninan.common.Constants.SHARE_PICTURE_ACTIVITY_REQUEST;
+import static com.rekhaninan.common.Constants.SHARE_PICTURE_VW;
 
 public class ShareVwTabbed extends Fragment {
 
@@ -37,7 +46,7 @@ public class ShareVwTabbed extends Fragment {
     private final String TAG = "ShareVwTabbed";
     private Item selectedItem;
     private  ArrayAdapterMainVw adapter;
-
+    private ArrayList<String> selectedImages;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,10 +96,41 @@ public class ShareVwTabbed extends Fragment {
             {
                 return true;
             }
-            Intent intent = new Intent(getActivity(), ShareActivity.class);
+
+
+
+            File dir = getContext().getFilesDir();
+            String thumbDir = selectedItem.getAlbum_name() + File.separator + "thumbnails";
+            File thumbNailsDir = new File(dir, thumbDir);
+            boolean startContactActivity = false;
+            if (!thumbNailsDir.exists())
+            {
+                Log.i(TAG, "Starting contacts activity in sharing as no thumbnail directory found");
+                startContactActivity = true;
+            }
+
+            if (!startContactActivity) {
+                File[] files = thumbNailsDir.listFiles();
+                if (files.length == 0) {
+                    Log.i(TAG, "Starting contacts activity in sharing as no thumbnail images found");
+                    startContactActivity = true;
+                }
+            }
+
+            if (startContactActivity)
+            {
+                Intent intent = new Intent(getActivity(), ShareActivity.class);
+                intent.putExtra("app_name", app_name);
+                intent.putExtra("ViewType", CONTACTS_VW);
+                startActivityForResult(intent, GET_CONTACTS_ACTIVITY_REQUEST);
+                return true;
+            }
+
+            Intent intent = new Intent(getActivity(), PhotoRoll.class);
             intent.putExtra("app_name", app_name);
-            intent.putExtra("ViewType", CONTACTS_VW);
-            startActivityForResult(intent, GET_CONTACTS_ACTIVITY_REQUEST);
+            intent.putExtra("ViewType", SHARE_PICTURE_VW);
+            intent.putExtra("album_name", selectedItem.getAlbum_name());
+            startActivityForResult(intent, SHARE_PICTURE_ACTIVITY_REQUEST);
         }
         return true;
     }
@@ -103,9 +143,20 @@ public class ShareVwTabbed extends Fragment {
                Log.d(TAG, "GET_CONTACTS_ACTIVITY_REQUEST result code=" + resultCode);
                String msg;
                boolean bShowAlert = true;
-               if (resultCode == Activity.RESULT_OK) {
+               if (resultCode == RESULT_OK) {
                    java.util.ArrayList<Item> contactsLst = data.getParcelableArrayListExtra("contactslist");
-                   shareEasyGrocItem(contactsLst);
+                   if (app_name.equals(EASYGROC))
+                   {
+                       shareEasyGrocItem(contactsLst);
+                   }
+                   else if (app_name.equals(AUTOSPREE))
+                   {
+                       shareAutoSpreeItem(contactsLst);
+                   }
+                   else if (app_name.equals(OPENHOUSES))
+                   {
+                       shareOpenHousesItem(contactsLst);
+                   }
                    msg = "Send item="+ selectedItem.getName() + " to=";
                    for (Item contact : contactsLst)
                    {
@@ -134,6 +185,17 @@ public class ShareVwTabbed extends Fragment {
                                }
                            });
                    alertDialog.show();
+               }
+           }
+            case SHARE_PICTURE_ACTIVITY_REQUEST:
+           {
+               if(resultCode == RESULT_OK)
+               {
+                   selectedImages = data.getStringArrayListExtra("image_items");
+                   Intent intent = new Intent(getActivity(), ShareActivity.class);
+                   intent.putExtra("app_name", app_name);
+                   intent.putExtra("ViewType", CONTACTS_VW);
+                   startActivityForResult(intent, GET_CONTACTS_ACTIVITY_REQUEST);
                }
            }
                break;
@@ -189,6 +251,160 @@ public class ShareVwTabbed extends Fragment {
 
         return;
     }
+
+    private void shareOpenHousesItem(java.util.ArrayList<Item> contactsLst)
+    {
+        String shrMsg = new String();
+        for (Item contact : contactsLst)
+        {
+            if (contact.getName().equals("ME"))
+                continue;
+            shrMsg += Long.toString(contact.getShare_id());
+            shrMsg += ";";
+        }
+
+        if (shrMsg == null || shrMsg.length() <=0)
+        {
+            Log.d(TAG, "No contact to share to");
+            return;
+        }
+        String picMetaCommon = shrMsg;
+        shrMsg += ":::";
+        shrMsg += getCommonStr();
+        shrMsg += "Area:|:";
+        shrMsg += Double.toString(selectedItem.getArea());
+        shrMsg += "]:;";
+        shrMsg += "Beds:|:";
+        shrMsg += Double.toString(selectedItem.getBeds());
+        shrMsg += "]:;";
+        shrMsg += "Baths:|:";
+        shrMsg += Double.toString(selectedItem.getBaths());
+        shrMsg += "]:;";
+        shrMsg += getCheckList(selectedItem);
+        ShareMgr.getInstance().shareItem(shrMsg, selectedItem.getName());
+        if (selectedImages != null) {
+            for (String selectedImage : selectedImages) {
+                String picMetaStr = picMetaCommon + selectedItem.getName();
+                ShareMgr.getInstance().sharePicture(selectedImage, picMetaStr, selectedItem.getShare_id());
+
+            }
+        }
+        return;
+    }
+
+
+    private void shareAutoSpreeItem(java.util.ArrayList<Item> contactsLst)
+    {
+        String shrMsg = new String();
+        for (Item contact : contactsLst)
+        {
+            if (contact.getName().equals("ME"))
+                continue;
+            shrMsg += Long.toString(contact.getShare_id());
+            shrMsg += ";";
+        }
+
+        if (shrMsg == null || shrMsg.length() <=0)
+        {
+            Log.d(TAG, "No contact to share to");
+            return;
+        }
+
+        String picMetaCommon = shrMsg;
+        shrMsg += ":::";
+        shrMsg += getCommonStr();
+        shrMsg += "Model:|:";
+        shrMsg += selectedItem.getModel();
+        shrMsg += "]:;";
+        shrMsg += "Make:|:";
+        shrMsg += selectedItem.getMake();
+        shrMsg += "]:;";
+        shrMsg += "Color:|:";
+        shrMsg += selectedItem.getColor();
+        shrMsg += "]:;";
+        shrMsg += "Miles:|:";
+        shrMsg += Integer.toString(selectedItem.getMiles());
+        shrMsg += "]:;";
+        shrMsg += getCheckList(selectedItem);
+
+        ShareMgr.getInstance().shareItem(shrMsg, selectedItem.getName());
+        if (selectedImages != null) {
+            for (String selectedImage : selectedImages) {
+                String picMetaStr = picMetaCommon + selectedItem.getName();
+                ShareMgr.getInstance().sharePicture(selectedImage, picMetaStr, selectedItem.getShare_id());
+
+            }
+        }
+        return;
+    }
+    private String getCommonStr()
+    {
+        String shrMsg = new String();
+        shrMsg += "Name:|:";
+        shrMsg += selectedItem.getName();
+        shrMsg += "]:;";
+        shrMsg += "Price:|:";
+        shrMsg += Double.toString(selectedItem.getPrice());
+        shrMsg += "]:;";
+        shrMsg += "Year:|:";
+        shrMsg += Integer.toString(selectedItem.getYear());
+        shrMsg += "]:;";
+        shrMsg += "Notes:|:";
+        shrMsg += selectedItem.getNotes();
+        shrMsg += "]:;";
+        shrMsg += "Ratings:|:";
+        shrMsg += Integer.toString(selectedItem.getRating());
+        shrMsg += "]:;";
+        shrMsg += "Street:|:";
+        shrMsg += selectedItem.getStreet();
+        shrMsg += "]:;";
+        shrMsg += "City:|:";
+        shrMsg += selectedItem.getCity();
+        shrMsg += "]:;";
+        shrMsg += "State:|:";
+        shrMsg += selectedItem.getState();
+        shrMsg += "]:;";
+        shrMsg += "PostalCode:|:";
+        shrMsg += selectedItem.getZip();
+        shrMsg += "]:;";
+        shrMsg += "latitude:|:";
+        shrMsg += Double.toString(selectedItem.getLatitude());
+        shrMsg += "]:;";
+        shrMsg += "longitude:|:";
+        shrMsg += Double.toString(selectedItem.getLongitude());
+        shrMsg += "]:;";
+        shrMsg += "shareId:|:";
+        shrMsg += Long.toString(ShareMgr.getInstance().getShare_id());
+        shrMsg += "]:;";
+
+        return shrMsg;
+    }
+
+    private String getCheckList(Item itm)
+    {
+        String chkLstMsg = "::]}]::"; //separator
+        java.util.List<Item> list = DBOperations.getInstance().getList(itm.getName(), itm.getShare_id());
+        if (list == null || list.size() == 0)
+            return chkLstMsg;
+        for (Item selItem : list)
+        {
+            chkLstMsg += Integer.toString(selItem.getRowno());
+            chkLstMsg += ":|:";
+            if (selItem.isSelected())
+            {
+                chkLstMsg += Integer.toString(1);
+            }
+            else
+            {
+                chkLstMsg += Integer.toString(0);
+            }
+            chkLstMsg += ":|:";
+            chkLstMsg += selItem.getItem();
+            chkLstMsg += "]:;";
+        }
+        return chkLstMsg;
+    }
+
     public void refresh()
     {
         Log.d(TAG, "Refreshing Share View");
