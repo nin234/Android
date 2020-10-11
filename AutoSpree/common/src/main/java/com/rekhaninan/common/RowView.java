@@ -512,8 +512,9 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
                                       if (cbxi.isChecked())
                                       {
                                           adapter.resetSelected(itm.getRowno());
+                                          ShareVwTabbed  shareVwTabbed= (ShareVwTabbed) fragment;
+                                          shareVwTabbed.attachPictures();
                                       }
-
                                   }
                               }
 
@@ -535,6 +536,8 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
                                        if (cbxi.isChecked())
                                        {
                                            adapter.resetSelected(itm.getRowno());
+                                           ShareVwTabbed  shareVwTabbed= (ShareVwTabbed) fragment;
+                                           shareVwTabbed.attachPictures();
                                        }
 
                                    }

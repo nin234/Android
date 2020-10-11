@@ -1,25 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c0d74289-fb25-4b50-a5ec-7e5b53a28d93" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../../OpenHouses/mobile/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../OpenHouses/mobile/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../OpenHouses/mobile/.idea/gradle.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../OpenHouses/mobile/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../OpenHouses/mobile/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../OpenHouses/mobile/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Android_EasyGrocList/mobile/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Android_EasyGrocList/mobile/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Android_EasyGrocList/mobile/.idea/libraries/Gradle__artifacts_common_debug_unspecified_jar.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Android_EasyGrocList/mobile/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Android_EasyGrocList/mobile/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../AutoSpree/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../../AutoSpree/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../AutoSpree/common/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../../AutoSpree/common/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../AutoSpree/common/src/main/java/com/rekhaninan/common/ArrayAdapterMainVw.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../AutoSpree/common/src/main/java/com/rekhaninan/common/ArrayAdapterMainVw.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../AutoSpree/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../../AutoSpree/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../AutoSpree/mobile/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../../AutoSpree/mobile/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../AutoSpree/mobile/release/mobile-release.apk" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../AutoSpree/mobile/release/output.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../OpenHouses/amplify/.config/project-config.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../OpenHouses/amplify/.config/project-config.json" afterDir="false" />
-    </list>
+    <list default="true" id="c0d74289-fb25-4b50-a5ec-7e5b53a28d93" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

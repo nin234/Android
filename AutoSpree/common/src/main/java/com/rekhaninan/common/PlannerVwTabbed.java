@@ -80,15 +80,14 @@ public class PlannerVwTabbed extends Fragment {
             mListView = (ListView) view.findViewById(R.id.recipe_list_view);
             adapter = new ArrayAdapterMainVw(getActivity(), R.layout.simple_list_1, mainLst);
             adapter.setParams(app_name, EASYGROC_TEMPL_NAME_LISTS);
-            adapter.setFragment(this);
-            mListView.setAdapter(adapter);
         }
         else {
             mListView = (ListView) view.findViewById(R.id.add_item_view);
             adapter = new ArrayAdapterMainVw(getActivity(), R.layout.simple_list_1, mainLst);
             adapter.setParams(EASYGROC, EASYGROC_TEMPL_LISTS);
-            mListView.setAdapter(adapter);
         }
+            adapter.setFragment(this);
+            mListView.setAdapter(adapter);
     }
 
     @Override
@@ -161,6 +160,10 @@ public class PlannerVwTabbed extends Fragment {
                 break;
         }
     }
+
+
+
+
     private void addTemplListName()
     {
 

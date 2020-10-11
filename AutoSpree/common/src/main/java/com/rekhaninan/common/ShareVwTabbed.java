@@ -47,11 +47,12 @@ public class ShareVwTabbed extends Fragment {
     private Item selectedItem;
     private  ArrayAdapterMainVw adapter;
     private ArrayList<String> selectedImages;
-
+    private boolean dontRefresh;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        dontRefresh = false;
     }
 
     @Nullable
@@ -75,6 +76,7 @@ public class ShareVwTabbed extends Fragment {
         adapter = new ArrayAdapterMainVw(getContext(), R.layout.simple_list_1, mainLst);
         adapter.setParams(app_name, SHARE_MAINVW);
         mListView.setAdapter(adapter);
+        adapter.setFragment(this);
     }
 
     @Override
@@ -97,43 +99,15 @@ public class ShareVwTabbed extends Fragment {
                 return true;
             }
 
-
-
-            File dir = getContext().getFilesDir();
-            String thumbDir = selectedItem.getAlbum_name() + File.separator + "thumbnails";
-            File thumbNailsDir = new File(dir, thumbDir);
-            boolean startContactActivity = false;
-            if (!thumbNailsDir.exists())
-            {
-                Log.i(TAG, "Starting contacts activity in sharing as no thumbnail directory found");
-                startContactActivity = true;
-            }
-
-            if (!startContactActivity) {
-                File[] files = thumbNailsDir.listFiles();
-                if (files.length == 0) {
-                    Log.i(TAG, "Starting contacts activity in sharing as no thumbnail images found");
-                    startContactActivity = true;
-                }
-            }
-
-            if (startContactActivity)
-            {
-                Intent intent = new Intent(getActivity(), ShareActivity.class);
-                intent.putExtra("app_name", app_name);
-                intent.putExtra("ViewType", CONTACTS_VW);
-                startActivityForResult(intent, GET_CONTACTS_ACTIVITY_REQUEST);
-                return true;
-            }
-
-            Intent intent = new Intent(getActivity(), PhotoRoll.class);
+            Intent intent = new Intent(getActivity(), ShareActivity.class);
             intent.putExtra("app_name", app_name);
-            intent.putExtra("ViewType", SHARE_PICTURE_VW);
-            intent.putExtra("album_name", selectedItem.getAlbum_name());
-            startActivityForResult(intent, SHARE_PICTURE_ACTIVITY_REQUEST);
+            intent.putExtra("ViewType", CONTACTS_VW);
+            startActivityForResult(intent, GET_CONTACTS_ACTIVITY_REQUEST);
+            return true;
         }
         return true;
     }
+
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -189,13 +163,10 @@ public class ShareVwTabbed extends Fragment {
            }
             case SHARE_PICTURE_ACTIVITY_REQUEST:
            {
+               dontRefresh = true;
                if(resultCode == RESULT_OK)
                {
                    selectedImages = data.getStringArrayListExtra("image_items");
-                   Intent intent = new Intent(getActivity(), ShareActivity.class);
-                   intent.putExtra("app_name", app_name);
-                   intent.putExtra("ViewType", CONTACTS_VW);
-                   startActivityForResult(intent, GET_CONTACTS_ACTIVITY_REQUEST);
                }
            }
                break;
@@ -290,6 +261,71 @@ public class ShareVwTabbed extends Fragment {
             }
         }
         return;
+    }
+
+
+    private void startPictureSharePictureActivity()
+    {
+        AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+        alertDialog.setTitle("Attach Pictures?");
+
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        Intent intent = new Intent(getActivity(), PhotoRoll.class);
+                        intent.putExtra("app_name", app_name);
+                        intent.putExtra("ViewType", SHARE_PICTURE_VW);
+                        intent.putExtra("album_name", selectedItem.getAlbum_name());
+                        startActivityForResult(intent, SHARE_PICTURE_ACTIVITY_REQUEST);
+                        dialog.cancel();
+                    }
+                });
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                    }
+                });
+        alertDialog.show();
+    }
+
+    public void attachPictures()
+    {
+        Log.d(TAG, "Showing select contacts screen");
+        ArrayAdapterMainVw  adapter = (ArrayAdapterMainVw)mListView.getAdapter();
+        selectedItem = adapter.getSelectedItem();
+        if (selectedItem == null)
+        {
+            return;
+        }
+
+
+
+        File dir = getContext().getFilesDir();
+        String thumbDir = selectedItem.getAlbum_name() + File.separator + "thumbnails";
+        File thumbNailsDir = new File(dir, thumbDir);
+        boolean startSharePictures = true;
+        if (!thumbNailsDir.exists())
+        {
+            Log.i(TAG, "Starting contacts activity in sharing as no thumbnail directory found");
+            startSharePictures = false;
+        }
+
+        if (startSharePictures) {
+            File[] files = thumbNailsDir.listFiles();
+            if (files.length == 0) {
+                Log.i(TAG, "Starting contacts activity in sharing as no thumbnail images found");
+                startSharePictures = false;
+            }
+        }
+        if (startSharePictures)
+        {
+            startPictureSharePictureActivity();
+        }
+
+
     }
 
 
@@ -408,6 +444,12 @@ public class ShareVwTabbed extends Fragment {
     public void refresh()
     {
         Log.d(TAG, "Refreshing Share View");
+        if (dontRefresh)
+        {
+            Log.d(TAG, "Not refreshing Share View now");
+            dontRefresh = false;
+            return;
+        }
         java.util.List<Item> mainLst = DBOperations.getInstance().getMainLst(SHARE_MAINVW);
         adapter.setArryElems(mainLst);
         adapter.notifyDataSetChanged();
@@ -416,6 +458,7 @@ public class ShareVwTabbed extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG, "In onResume of ShareVwTabbed");
         refresh();
     }
 }
