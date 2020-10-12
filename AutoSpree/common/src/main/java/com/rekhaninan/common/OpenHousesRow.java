@@ -85,7 +85,6 @@ public class OpenHousesRow extends RowView {
                 tv.setHeight(txtHeight);
                 tv.setWidth((width / 10) * 8);
                 tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.35f);
-                //tv.setText(Item, TextView.BufferType.EDITABLE);
 
                 ImageView disclosure = (ImageView) vw.findViewById(R.id.label_image_icon);
                 disclosure.setMaxHeight(txtHeight);
