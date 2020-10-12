@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import static com.rekhaninan.common.Constants.*;
 import android.view.LayoutInflater;
@@ -69,11 +71,10 @@ public class OpenHousesRow extends RowView {
 
             case MAINVW: {
                 LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View vw = inflater.inflate(R.layout.text, parent, false);
-                TextView tv = (TextView) vw.findViewById(R.id.main_row_name);
+                View vw = inflater.inflate(R.layout.label, parent, false);
+                TextView tv = (TextView) vw.findViewById(R.id.name);
 
 
-                tv.setHeight(txtHeight);
                 String housename = itm.getName() + " - " ;
                 if (itm.getStreet() != null)
                  housename += itm.getStreet();
@@ -81,9 +82,18 @@ public class OpenHousesRow extends RowView {
                 tv.setText(housename);
                 tv.setTag(itm);
                 //tv.setText(Item, TextView.BufferType.EDITABLE);
-                tv.setWidth(width);
-                tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
+                tv.setHeight(txtHeight);
+                tv.setWidth((width / 10) * 8);
+                tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.35f);
+                //tv.setText(Item, TextView.BufferType.EDITABLE);
 
+                ImageView disclosure = (ImageView) vw.findViewById(R.id.label_image_icon);
+                disclosure.setMaxHeight(txtHeight);
+                disclosure.setMaxWidth(width / 10);
+                RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+                lp.setMargins((width / 10) * 8, 5, 5, 5);
+                disclosure.setLayoutParams(lp);
                 tv.setOnClickListener(new View.OnClickListener() {
                                           @Override
                                           public void onClick(View view) {

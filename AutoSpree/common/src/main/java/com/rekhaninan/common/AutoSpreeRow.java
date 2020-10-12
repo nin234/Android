@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import static com.rekhaninan.common.Constants.*;
@@ -82,11 +84,10 @@ public class AutoSpreeRow extends RowView
             case MAINVW: {
 
                 LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View vw = inflater.inflate(R.layout.text, parent, false);
-                TextView tv = (TextView) vw.findViewById(R.id.main_row_name);
+                View vw = inflater.inflate(R.layout.label, parent, false);
+                TextView tv = (TextView) vw.findViewById(R.id.name);
 
 
-                tv.setHeight(txtHeight);
 
                 String carname = itm.getName() + " - ";
                 if (itm.getColor() != null)
@@ -96,9 +97,19 @@ public class AutoSpreeRow extends RowView
                 Log.d(TAG, "In AutoSpreeRow setting car name=" + carname);
                 tv.setText(carname);
                 tv.setTag(itm);
-                tv.setWidth(width);
+
+                tv.setHeight(txtHeight);
+                tv.setWidth((width / 10) * 8);
+                tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.35f);
                 //tv.setText(Item, TextView.BufferType.EDITABLE);
-                tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
+
+                ImageView disclosure = (ImageView) vw.findViewById(R.id.label_image_icon);
+                disclosure.setMaxHeight(txtHeight);
+                disclosure.setMaxWidth(width / 10);
+                RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+                lp.setMargins((width / 10) * 8, 5, 5, 5);
+                disclosure.setLayoutParams(lp);
 
                 tv.setOnClickListener(new View.OnClickListener() {
                                           @Override
