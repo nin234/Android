@@ -99,9 +99,17 @@ public class ContactsVwTabbed extends Fragment {
 
     public void refresh()
     {
-
+        Log.d(TAG, "Refreshing ContactsVwTabbed");
         java.util.List<Item> mainLst = DBOperations.getInstance().getMainLst(CONTACTS_MAINVW);
         adapter.setArryElems(mainLst);
         adapter.notifyDataSetChanged();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "In onResume of ContactsVwTabbed");
+        refresh();
+    }
+
     }

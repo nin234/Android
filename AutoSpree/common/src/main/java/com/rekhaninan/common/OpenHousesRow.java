@@ -49,6 +49,20 @@ public class OpenHousesRow extends RowView {
         setRatings(1);
     }
 
+    private void displayItem(View view, String housename)
+    {
+        Item itm = (Item) view.getTag();
+        Log.d(getClass().getName(), "Clicked row " + housename);
+        Intent intent = new Intent(ctxt, SingleItemActivity.class);
+        intent.putExtra("ViewType", OPENHOUSES_DISPLAY_ITEM);
+        intent.putExtra("item", itm);
+        java.util.List<Item> list = DBOperations.getInstance().getList(itm.getName(), itm.getShare_id());
+        if (list == null)
+            list = new ArrayList<Item>();
+        intent.putParcelableArrayListExtra("check_list", (ArrayList<Item>)list);
+        ctxt.startActivity(intent);
+    }
+
     public  View getView(final Item itm, int position, ViewGroup parent)
     {
         View svw = super.getView(itm, position, parent);
@@ -85,7 +99,7 @@ public class OpenHousesRow extends RowView {
                 tv.setHeight(txtHeight);
                 tv.setWidth((width / 10) * 8);
                 tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.35f);
-
+                final String hname = housename;
                 ImageView disclosure = (ImageView) vw.findViewById(R.id.label_image_icon);
                 disclosure.setMaxHeight(txtHeight);
                 disclosure.setMaxWidth(width / 10);
@@ -93,24 +107,10 @@ public class OpenHousesRow extends RowView {
 
                 lp.setMargins((width / 10) * 8, 5, 5, 5);
                 disclosure.setLayoutParams(lp);
-                tv.setOnClickListener(new View.OnClickListener() {
-                                          @Override
-                                          public void onClick(View view) {
-
-                                              TextView tv = (TextView) view;
-                                              Item itm = (Item) tv.getTag();
-                                              Log.d(getClass().getName(), "Clicked row " + tv.getText());
-                                              Intent intent = new Intent(ctxt, SingleItemActivity.class);
-                                              intent.putExtra("ViewType", OPENHOUSES_DISPLAY_ITEM);
-                                              intent.putExtra("item", itm);
-                                              java.util.List<Item> list = DBOperations.getInstance().getList(itm.getName(), itm.getShare_id());
-                                              if (list == null)
-                                                  list = new ArrayList<Item>();
-                                              intent.putParcelableArrayListExtra("check_list", (ArrayList<Item>)list);
-                                              ctxt.startActivity(intent);
-                                          }
-                                      }
-
+                disclosure.setTag(itm);
+                tv.setOnClickListener(view -> displayItem(view, hname)
+                );
+                disclosure.setOnClickListener(view -> displayItem(view, hname)
                 );
                 return vw;
             }

@@ -277,6 +277,12 @@ public class MainVwActivity extends AppCompatActivity {
         mListView.setAdapter(adapter);
         return;
     }
+
+    public void refreshContactVw()
+    {
+        adapter.refreshContactVw();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(getClass().getSimpleName(), "Processing activity result with request code=" + requestCode);

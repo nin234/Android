@@ -142,6 +142,7 @@ public class ShareMgr extends Thread {
         SharedPreferences.Editor editor = sharing.edit();
         editor.putLong("share_id", share_id);
         editor.commit();
+        activity.refreshContactVw();
         shareDeviceTkn();
     }
 

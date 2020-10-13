@@ -422,6 +422,18 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
            return null;
        }
 
+      private void displayContactItem(View view, String contactname)
+      {
+          Item itm = (Item) view.getTag();
+          Log.d(getClass().getName(), "Clicked row " + contactname);
+          Intent intent = new Intent(ctxt, ShareActivity.class);
+          intent.putExtra("ViewType", CONTACTS_ITEM_DISPLAY);
+          intent.putExtra("app_name", app_name);
+          intent.putExtra("item", itm);
+          Activity itemAct = (Activity) ctxt;
+          itemAct.startActivityForResult(intent, DELETE_CONTACT_ITEM_ACTIVITY_REQUEST);
+      }
+
     public View getContactMainVwRow (ViewGroup parent , int txtHeight,  int width, Item itm)
     {
         final LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -440,6 +452,8 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
         {
             itemname = Long.toString(itm.getShare_id());
         }
+
+        final String contactname = itemname;
         Log.d(TAG, "Setting item name=" + itemname + " in CONTACTS_MAINVW");
         TextView tv = (TextView) vw.findViewById(R.id.name);
         tv.setHeight(txtHeight);
@@ -447,23 +461,10 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
         tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.35f);
         tv.setText(itemname);
         tv.setTag(itm);
-        tv.setOnClickListener(new View.OnClickListener() {
-                                  @Override
-                                  public void onClick(View view) {
-
-                                      TextView tv = (TextView) view;
-                                      Item itm = (Item) tv.getTag();
-                                      Log.d(getClass().getName(), "Clicked row " + tv.getText());
-                                      Intent intent = new Intent(ctxt, ShareActivity.class);
-                                      intent.putExtra("ViewType", CONTACTS_ITEM_DISPLAY);
-                                      intent.putExtra("app_name", app_name);
-                                      intent.putExtra("item", itm);
-                                      Activity itemAct = (Activity) ctxt;
-                                      itemAct.startActivityForResult(intent, DELETE_CONTACT_ITEM_ACTIVITY_REQUEST);
-
-                                  }
-                              }
-
+        disclosure.setTag(itm);
+        tv.setOnClickListener(view -> displayContactItem(view, contactname)
+        );
+        disclosure.setOnClickListener(view -> displayContactItem(view, contactname)
         );
         return vw;
     }

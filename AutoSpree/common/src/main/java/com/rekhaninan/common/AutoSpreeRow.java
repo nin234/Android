@@ -59,6 +59,25 @@ public class AutoSpreeRow extends RowView
         return carname;
     }
 
+    private void displayAutoSpreeItem(View view, String carname)
+    {
+       // TextView tv = (TextView) view;
+        Item itm = (Item)view.getTag();
+        Log.d(getClass().getName(), "Clicked row " + carname);
+        Intent intent = new Intent(ctxt, SingleItemActivity.class);
+        intent.putExtra("ViewType", AUTOSPREE_DISPLAY_ITEM);
+        intent.putExtra("item", itm);
+        Log.i(TAG, "Getting list for item name=" + itm.getName() + " share_id=" + itm.getShare_id());
+        java.util.List<Item> list = DBOperations.getInstance().getList(itm.getName(), itm.getShare_id());
+        if (list == null) {
+            Log.i(TAG, "Null check list retrieved for item name=" + itm.getName() + " share_id=" + itm.getShare_id());
+            list = new ArrayList<Item>();
+        }
+        intent.putParcelableArrayListExtra("check_list", (ArrayList<Item>)list);
+        Activity itemAct = (Activity) ctxt;
+        itemAct.startActivityForResult(intent, AUTOSPREE_DISPLAY_ITEM_REQUEST);
+    }
+
     @Override
     public View getView(final Item itm, int position, ViewGroup parent)
     {
@@ -98,6 +117,7 @@ public class AutoSpreeRow extends RowView
                 tv.setText(carname);
                 tv.setTag(itm);
 
+                final String cname = carname;
                 tv.setHeight(txtHeight);
                 tv.setWidth((width / 10) * 8);
                 tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.35f);
@@ -110,29 +130,10 @@ public class AutoSpreeRow extends RowView
 
                 lp.setMargins((width / 10) * 8, 5, 5, 5);
                 disclosure.setLayoutParams(lp);
-
-                tv.setOnClickListener(new View.OnClickListener() {
-                                          @Override
-                                          public void onClick(View view) {
-
-                                              TextView tv = (TextView) view;
-                                              Item itm = (Item) tv.getTag();
-                                              Log.d(getClass().getName(), "Clicked row " + tv.getText());
-                                              Intent intent = new Intent(ctxt, SingleItemActivity.class);
-                                              intent.putExtra("ViewType", AUTOSPREE_DISPLAY_ITEM);
-                                              intent.putExtra("item", itm);
-                                              Log.i(TAG, "Getting list for item name=" + itm.getName() + " share_id=" + itm.getShare_id());
-                                              java.util.List<Item> list = DBOperations.getInstance().getList(itm.getName(), itm.getShare_id());
-                                              if (list == null) {
-                                                  Log.i(TAG, "Null check list retrieved for item name=" + itm.getName() + " share_id=" + itm.getShare_id());
-                                                  list = new ArrayList<Item>();
-                                              }
-                                              intent.putParcelableArrayListExtra("check_list", (ArrayList<Item>)list);
-                                              Activity itemAct = (Activity) ctxt;
-                                              itemAct.startActivityForResult(intent, AUTOSPREE_DISPLAY_ITEM_REQUEST);
-                                          }
-                                      }
-
+                disclosure.setTag(itm);
+                tv.setOnClickListener(view -> displayAutoSpreeItem(view, cname)
+                );
+                disclosure.setOnClickListener(view -> displayAutoSpreeItem(view, cname)
                 );
                 return vw;
             }
