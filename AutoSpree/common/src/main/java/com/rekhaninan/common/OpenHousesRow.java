@@ -3,6 +3,7 @@ package com.rekhaninan.common;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
@@ -132,9 +133,10 @@ public class OpenHousesRow extends RowView {
                         View vw = inflater.inflate(R.layout.label_text, parent,false);
                         TextView name = (TextView) vw.findViewById(R.id.name);
                         name.setText("Name");
+                        name.setTypeface(name.getTypeface(), Typeface.BOLD);
                         name.setHeight(txtHeight);
                         name.setWidth(width/4);
-                        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.5f);
+                        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.27f);
                         name_value = (EditText) vw.findViewById(R.id.value);
                         if (vwType == OPENHOUSES_ADD_ITEM || vwType == OPENHOUSES_EDIT_ITEM) {
                             name_value.setText(itm.getName(), TextView.BufferType.EDITABLE);
@@ -144,7 +146,7 @@ public class OpenHousesRow extends RowView {
                         }
                         name_value.setHeight(txtHeight);
                         name_value.setWidth((width/4)*3);
-                        name_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
+                        name_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.32f);
                         name_row =vw;
                         return name_row;
                     }
@@ -160,12 +162,12 @@ public class OpenHousesRow extends RowView {
                         name.setText("Price");
                         name.setHeight(txtHeight);
                         name.setWidth(width/4);
-                        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.5f);
-
+                        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.27f);
+                        name.setTypeface(name.getTypeface(), Typeface.BOLD);
                         price_value = (EditText) vw.findViewById(R.id.value);
                         price_value.setHeight(txtHeight);
                         price_value.setWidth((width/4)*3);
-                        price_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
+                        price_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.32f);
 
 
                         if (vwType == OPENHOUSES_DISPLAY_ITEM){
@@ -190,22 +192,24 @@ public class OpenHousesRow extends RowView {
                         TextView name = (TextView) vw.findViewById(R.id.name_tarun);
                         name.setText("Area");
                         name.setHeight(txtHeight);
-                        name.setWidth(width/6);
-                        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
+                        name.setTypeface(name.getTypeface(), Typeface.BOLD);
+                        name.setWidth(width/7);
+                        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.27f);
                         TextView name1 = (TextView) vw.findViewById(R.id.name);
                         name1.setHeight(txtHeight);
-                        name1.setWidth(width/6);
-                        name1.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
+                        name1.setWidth(width/7);
+                        name1.setTypeface(name.getTypeface(), Typeface.BOLD);
+                        name1.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.27f);
 
                         name1.setText("Year");
                         area_value = (EditText) vw.findViewById(R.id.value_tarun);
                         area_value.setHeight(txtHeight);
-                        area_value.setWidth(width/4);
-                        area_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.3f);
+                        area_value.setWidth(width/3);
+                        area_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.32f);
                         year_value= (EditText) vw.findViewById(R.id.value);
                         year_value.setHeight(txtHeight);
                         year_value.setWidth(width/3);
-                        year_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.3f);
+                        year_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.32f);
                         if (vwType == OPENHOUSES_DISPLAY_ITEM){
                             area_value.setText(Double.toString(itm.getArea()));
                             area_value.setKeyListener(null);
@@ -232,19 +236,21 @@ public class OpenHousesRow extends RowView {
                         TextView name1 = (TextView) vw.findViewById(R.id.name);
                         name1.setText("Baths");
                         name.setHeight(txtHeight);
-                        name.setWidth(width/6);
-                        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
+                        name.setWidth(width/7);
+                        name.setTypeface(name.getTypeface(), Typeface.BOLD);
+                        name1.setTypeface(name.getTypeface(), Typeface.BOLD);
+                        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.27f);
                         name1.setHeight(txtHeight);
-                        name1.setWidth(width/6);
-                        name1.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
+                        name1.setWidth(width/7);
+                        name1.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.27f);
                         beds_value = (EditText) vw.findViewById(R.id.value_tarun);
                         baths_value = (EditText) vw.findViewById(R.id.value);
                         beds_value.setHeight(txtHeight);
-                        beds_value.setWidth(width/4);
-                        beds_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.3f);
+                        beds_value.setWidth(width/3);
+                        beds_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.32f);
                         baths_value.setHeight(txtHeight);
                         baths_value.setWidth(width/3);
-                        baths_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.3f);
+                        baths_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.32f);
                         if (vwType == OPENHOUSES_DISPLAY_ITEM){
                             beds_value.setText(Double.toString(itm.getBeds()));
                             baths_value.setText(Double.toString(itm.getBaths()));
