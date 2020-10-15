@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -153,10 +154,11 @@ public class AutoSpreeRow extends RowView
                         LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                         View vw = inflater.inflate(R.layout.label_text, parent,false);
                         TextView name = (TextView) vw.findViewById(R.id.name);
-                        name.setText("Name:");
+                        name.setTypeface(name.getTypeface(), Typeface.BOLD);
+                        name.setText("Name");
                         name.setHeight(txtHeight);
                         name.setWidth(width/4);
-                        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.5f);
+                        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.27f);
                         name_value = (EditText) vw.findViewById(R.id.value);
                         if (vwType == AUTOSPREE_ADD_ITEM || vwType == AUTOSPREE_EDIT_ITEM) {
                             name_value.setText(itm.getName(), TextView.BufferType.EDITABLE);
@@ -166,7 +168,7 @@ public class AutoSpreeRow extends RowView
                         }
                         name_value.setHeight(txtHeight);
                         name_value.setWidth((width/4)*3);
-                        name_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
+                        name_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.32f);
                         name_row =vw;
                         return name_row;
                     }
@@ -180,25 +182,27 @@ public class AutoSpreeRow extends RowView
                         View vw = inflater.inflate(R.layout.tarun, parent,false);
                        TextView name = (TextView) vw.findViewById(R.id.name_tarun);
                         name.setText("Model");
+                        name.setTypeface(name.getTypeface(), Typeface.BOLD);
                         name.setHeight(txtHeight);
-                        name.setWidth(width/6);
-                        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
+                        name.setWidth(width/7);
+                        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.27f);
 
                         model_value = (EditText) vw.findViewById(R.id.value_tarun);
                         model_value.setHeight(txtHeight);
-                        model_value.setWidth(width/4);
-                        model_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.3f );
+                        model_value.setWidth(width/3);
+                        model_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.32f );
 
                         TextView name1 = (TextView) vw.findViewById(R.id.name);
                         name1.setHeight(txtHeight);
-                        name1.setWidth(width/6);
-                        name1.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
+                        name1.setWidth(width/7);
+                        name1.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.27f);
 
                         name1.setText("Color");
+                        name1.setTypeface(name1.getTypeface(), Typeface.BOLD);
                         color_value = (EditText) vw.findViewById(R.id.value);
                         color_value.setHeight(txtHeight);
                         color_value.setWidth(width/3);
-                        color_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.3f);
+                        color_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.32f);
                         if (vwType == AUTOSPREE_DISPLAY_ITEM){
                             model_value.setText(itm.getModel());
                             color_value.setText(itm.getColor());
@@ -223,22 +227,24 @@ public class AutoSpreeRow extends RowView
                         TextView name = (TextView) vw.findViewById(R.id.name_tarun);
                         name.setText("Make");
                         name.setHeight(txtHeight);
-                        name.setWidth(width/6);
-                        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
+                        name.setWidth(width/7);
+                        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.27f);
+                        name.setTypeface(name.getTypeface(), Typeface.BOLD);
                         TextView name1 = (TextView) vw.findViewById(R.id.name);
                         name1.setHeight(txtHeight);
-                        name1.setWidth(width/6);
-                        name1.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
+                        name1.setWidth(width/7);
+                        name1.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.27f);
+                        name1.setTypeface(name1.getTypeface(), Typeface.BOLD);
 
                         name1.setText("Year");
                         make_value = (EditText) vw.findViewById(R.id.value_tarun);
                         make_value.setHeight(txtHeight);
-                        make_value.setWidth(width/4);
-                        make_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.3f);
+                        make_value.setWidth(width/3);
+                        make_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.32f);
                         year_value= (EditText) vw.findViewById(R.id.value);
                         year_value.setHeight(txtHeight);
                         year_value.setWidth(width/3);
-                        year_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.3f);
+                        year_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.32f);
                         if (vwType == AUTOSPREE_DISPLAY_ITEM){
                             make_value.setText(itm.getMake());
                             make_value.setKeyListener(null);
@@ -265,19 +271,21 @@ public class AutoSpreeRow extends RowView
                         TextView name1 = (TextView) vw.findViewById(R.id.name);
                         name1.setText("Miles");
                         name.setHeight(txtHeight);
-                        name.setWidth(width/6);
-                        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
+                        name.setWidth(width/7);
+                        name.setTypeface(name.getTypeface(), Typeface.BOLD);
+                        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.27f);
+                        name1.setTypeface(name1.getTypeface(), Typeface.BOLD);
                         name1.setHeight(txtHeight);
-                        name1.setWidth(width/6);
-                        name1.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
+                        name1.setWidth(width/7);
+                        name1.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.27f);
                         price_value = (EditText) vw.findViewById(R.id.value_tarun);
                         miles_value = (EditText) vw.findViewById(R.id.value);
                         price_value.setHeight(txtHeight);
-                        price_value.setWidth(width/4);
-                        price_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.3f);
+                        price_value.setWidth(width/3);
+                        price_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.32f);
                         miles_value.setHeight(txtHeight);
                         miles_value.setWidth(width/3);
-                        miles_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.3f);
+                        miles_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.32f);
                         if (vwType == AUTOSPREE_DISPLAY_ITEM){
                             price_value.setText(Double.toString(itm.getPrice()));
                             miles_value.setText(Integer.toString(itm.getMiles()));
