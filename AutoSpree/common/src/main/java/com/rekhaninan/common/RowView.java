@@ -562,14 +562,15 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
             name.setText("Ratings:    ");
             name.setHeight(txtHeight);
             name.setWidth(width/4);
-            name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.5f);
+            name.setTypeface(name.getTypeface(), Typeface.BOLD);
+            name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.27f);
             EditText name_value = (EditText) vw.findViewById(R.id.value);
             //itm.getRating()
             name_value.setText(Integer.toString(itm.getRating()));
             name_value.setKeyListener(null);
             name_value.setHeight(txtHeight);
             name_value.setWidth(width/3);
-            name_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.5f);
+            name_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.32f);
             return vw;
         }
         else {
@@ -578,8 +579,9 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
         TextView label = (TextView) vw.findViewById(R.id.ohaspree_ratings_text);
         label.setText("Ratings: ");
         label.setHeight(txtHeight);
-        label.setWidth(width/3);
-        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+        label.setTypeface(label.getTypeface(), Typeface.BOLD);
+        label.setWidth(width/4);
+        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.27f);
 
             ratingsSpnr = (Spinner) vw.findViewById(R.id.ohaspree_ratings_spnr);
             ArrayAdapter<CharSequence> ratingsAdapter = ArrayAdapter.createFromResource(ctxt,
@@ -686,13 +688,14 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
         name.setText(item);
         name.setHeight(txtHeight);
         name.setWidth(width/4);
-        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.27f);
+        name.setTypeface(name.getTypeface(), Typeface.BOLD);
         EditText name_value = (EditText) vw.findViewById(R.id.value);
         name_value.setText(value);
         name_value.setKeyListener(null);
         name_value.setHeight(txtHeight);
         name_value.setWidth((width/4)*3);
-        name_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
+        name_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.32f);
         return vw;
     }
 

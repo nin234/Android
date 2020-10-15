@@ -10,6 +10,7 @@
             tools:text="Ratings"
             tools:textSize="30sp"
             android:layout_weight=".5"
+            android:gravity="center_vertical"
             android:textSize="30sp"
             android:layout_alignParentTop="true"
             android:id="@+id/ohaspree_ratings_text"
