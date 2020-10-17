@@ -866,7 +866,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         }
         name_value.setHeight(txtHeight);
         name_value.setWidth(width);
-        name_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+        name_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.36f);
         return vw;
     }
     private View getName1RowView(ViewGroup parent, int txtHeight, int width, final Item itm)
