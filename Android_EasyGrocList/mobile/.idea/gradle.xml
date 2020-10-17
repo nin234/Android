@@ -11,7 +11,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/.." />
-            <option value="$PROJECT_DIR$/../common-release" />
+            <option value="$PROJECT_DIR$/../common-debug" />
             <option value="$PROJECT_DIR$" />
           </set>
         </option>

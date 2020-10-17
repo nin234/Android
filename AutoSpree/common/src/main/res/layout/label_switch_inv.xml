@@ -15,7 +15,7 @@
         android:id="@+id/toggle_inv"
         android:theme="@style/SCBSwitch"
         android:layout_alignParentRight="true"
-        android:gravity="center"
+        android:gravity="center_vertical"
         android:switchMinWidth="56dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="15dp"

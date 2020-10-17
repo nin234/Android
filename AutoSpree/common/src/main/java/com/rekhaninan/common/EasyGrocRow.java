@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -423,7 +424,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
 
                             }
                         else {
-                            return getNoLabelView(parent, txtHeight, width, itm.getItem());
+                            return getEasyTemplRow(parent, txtHeight, width, itm.getItem());
                         }
                     }
                 }
@@ -913,9 +914,10 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         View vw = inflater.inflate(R.layout.label_text, parent,false);
         TextView name = (TextView) vw.findViewById(R.id.name);
         name.setText("Name:");
+        name.setTypeface(name.getTypeface(), Typeface.BOLD);
         name.setHeight(txtHeight);
         //name.setWidth(width/4);
-        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+        name.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.30f );
         final EditText name_value = (EditText) vw.findViewById(R.id.value);
         String app_name = DBOperations.getInstance().getApp_name();
         if (app_name.equals(EASYGROC)) {
@@ -960,7 +962,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         }
         name_value.setHeight(txtHeight);
         name_value.setWidth((width/4)*3);
-        name_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+        name_value.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.36f);
         return vw;
     }
 
