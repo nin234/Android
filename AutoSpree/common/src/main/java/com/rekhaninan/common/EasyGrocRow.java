@@ -288,7 +288,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                 {
                     case EASYGROC_NAME_ROW:
                     {
-                        return getLabelView(parent, txtHeight, width, "Create from Check Lists");
+                        return getHeadLineLabelView(parent, txtHeight, width, "Create from Check Lists");
                     }
 
                     case EASYGROC_ADD_ROW_TWO:
@@ -1088,7 +1088,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         label.setText(labelTxt);
         label.setHeight(txtHeight);
         label.setWidth((width / 10) * 8);
-        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
+        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.35f);
         ImageView disclosure = (ImageView) vw.findViewById(R.id.label_image_icon);
         disclosure.setMaxHeight(txtHeight);
         disclosure.setMaxWidth(width / 10);
@@ -1163,6 +1163,19 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
             label.setChecked(false);
         }
 
+        return vw;
+    }
+
+    public View getHeadLineLabelView(ViewGroup parent, int txtHeight, int width, String txt)
+    {
+        LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View vw = inflater.inflate(R.layout.easy_templ_row, parent,false);
+        TextView label = (TextView) vw.findViewById(R.id.name);
+        label.setText(txt);
+        label.setHeight(txtHeight);
+        label.setWidth(width);
+        label.setTypeface(label.getTypeface(), Typeface.BOLD);
+        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.38f);
         return vw;
     }
 
