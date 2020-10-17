@@ -232,7 +232,7 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
                            {
                                if (check_row != null)
                                    return check_row;
-                               check_row = getNotesCheckView(parent, txtHeight, width, "Check List");
+                               check_row = getChildPointerView(parent, txtHeight, width, "Check List");
                                checkListRowSetOnClick(itm, true);
                                return check_row;
                            }
@@ -241,7 +241,7 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
                                if (camera_row != null)
                                    return camera_row;
 
-                               camera_row = getCameraView(parent, txtHeight, width, "Camera");
+                               camera_row = getChildPointerView(parent, txtHeight, width, "Camera");
 
                                camera_row.setOnClickListener(new View.OnClickListener() {
                                                                  @Override
@@ -267,7 +267,7 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
                            {
                                if (notes_row != null)
                                    return notes_row;
-                               notes_row = getNotesCheckView(parent, txtHeight, width, "Notes");
+                               notes_row = getChildPointerView(parent, txtHeight, width, "Notes");
                                notesRowSetOnClick(itm, true);
                                return notes_row;
                            }
@@ -281,7 +281,7 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
 
                                    return check_row;
                                }
-                               check_row = getNotesCheckView(parent, txtHeight, width, "Check List");
+                               check_row = getChildPointerView(parent, txtHeight, width, "Check List");
                                checkListRowSetOnClick(itm, false);
                                return check_row;
                            }
@@ -293,7 +293,7 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
                            {
                                if (pictures_row != null)
                                    return pictures_row;
-                               pictures_row = getPicturesView(parent, txtHeight, width);
+                               pictures_row = getChildPointerView(parent, txtHeight, width, "Pictures");
                                picturesRowSetOnClick(itm);
                                return pictures_row;
                            }
@@ -301,7 +301,7 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
                            {
                                if (notes_row != null)
                                    return notes_row;
-                               notes_row = getNotesCheckView(parent, txtHeight, width, "Notes");
+                               notes_row = getChildPointerView(parent, txtHeight, width, "Notes");
                                notesRowSetOnClick(itm, false);
                                return notes_row;
                            }
@@ -320,7 +320,7 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
                            {
                                if (pictures_row != null)
                                    return pictures_row;
-                               pictures_row = getPicturesView(parent, txtHeight, width);
+                               pictures_row = getChildPointerView(parent, txtHeight, width, "Pictures");
                                picturesRowSetOnClick(itm);
                                return pictures_row;
                            }
@@ -598,49 +598,9 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
 
     }
 
-    public View getCameraView(ViewGroup parent, int txtHeight, int width, String cameraTxt)
-    {
-        LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View vw = inflater.inflate(R.layout.label_image, parent,false);
-        ImageView camera = (ImageView) vw.findViewById(R.id.label_image_icon);
-        camera.setMaxHeight(txtHeight);
-        camera.setMaxWidth(width/4);
-       // RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 
-        //lp.setMargins(10, 5, width/10, 5);
-        //camera.setLayoutParams(lp);
 
-        TextView label = (TextView) vw.findViewById(R.id.label_image_name);
-        label.setText(cameraTxt);
-        label.setHeight(txtHeight);
-        label.setWidth((width/4)*3);
-
-        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.4f);
-         return vw;
-
-    }
-
-    public View getPicturesView(ViewGroup parent, int txtHeight, int width)
-    {
-        LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View vw = inflater.inflate(R.layout.label, parent,false);
-        TextView label = (TextView) vw.findViewById(R.id.name);
-        label.setText("Pictures");
-        label.setHeight(txtHeight);
-        label.setWidth((width/10)*8);
-        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
-        ImageView disclosure = (ImageView) vw.findViewById(R.id.label_image_icon);
-        disclosure.setMaxHeight(txtHeight);
-        disclosure.setMaxWidth(width/10);
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-
-        lp.setMargins((width/10)*8, 5, 5, 5);
-        disclosure.setLayoutParams(lp);
-
-        return vw;
-    }
-
-    private View getNotesCheckView(ViewGroup parent, int txtHeight, int width, String lblTxt)
+    private View getChildPointerView(ViewGroup parent, int txtHeight, int width, String lblTxt)
     {
         LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View vw = inflater.inflate(R.layout.label, parent,false);
@@ -648,7 +608,7 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
         label.setText(lblTxt);
         label.setHeight(txtHeight);
         label.setWidth((width/10)*8);
-        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.37f);
         ImageView disclosure = (ImageView) vw.findViewById(R.id.label_image_icon);
         disclosure.setMaxHeight(txtHeight);
         disclosure.setMaxWidth(width/10);
@@ -668,7 +628,7 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
         label.setText("Map");
         label.setHeight(txtHeight);
         label.setWidth((width/10)*8);
-        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.37f);
         ImageView disclosure = (ImageView) vw.findViewById(R.id.label_image_icon);
         disclosure.setMaxHeight(txtHeight);
         disclosure.setMaxWidth(width/10);
