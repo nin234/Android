@@ -1111,7 +1111,7 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         label.setText(itm.getItem());
         label.setHeight(txtHeight);
         label.setWidth(width);
-        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.33f );
         if (itm.isSelected())
         {
             label.setCheckMarkDrawable(R.drawable.ic_done_black_48dp);
