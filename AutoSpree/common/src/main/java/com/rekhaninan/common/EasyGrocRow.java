@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CheckedTextView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -1130,14 +1131,15 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
 
     private View getCheckedLabelView (ViewGroup parent, int txtHeight, int width, final Item itm)
     {
+        /*
         LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View vw = inflater.inflate(R.layout.label_checked, parent, false);
 
-        final CheckedTextView label = (CheckedTextView) vw.findViewById(R.id.name_checked);
+       final CheckedTextView label = (CheckedTextView) vw.findViewById(R.id.name_checked);
         label.setText(itm.getItem());
         label.setHeight(txtHeight);
         label.setWidth(width);
-        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight / 2);
+        label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.33f);
         label.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1164,6 +1166,63 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         }
 
         return vw;
+
+       */
+
+       // return vw;
+
+        LayoutInflater inflater = (LayoutInflater) ctxt.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View vw = inflater.inflate(R.layout.check_list_selection, parent, false);
+        TextView tv = (TextView) vw.findViewById(R.id.check_list_item);
+
+
+        tv.setHeight(txtHeight);
+
+        tv.setText(itm.getItem());
+        tv.setTag(itm);
+
+        //tv.setText(Item, TextView.BufferType.EDITABLE);
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.33f);
+        tv.setOnClickListener(new View.OnClickListener() {
+
+                                  @Override
+                                  public void onClick(View view) {
+
+                                      TextView tv = (TextView) view;
+                                      Item itm = (Item) tv.getTag();
+                                      CheckBox cbxi = itm.getCbx();
+                                      cbxi.setChecked(!cbxi.isChecked());
+                                      Log.d(TAG, "Toggling checkbox of shareItem " + itm.isSelected() + " cbx=" + cbxi.isChecked());
+                                      itm.setSelected(cbxi.isChecked());
+                                  }
+                              }
+
+        );
+
+        final CheckBox cbx = (CheckBox) vw.findViewById(R.id.check_list_cbx);
+        cbx.setTag(itm);
+        itm.setCbx(cbx);
+        if (itm.isSelected())
+        {
+            cbx.setChecked(true);
+        }
+
+        cbx.setOnClickListener(new View.OnClickListener() {
+                                   @Override
+                                   public void onClick(View view) {
+
+                                       CheckBox cbxi = (CheckBox) view;
+                                       Item itm = (Item) cbxi.getTag();
+                                       Log.d(TAG, "Toggling checkbox " + itm.isSelected() + " cbx=" + cbxi.isChecked());
+                                       itm.setSelected(cbxi.isChecked());
+
+                                   }
+                               }
+
+        );
+
+        return vw;
+
     }
 
     public View getHeadLineLabelView(ViewGroup parent, int txtHeight, int width, String txt)
