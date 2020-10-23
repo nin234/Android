@@ -21,6 +21,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
@@ -40,6 +41,7 @@ import static com.rekhaninan.common.Constants.MAX_BUF;
 import static com.rekhaninan.common.Constants.OPENHOUSES;
 import static com.rekhaninan.common.Constants.RCV_BUF_LEN;
 import android.content.SharedPreferences;
+import android.provider.Settings;
 
 import androidx.annotation.NonNull;
 
@@ -78,6 +80,7 @@ public class ShareMgr extends Thread {
     private long lastTokenUpdateSentTime;
     private boolean bNtwConnected;
     private AppSyncInterface appSyncInterface;
+    private String androidId;
 
     public void setActivity(MainVwActivity act) {
         activity = act;
@@ -581,7 +584,10 @@ public class ShareMgr extends Thread {
         getCurrentToken();
         share_id = 0;
         app_name = appname;
-
+        String uniqueID = UUID.randomUUID().toString();
+         androidId = Settings.Secure.getString(ctxt.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        Log.d(TAG, "Unique appId=" + uniqueID + " androidID=" + androidId);
         setShId();
         Log.i(TAG, "setShId done");
         shareDBIntf = new ShareDBIntf();
@@ -723,7 +729,7 @@ public class ShareMgr extends Thread {
         }
         lastIdSentTime = now;
         Log.d(TAG, "Getting shareId");
-        if (ntwIntf.sendMsg(MessageTranslator.createIdRequest()))
+        if (ntwIntf.sendMsg(MessageTranslator.createIdRequest(androidId)))
         {
             Log.i(TAG, "Send share_id request");
         }

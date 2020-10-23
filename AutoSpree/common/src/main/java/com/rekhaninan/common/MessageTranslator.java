@@ -44,19 +44,36 @@ public class MessageTranslator {
         return null;
     }
 
-    public static ByteBuffer createIdRequest()
+    public static ByteBuffer createIdRequest(String androidId)
     {
+
+        try
+        {
         int tridLen = 8;
         long trid = 1000;
-        int msglen =  tridLen + 8;
+        int idLen = androidId.getBytes("UTF-8").length+1;
+        int msglen =  tridLen + 8 + idLen;
         ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
 
         byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
         byteBuffer.putInt( msglen);
         byteBuffer.putInt(GET_SHARE_ID_MSG);
         byteBuffer.putLong(trid);
+        byteBuffer.put(androidId.getBytes("UTF-8"));
+        byteBuffer.put((byte)0x00);
         Log.i(TAG, "Created id request of length=" + msglen);
         return byteBuffer;
+        }
+        catch (UnsupportedEncodingException excep)
+        {
+            Log.e(TAG, "shareDevicTknMsg Unsupported encoding UTF-8 " + excep.getMessage(), excep);
+
+        }
+        catch (Exception excp)
+        {
+            Log.e (TAG, "shareDevicTknMsg Caught exception " + excp.getMessage(), excp);
+        }
+        return null;
 
     }
 
