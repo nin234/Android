@@ -234,7 +234,30 @@ public class MainVwTabbed extends Fragment {
         intent.putExtra("ViewType", HELP_SCREEN_VIEW);
         Item itm = new Item();
         intent.putExtra("item", itm);
-        intent.putExtra("HelpText", helpText);
+        switch (app_name) {
+            case AUTOSPREE: {
+
+                intent.putExtra("HelpText", helpText);
+            }
+            break;
+
+            case OPENHOUSES:
+            {
+
+                intent.putExtra("HelpText", helpText);
+            }
+            break;
+
+            case EASYGROC:{
+
+                intent.putExtra("HelpText", HelpTxt.EasyGrocTxt);
+            }
+            break;
+
+            default:
+
+                break;
+        }
         startActivity(intent);
     }
 

@@ -83,7 +83,13 @@ public class MainVwActivity extends AppCompatActivity {
                                     break;
 
                                 case PLANNER_POSN:
-                                    tab.setText("Planner");
+                                    if (app_name.equals(EASYGROC)) {
+                                        tab.setText("Planner");
+                                    }
+                                    else
+                                    {
+                                        tab.setText("Checklists");
+                                    }
                                     break;
                                 case HOME_POSN:
                                     tab.setText("Home");
