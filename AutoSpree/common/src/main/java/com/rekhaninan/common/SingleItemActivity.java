@@ -1385,7 +1385,7 @@ public class SingleItemActivity extends AppCompatActivity
             case OPENHOUSES_ADD_ITEM:
             case OPENHOUSES_EDIT_ITEM:
                 intent.putExtra("ViewType", OPENHOUSES_DISPLAY_ITEM);
-                startActivity(intent);
+                startActivityForResult(intent, OPENHOUSES_DISPLAY_ITEM_REQUEST);
                 break;
             case AUTOSPREE_ADD_ITEM:
             case AUTOSPREE_EDIT_ITEM:

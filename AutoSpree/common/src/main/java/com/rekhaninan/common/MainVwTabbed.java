@@ -244,7 +244,7 @@ public class MainVwTabbed extends Fragment {
             case OPENHOUSES:
             {
 
-                intent.putExtra("HelpText", helpText);
+                intent.putExtra("HelpText", HelpTxt.OpenHousesTxt);
             }
             break;
 
@@ -269,6 +269,7 @@ public class MainVwTabbed extends Fragment {
             case AUTOSPREE_ADD_ITEM_REQUEST:
             case OPENHOUSES_ADD_ITEM_REQUEST:
             case AUTOSPREE_DISPLAY_ITEM_REQUEST:
+            case OPENHOUSES_DISPLAY_ITEM_REQUEST:
             case EASYGROC_ADD_ITEM_REQUEST:
 
                 if (resultCode == Activity.RESULT_OK)

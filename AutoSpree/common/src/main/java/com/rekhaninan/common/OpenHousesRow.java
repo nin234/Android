@@ -1,5 +1,6 @@
 package com.rekhaninan.common;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
@@ -61,7 +62,8 @@ public class OpenHousesRow extends RowView {
         if (list == null)
             list = new ArrayList<Item>();
         intent.putParcelableArrayListExtra("check_list", (ArrayList<Item>)list);
-        ctxt.startActivity(intent);
+        Activity itemAct = (Activity) ctxt;
+        itemAct.startActivityForResult(intent, OPENHOUSES_DISPLAY_ITEM_REQUEST);
     }
 
     public  View getView(final Item itm, int position, ViewGroup parent)

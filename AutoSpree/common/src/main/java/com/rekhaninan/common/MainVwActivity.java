@@ -306,6 +306,7 @@ public class MainVwActivity extends AppCompatActivity {
                 }
                 break;
             case AUTOSPREE_DISPLAY_ITEM_REQUEST:
+            case OPENHOUSES_DISPLAY_ITEM_REQUEST:
             case EASYGROC_DELETE_ITEM_REQUEST:
                 if (resultCode == RESULT_OK)
                 {
