@@ -50,7 +50,7 @@ public class HelpTxt {
                      "and microphone to record pictures and videos.\n\n    On reaching a home to view swipe and navigate to Home tab. " +
                      "Click the ADD button on the top right corner of Home screen. This will bring the main screen view of the " +
                      "home. The street address will be auto populated with the Home address.\n\n    To view the Map of the house" +
-                     " click the Map row. The street map of the house view will be shown. " +
+                     " click the Map row. The street map of the house will be shown. " +
                      "Click the back button at the bottom to navigate back to main Home details screen.\n\n " +
                      "Click the Notes row to navigate to the Notes screen. Touch the screen. This will bring up the keyboard." +
                      " Takes notes. Click the back button (OpenHouses)  on top to navigate back to main Home details " +
@@ -66,7 +66,7 @@ public class HelpTxt {
                      "at the bottom left to exit the Camera view. Select the Pictures row to view the photos and videos. " +
                      "Touch a photo to show the single picture view. Swipe left and right on pictures to navigate to the " +
                      "next.  Click the back button to navigate back to previous screens.\n\n Enter the Price, Area, Year," +
-                     " Beds by touching the screen to bring up the keyboard. Click the Done button on the top right corner" +
+                     " Beds of the house. Touchb the screen in the Text field to bring up the keyboard. Click the Done button on the top right corner" +
                      " to save the changes.\n\n    The house details can be shared with friends.\n\n    The first step to " +
                      "share is to add Contacts to share the house with. Swipe to  the CONTACTS tab from the main screen. " +
                      "There will be a ME line. Selecting the ME line, shows the share Id of the OpenHouses on this " +
@@ -77,15 +77,68 @@ public class HelpTxt {
                      "to add the contact.\n\n   " +
                      " Swipe to the SHARE tab from the main screen. This will bring up the Share screen. Select the House " +
                      "to share. Attach Pictures dialog pop up. If YES is selected the picture roll screen is shown. " +
-                     "Select the photos to share by clicking on them. Click Done when finished or back button to cancel." +
-                     " Click the Recipients icon on the top right corner. This will bring up the Contacts screen. Select " +
-                     "the contacts to share the item. Once the contacts are selected click the Send button. This will sent" +
-                     " the list to the selected Contacts\n\n    Delete the house. Navigate to HOME tab on the main screen by " +
+                     "Select the photos to share by clicking on them. Click DONE when finished or back button to cancel." +
+                     " Click the RECIPIENTS icon on the top right corner. This will bring up the Contacts screen. Select " +
+                     "the contacts to share the item. Once the contacts are selected click the SEND button. This will sent" +
+                     " the house details to the selected Contacts\n\n    Delete the house. Navigate to HOME tab on the main screen by " +
                      "swiping. Select the House to be deleted. This will bring up the home details screen. Click the DELETE button" +
                      " on the top right corner and confirm\n\n         Edit house details.  Swipe to HOME tab on main screen. " +
-                     "Select the House to be edited.  This will bring up the home details screen. Click the Edit button on" +
+                     "Select the House to be edited.  This will bring up the home details screen. Click the EDIT button on" +
                      " the top right corner. Edit the house details as described earlier in the Add house sections. Click " +
                      "the DONE button to save the house details. Click the back button (OpenHouses) to discard edits\n\n ";
 
+    public static final String AutoSpreeTxt = "AutoSpree is a decision support tool to aid the car buying process. " +
+            "This help section shows how to use the App effectively\n\n    Create CheckLists. Swipe to the  " +
+            "Checklists tab of the AutoSpree App.\n\n    Create a new " +
+            "Checklist by clicking the ADD button on the top right hand corner. This will create and display" +
+            " a blank CheckList with title Check List 1. Start adding items to the CheckList. CheckList " +
+            "items are those items of interest when viewing or buying a car. A sample Checklist is as follows" +
+            "1)Leather seats 2) Rearview mirror 3) Collision warning. 4) Auto navigation 5)Sunroof. " +
+            "Title can be changed from Check  List 1 to a more meaningful name. Click the DONE button after adding items. " +
+            "Click the ADD button on top right hand corner to create another Checklist. Different sets of CheckLists" +
+            " can be created and saved.\n\n    AutoSpree app needs the following permissions. Access to location. This " +
+            "enables AutoSpree to autofill the seller's address and show the location of seller on the map." +
+            " Access to camera " +
+            "and microphone to record pictures and videos.\n\n    On reaching a seller's location to view swipe and navigate to Home tab. " +
+            "Click the ADD button on the top right corner of Home screen. This will bring the main screen view of the " +
+            "car. The street address will be auto populated with Seller address.\n\n    To view the Map of the car" +
+            " seller's location" +
+            " click the Map row. The street map of the seller will be shown. " +
+            "Click the back button at the bottom to navigate back to main Home details screen.\n\n " +
+            "Click the Notes row to navigate to the Notes screen. Touch the screen. This will bring up the keyboard." +
+            " Takes notes. Click the back button (AutoSpree)  on top to navigate back to main Home details " +
+            "screen.\n\n Select the Check Lists row. AutoSpree app will show a screen with all the previously " +
+            "created Checklist titles. Select the CheckList title appropriate for this car. This will show the " +
+            "Checklist. For the features present in the car being viewed place checkmarks for Checklist items " +
+            "by clicking the check box on the screen. Click the back button (AutoSpree) on the top of screen " +
+            "to navigate back to main Home details screen.\n\n Select the Camera row. This will show the Camera " +
+            "View. Click the Camera button in the center of bottom tab bar to take pictures. To take video slide " +
+            "the slider to the right. The slider is located to right of the camera button. Click the video camera" +
+            "icon to " +
+            "start video recording. Click the video camera icon again to stop recording. Click the back button " +
+            "at the bottom left to exit the Camera view. Select the Pictures row to view the photos and videos. " +
+            "Touch a photo to show the single picture view. Swipe left and right on pictures to navigate to the " +
+            "next.  Click the back button to navigate back to previous screens.\n\n Enter the Model, Color, Make, " +
+            "Year, Price, Miles of the car." +
+            " Touch the screen in the Text field to bring up the keyboard. Click the Done button on the top right corner" +
+            " to save the changes.\n\n    The car details can be shared with friends.\n\n    The first step to " +
+            "share is to add Contacts to share the car with. Swipe to  the CONTACTS tab from the main screen. " +
+            "There will be a ME line. Selecting the ME line, shows the share Id of the AutoSpree on this " +
+            "Android phone. This number uniquely identifies the App for sharing purposes. Now navigate back " +
+            "to Contacts screen by clicking  the back button (AutoSpree) on top left corner. Click the ADD " +
+            "button on top right corner to add a new contact. Enter the share Id and a name to identify the " +
+            "contact.The Share Id is the number in the ME row of your friend's AutoSpree app. Click the DONE button" +
+            "to add the contact.\n\n   " +
+            " Swipe to the SHARE tab from the main screen. This will bring up the Share screen. Select the Car " +
+            "to share. Attach Pictures dialog pop up. If YES is selected the picture roll screen is shown. " +
+            "Select the photos to share by clicking on them. Click DONE when finished or back button to cancel." +
+            " Click the RECIPIENTS icon on the top right corner. This will bring up the Contacts screen. Select " +
+            "the contacts to share the item. Once the contacts are selected click the SENT button. This will sent" +
+            " the car details to the selected Contacts\n\n    Delete the car. Navigate to HOME tab on the main screen by " +
+            "swiping. Select the Car to be deleted. This will bring up the home details screen. Click the DELETE button" +
+            " on the top right corner and confirm\n\n         Edit car details.  Swipe to HOME tab on main screen. " +
+            "Select the Car to be edited.  This will bring up the home details screen. Click the EDIT button on" +
+            " the top right corner. Edit the car details as described earlier in the Add car section. Click " +
+            "the DONE button to save the car details. Click the back button (AutoSpree) to discard edits\n\n ";
 
 }
