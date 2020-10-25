@@ -82,6 +82,10 @@ public class HelpTxt {
                      "the contacts to share the item. Once the contacts are selected click the Send button. This will sent" +
                      " the list to the selected Contacts\n\n    Delete the house. Navigate to HOME tab on the main screen by " +
                      "swiping. Select the House to be deleted. This will bring up the home details screen. Click the DELETE button" +
-                     " on the top right corner and confirm\n\n         Edit house details.  Navigate to home screen by selecting Home icon on the bottom tab bar. Select the House to be edited.  This will bring up the home details screen. Click the Edit button on the top right corner. Edit the house details as described earlier in the Add house sections. Click the Done button to save the house details. Click the Cancel button to discard edits.\n\n    Sort by option. Select the Sort by option to show the Sorting options screen. Select the row to change the sorting option. Click the brown button on the row to reverse the sorting criteria.\n\n    Search bar. This acts as a filter to limit the houses. Search based on street address, price , area etc. Checklist items are not yet included in the search."  ;
+                     " on the top right corner and confirm\n\n         Edit house details.  Swipe to HOME tab on main screen. " +
+                     "Select the House to be edited.  This will bring up the home details screen. Click the Edit button on" +
+                     " the top right corner. Edit the house details as described earlier in the Add house sections. Click " +
+                     "the DONE button to save the house details. Click the back button (OpenHouses) to discard edits\n\n ";
+
 
 }
