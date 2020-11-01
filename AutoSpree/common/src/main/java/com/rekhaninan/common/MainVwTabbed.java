@@ -46,7 +46,7 @@ public class MainVwTabbed extends Fragment {
     private static final String TAG="MainVwTabbed";
     public String app_name;
     private ArrayAdapterMainVw adapter;
-   
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

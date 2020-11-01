@@ -171,71 +171,8 @@ public class ShareMgr extends Thread {
 
     }
 
-    private long getAutoSpreeShareId()
-    {
-        try {
-            Context con = ctxt.createPackageContext("com.rekhaninan.autospree", 0);//first app package name is "com.sharedpref1"
-           if (con == null)
-           {
-               Log.i(TAG, "Cannot obtain context AutoSpree not installed?");
-               return 0;
-           }
-            SharedPreferences pref = con.getSharedPreferences(
-                    "Sharing", Context.MODE_PRIVATE);
-            if (pref == null)
-            {
-                Log.i(TAG, "Cannot obtain SharedPreferences AutoSpree not installed?");
-                return 0;
-            }
-            Log.i(TAG, "get share_id in getAutoSpreeShareId");
-            long shid = pref.getLong("share_id", 0);
-            return shid;
-        }
-        catch (PackageManager.NameNotFoundException e) {
-            Log.e("Not data shared", e.toString(), e);
-        }
-        return 0;
-    }
 
-    private long getEasyGrocShareId()
-    {
-        try {
-            Context con = ctxt.createPackageContext("com.rekhaninan.easygroclist", 0);//first app package name is "com.sharedpref1"
-            if (con == null)
-            {
-                Log.i(TAG, "Cannot obtain context EasyGrocList not installed?");
-                return 0;
-            }
-            SharedPreferences pref = con.getSharedPreferences(
-                    "Sharing", Context.MODE_PRIVATE);
-            long shid = pref.getLong("share_id", 0);
-            return shid;
-        }
-        catch (PackageManager.NameNotFoundException e) {
-            Log.e("Not data shared", e.toString(), e);
-        }
-        return 0;
-    }
 
-    private long getOpenHousesShareId()
-    {
-        try {
-            Context con = ctxt.createPackageContext("com.rekhaninan.openhouses", 0);//first app package name is "com.sharedpref1"
-            if (con == null)
-            {
-                Log.i(TAG, "Cannot obtain context OpenHouses not installed?");
-                return 0;
-            }
-            SharedPreferences pref = con.getSharedPreferences(
-                    "Sharing", Context.MODE_PRIVATE);
-            long shid = pref.getLong("share_id", 0);
-            return shid;
-        }
-        catch (PackageManager.NameNotFoundException e) {
-            Log.e("Not data shared", e.toString(), e);
-        }
-        return 0;
-    }
 
     public void processShouldUploadMessage(int upload)
     {
@@ -664,46 +601,7 @@ public class ShareMgr extends Thread {
             }
 
             Log.i(TAG, "ShareId set to " + share_id);
-            if (share_id != 0) {
-                Log.i(TAG, "ShareId set to " + share_id);
-                return;
-            }
 
-            if (share_id == 0) {
-                switch (app_name) {
-                    case OPENHOUSES: {
-                        share_id = getAutoSpreeShareId();
-                        if (share_id == 0) {
-                            share_id = getEasyGrocShareId();
-                        }
-                    }
-                    break;
-
-                    case AUTOSPREE: {
-                        share_id = getOpenHousesShareId();
-                        if (share_id == 0) {
-                            share_id = getEasyGrocShareId();
-                        }
-                    }
-                    break;
-
-                    case EASYGROC: {
-                        share_id = getOpenHousesShareId();
-                        if (share_id == 0) {
-                            share_id = getAutoSpreeShareId();
-                        }
-                    }
-                    break;
-                }
-            }
-            Log.i(TAG, "ShareId 1 set to " + share_id);
-            if (share_id != 0) {
-                Item newContact = new Item();
-                newContact.setName("ME");
-                newContact.setShare_id(share_id);
-                Log.i(TAG, "Setting share_id=" + share_id + " from shared preferences");
-                DBOperations.getInstance().insertDb(newContact, CONTACTS_ITEM_ADD_NOVWTYP);
-            }
         }
         catch(Exception e)
         {

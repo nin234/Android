@@ -126,6 +126,7 @@ public final class Constants {
     public static final int  PIC_DONE_MSG =19;
     public static final int SHOULD_UPLOAD_MSG = 20;
     public static final int SHOULD_DOWNLOAD_MSG = 21;
+    public static final int  FRIEND_LIST_MSG = 25;
 
     public static final int SHARE_POSN=0;
     public static final int CONTACTS_POSN=1;
@@ -163,5 +164,8 @@ public final class Constants {
 
     public static final String FRIENDLISTITEMSEPERATOR = ";];";
     public static final String FRIENDLISTTOKENSEPERATOR = ":]:";
+
+    public static final String FRNDLSTMSGFRNDSEPERATOR = ";";
+    public static final String FRNDLSTMSGNAMESHIDSEPERATOR = ":";
 
 }

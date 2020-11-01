@@ -1,5 +1,6 @@
 package com.rekhaninan.common;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -98,15 +99,12 @@ public class ContactsDBIntf {
         return  null;
     }
 
+
     public  boolean insertDb (Item itm, int vwType)
     {
-        if (vwType == CONTACTS_ITEM_ADD || vwType == CONTACTS_ITEM_ADD_NOVWTYP) {
-            populateContactsMp();
-            if (contactsMp.containsKey(itm.getShare_id()))
-            {
-                Log.i(TAG, "Share Id=" + itm.getShare_id() + " exists in contacts failed to insert");
-                return false;
-            }
+        try
+        {
+            if (vwType == CONTACTS_ITEM_ADD || vwType == CONTACTS_ITEM_ADD_NOVWTYP) {
             if (itm.getName().equals("ME") && vwType == CONTACTS_ITEM_ADD)
             {
                 Log.d(TAG, "Invalid name ME for contacts");
@@ -116,29 +114,25 @@ public class ContactsDBIntf {
             if (itm.getName() != null && itm.getName().length() > 0) {
                 name = itm.getName();
             }
-                SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
-                String frndList = sharing.getString("FriendList", "NoName");
-                if (frndList.equals("NoName"))
-                {
-                    frndList = Long.toString(itm.getShare_id());
-                }
-                else
-                {
-                    frndList += Long.toString(itm.getShare_id());
-                }
-                frndList += FRIENDLISTTOKENSEPERATOR;
-                frndList += name;
-                frndList += FRIENDLISTITEMSEPERATOR;
-                storeFriendList("com.rekhaninan.autospree" , frndList);
-                storeFriendList("com.rekhaninan.openhouses" , frndList);
-                storeFriendList("com.rekhaninan.easygroclist" , frndList);
-                 Item contact = new Item();
-                contact.setShare_id(itm.getShare_id());
-                contact.setName(name);
-                contactsMp.put(itm.getShare_id(), contact);
 
+            ContentValues values  = new ContentValues();;
+
+            values.put("name", name);
+            values.put("share_id", itm.getShare_id());
+
+            contactsDB.insert(contactsDbHelper.DATABASE_NAME, null, values);
+            }
 
         }
+        catch (NumberFormatException e)
+        {
+           Log.i(TAG, "Caught NumberFormatException exception" + e.getMessage());
+        }
+        catch (Exception e)
+        {
+        Log.i(TAG, "Caught Exception exception" + e.getMessage());
+        }
+
         return true;
     }
 
@@ -220,7 +214,7 @@ public class ContactsDBIntf {
         // If you change the database schema, you must increment the database version.
         public static final int DATABASE_VERSION = 1;
         public static final String DATABASE_NAME = "Contacts.db";
-        private static final String SQL_CREATE_ENTRIES = "CREATE TABLE Contacts (name TEXT, share_id INTEGER PRIMARY KEY, nickname TEXT, email TEXT, phoneno INTEGER)";
+        private static final String SQL_CREATE_ENTRIES = "CREATE TABLE Contacts (name TEXT, share_id INTEGER PRIMARY KEY(share_id))";
         private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS Contacts";
 
         public ContactsDbHelper(Context context)

@@ -8,10 +8,14 @@ import java.util.HashMap;
 import static com.rekhaninan.common.Constants.AUTOSPREE;
 import static com.rekhaninan.common.Constants.AUTOSPREE_ADD_ITEM;
 import static com.rekhaninan.common.Constants.AUTOSPREE_EDIT_ITEM;
+import static com.rekhaninan.common.Constants.CONTACTS_ITEM_ADD_NOVWTYP;
 import static com.rekhaninan.common.Constants.EASYGROC;
 import static com.rekhaninan.common.Constants.EASYGROC_ADD_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_DISPLAY_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_ADD_ITEM;
+import static com.rekhaninan.common.Constants.FRIEND_LIST_MSG;
+import static com.rekhaninan.common.Constants.FRNDLSTMSGFRNDSEPERATOR;
+import static com.rekhaninan.common.Constants.FRNDLSTMSGNAMESHIDSEPERATOR;
 import static com.rekhaninan.common.Constants.GET_SHARE_ID_RPLY_MSG;
 import static com.rekhaninan.common.Constants.ITEMSEPARATOR;
 import static com.rekhaninan.common.Constants.KEYVALSEPARATORREGEX;
@@ -203,6 +207,37 @@ public class MessageDecoder {
             ShareMgr.getInstance().refreshMainVw();
         return bRet;
 
+    }
+
+    boolean processFrndLstMessage(ByteBuffer buffer, int mlen)
+    {
+        boolean bRet = false;
+        try {
+
+            int frndLstLen = buffer.getInt(8); // 8 is offset msgId (int) + msglen(int)
+            int frndLstOffset = 12;
+            String frndLst = new String(buffer.array(), frndLstOffset, frndLstLen-1);
+            String[] frnds = frndLst.split(FRNDLSTMSGFRNDSEPERATOR);
+
+            for (String frnd : frnds)
+            {
+                String[] shIdName = frnd.split(FRNDLSTMSGNAMESHIDSEPERATOR);
+                if (shIdName.length != 2)
+                    continue;
+                Item itm = new Item();
+                itm.setShare_id(Long.parseLong(shIdName[0]));
+                itm.setName(shIdName[1]);
+                DBOperations.getInstance().insertDb(itm, CONTACTS_ITEM_ADD_NOVWTYP);
+
+            }
+
+        }
+        catch (Exception excp)
+        {
+            Log.e(TAG, "processFrndLstMessage exception  " + excp.getMessage(), excp);
+        }
+
+        return bRet;
     }
 
     boolean processShareItemMessage (ByteBuffer buffer, int mlen)
@@ -612,6 +647,12 @@ public class MessageDecoder {
                 case STORE_DEVICE_TKN_RPLY_MSG:
                 {
                     ShareMgr.getInstance().updateDeviceTknStatus();
+                }
+                break;
+
+                case FRIEND_LIST_MSG:
+                {
+
                 }
                 break;
 
