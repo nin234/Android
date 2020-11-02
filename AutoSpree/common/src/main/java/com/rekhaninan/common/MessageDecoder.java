@@ -9,6 +9,7 @@ import static com.rekhaninan.common.Constants.AUTOSPREE;
 import static com.rekhaninan.common.Constants.AUTOSPREE_ADD_ITEM;
 import static com.rekhaninan.common.Constants.AUTOSPREE_EDIT_ITEM;
 import static com.rekhaninan.common.Constants.CONTACTS_ITEM_ADD_NOVWTYP;
+import static com.rekhaninan.common.Constants.CONTACTS_ITEM_NOVWTYP;
 import static com.rekhaninan.common.Constants.EASYGROC;
 import static com.rekhaninan.common.Constants.EASYGROC_ADD_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_DISPLAY_ITEM;
@@ -214,6 +215,7 @@ public class MessageDecoder {
         boolean bRet = false;
         try {
 
+            DBOperations.getInstance().deleteAll(CONTACTS_ITEM_NOVWTYP);
             int frndLstLen = buffer.getInt(8); // 8 is offset msgId (int) + msglen(int)
             int frndLstOffset = 12;
             String frndLst = new String(buffer.array(), frndLstOffset, frndLstLen-1);
@@ -652,7 +654,7 @@ public class MessageDecoder {
 
                 case FRIEND_LIST_MSG:
                 {
-
+                    bRet = processFrndLstMessage(buffer, mlen);
                 }
                 break;
 

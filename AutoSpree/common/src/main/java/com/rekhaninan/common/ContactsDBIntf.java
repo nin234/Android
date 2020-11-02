@@ -4,10 +4,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -45,49 +47,31 @@ public class ContactsDBIntf {
         return;
     }
 
-    private void populateContactsMp()
-    {
-        contactsMp.clear();
-        SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_MULTI_PROCESS);
-        String frndList = sharing.getString("FriendList", "NoName");
-        Log.i(TAG, "Populating contactsMp with friendList=" + frndList);
-        if (!frndList.equals("NoName")) {
-            String[] listcomps = frndList.split(FRIENDLISTITEMSEPERATOR);
-            int comps = listcomps.length;
-            long share_id = 0;
-            for (int j = 0; j < comps; ++j) {
-                if (listcomps[j] == null || listcomps[j].length() < 1)
-                    continue;
 
-                String[] shareIdArr = listcomps[j].split(FRIENDLISTTOKENSEPERATOR);
-                Item contact = new Item();
-
-                share_id = Long.parseLong(shareIdArr[0]);
-                contact.setShare_id(share_id);
-                contact.setName(shareIdArr[1]);
-                contactsMp.put(share_id, contact);
-            }
-        }
-    }
 
     public List<Item> getMainViewLst()
     {
         try {
-            populateContactsMp();
+            String column_names[] = {"name",  "share_id"};
+            Cursor c =  contactsDB.query(contactsDbHelper.DATABASE_NAME, column_names, null, null, null, null, null);
+            boolean suceed = c.moveToFirst();
             List<Item> mainVwLst =  new ArrayList<Item>();
-            for (HashMap.Entry<Long, Item> entry : contactsMp.entrySet()) {
-                if (entry.getValue().getName().equals("ME")) {
-                    mainVwLst.add(entry.getValue());
+            while (suceed)
+            {
+                Item list = new Item();
+                list.setName(c.getString(c.getColumnIndexOrThrow("name")));
+                list.setShare_id(c.getLong(c.getColumnIndexOrThrow("share_id")));
+                if (list.getName().equals("ME"))
+                {
+                    mainVwLst.add(0, list);
                 }
-
+                else {
+                    mainVwLst.add(list);
+                }
+                suceed = c.moveToNext();
             }
 
-            for (HashMap.Entry<Long, Item> entry : contactsMp.entrySet()) {
-                if (!entry.getValue().getName().equals("ME")) {
-                    mainVwLst.add(entry.getValue());
-                }
-
-            }
+            c.close();
 
             return mainVwLst;
         }
@@ -136,79 +120,20 @@ public class ContactsDBIntf {
         return true;
     }
 
-    public  boolean deleteDb (Item itm, int vwType)
+    public boolean deleteAll()
     {
-        populateContactsMp();
-        contactsMp.remove(itm.getShare_id());
-        SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
-        String frndList = sharing.getString("FriendList", "NoName");
-        boolean bFirst = true;
-        if (frndList.equals("NoName"))
-        {
-            return true;
-        }
-        else
-        {
-            String[] listcomps = frndList.split(FRIENDLISTITEMSEPERATOR);
-            int comps = listcomps.length;
-            long share_id =0;
-            for (int j=0; j < comps; ++j)
-            {
-                if (listcomps[j] == null || listcomps[j].length() < 1)
-                    continue;
-                Log.i(TAG, "decoding comp j=" + j);
-
-                    String[] shareIdArr = listcomps[j].split(FRIENDLISTTOKENSEPERATOR);
-                    share_id = Long.parseLong(shareIdArr[0]);
-                if (share_id == itm.getShare_id())
-                    continue;
-                if (bFirst)
-                {
-                    bFirst = false;
-                    frndList = shareIdArr[0];
-                }
-                else
-                {
-                    frndList += shareIdArr[0];
-                }
-                frndList += FRIENDLISTTOKENSEPERATOR;
-                frndList += shareIdArr[1];
-                frndList += FRIENDLISTITEMSEPERATOR;
-
-            }
-            storeFriendList("com.rekhaninan.autospree" , frndList);
-            storeFriendList("com.rekhaninan.openhouses" , frndList);
-            storeFriendList("com.rekhaninan.easygroclist" , frndList);
-        }
+        contactsDB.delete(contactsDbHelper.DATABASE_NAME, null , null);
         return true;
     }
 
-    private void storeFriendList(String pkgname, String friendList)
+    public  boolean deleteDb (Item itm, int vwType)
     {
-        try
-        {
-            Context con = ctxt.createPackageContext(pkgname, 0);//first app package name is "com.sharedpref1"
-            if (con == null)
-            {
-                Log.i(TAG, "Cannot obtain context pkgname " + pkgname + " not installed?");
-                return ;
-            }
-            SharedPreferences pref = con.getSharedPreferences(
-                    "Sharing", Context.MODE_PRIVATE);
-            if (pref == null)
-            {
-                Log.i(TAG, "Cannot obtain SharedPreferences  " + pkgname + " not installed?");
-                return;
-            }
 
-            SharedPreferences.Editor editor = pref.edit();
-            editor.putString("FriendList", friendList);
-            editor.apply();
-        }
-        catch (PackageManager.NameNotFoundException e) {
-            Log.e("Not data shared", e.toString(), e);
-        }
+        contactsDB.delete(contactsDbHelper.DATABASE_NAME,  "share_id = ?" , new String[]{Long.toString(itm.getShare_id())});
+        return true;
     }
+
+
 
     public class ContactsDbHelper extends SQLiteOpenHelper {
         // If you change the database schema, you must increment the database version.

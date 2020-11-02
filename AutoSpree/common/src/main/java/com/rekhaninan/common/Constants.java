@@ -72,6 +72,7 @@ public final class Constants {
     public static final int EASYGROC_EDIT_VIEW=33;
     public static final int EASYGROC_SAVE_VIEW=34;
     public static final int HELP_SCREEN_VIEW=35;
+    public static final int CONTACTS_ITEM_NOVWTYP=35;
 
     public static final int AUTOSPREE_NAME_ROW=0;
     public static final int AUTOSPREE_MODEL_ROW=1;

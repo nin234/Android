@@ -177,7 +177,20 @@ public class DBOperations {
 
     }
 
-    public boolean deleteDb (Item itm, int vwType) {
+    public boolean deleteAll (int vwType) {
+       try
+       {
+
+            contactsDBIntf.deleteAll();
+       }
+       catch (Exception e)
+       {
+           Log.d(getClass().getName(), "Exception in deleteDb " + e.getMessage());
+           return false;
+       }
+       return true;
+    }
+        public boolean deleteDb (Item itm, int vwType) {
         try {
             switch (vwType) {
 
