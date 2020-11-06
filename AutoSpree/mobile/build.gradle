@@ -15,7 +15,7 @@ android {
         applicationId "com.rekhaninan.autospree"
         minSdkVersion 25
         targetSdkVersion 28
-        versionCode 6
+        versionCode 7
         versionName '1.2'
         multiDexEnabled true
 
@@ -25,7 +25,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
-            isDefault = false
+            isDefault = true
         }
         debug {
             debuggable true

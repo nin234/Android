@@ -28,7 +28,6 @@ public class ContactsDBIntf {
     private SQLiteDatabase contactsDB;
     private ContactsDbHelper contactsDbHelper;
     private Context ctxt;
-    private HashMap<Long, Item> contactsMp;
 
     private final String TAG = "ContactsDBIntf";
 
@@ -42,7 +41,6 @@ public class ContactsDBIntf {
         ctxt = ctx;
         contactsDbHelper = new ContactsDbHelper(ctxt);
         contactsDB = contactsDbHelper.getWritableDatabase();
-        contactsMp = new HashMap<>();
 
         return;
     }
@@ -53,7 +51,7 @@ public class ContactsDBIntf {
     {
         try {
             String column_names[] = {"name",  "share_id"};
-            Cursor c =  contactsDB.query(contactsDbHelper.DATABASE_NAME, column_names, null, null, null, null, null);
+            Cursor c =  contactsDB.query("Contacts", column_names, null, null, null, null, null);
             boolean suceed = c.moveToFirst();
             List<Item> mainVwLst =  new ArrayList<Item>();
             while (suceed)
@@ -77,7 +75,7 @@ public class ContactsDBIntf {
         }
         catch(Exception e)
         {
-            Log.e("Error", "Error" + e.getMessage(), e);
+            Log.e(TAG, "getMainViewLst " + e.getMessage(), e);
         }
 
         return  null;
@@ -104,7 +102,7 @@ public class ContactsDBIntf {
             values.put("name", name);
             values.put("share_id", itm.getShare_id());
 
-            contactsDB.insert(contactsDbHelper.DATABASE_NAME, null, values);
+            contactsDB.insert("Contacts", null, values);
             }
 
         }
@@ -122,14 +120,14 @@ public class ContactsDBIntf {
 
     public boolean deleteAll()
     {
-        contactsDB.delete(contactsDbHelper.DATABASE_NAME, null , null);
+        contactsDB.delete("Contacts", null , null);
         return true;
     }
 
     public  boolean deleteDb (Item itm, int vwType)
     {
 
-        contactsDB.delete(contactsDbHelper.DATABASE_NAME,  "share_id = ?" , new String[]{Long.toString(itm.getShare_id())});
+        contactsDB.delete("Contacts",  "share_id = ?" , new String[]{Long.toString(itm.getShare_id())});
         return true;
     }
 
@@ -139,7 +137,7 @@ public class ContactsDBIntf {
         // If you change the database schema, you must increment the database version.
         public static final int DATABASE_VERSION = 1;
         public static final String DATABASE_NAME = "Contacts.db";
-        private static final String SQL_CREATE_ENTRIES = "CREATE TABLE Contacts (name TEXT, share_id INTEGER PRIMARY KEY(share_id))";
+        private static final String SQL_CREATE_ENTRIES = "CREATE TABLE Contacts (name TEXT, share_id INTEGER, PRIMARY KEY(share_id))";
         private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS Contacts";
 
         public ContactsDbHelper(Context context)

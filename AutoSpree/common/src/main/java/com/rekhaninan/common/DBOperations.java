@@ -58,7 +58,7 @@ public class DBOperations {
         }
         catch (Exception e)
         {
-            Log.d(getClass().getName(), "Exception initDb Cannot find reflection class name " +dbClass);
+            Log.d(getClass().getName(), "initDb error " +e.getMessage());
             return;
         }
     }

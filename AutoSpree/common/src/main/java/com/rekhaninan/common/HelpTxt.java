@@ -1,5 +1,13 @@
 package com.rekhaninan.common;
 
+//This file also stores the release process
+
+//Change the Build Variant to release.
+//In the build.gradle file
+// change isDefault = true in release build type. From the Build option of Android Studio Build module common.
+// Build bundle/APKs build APK. This will generate the following output file
+///Users/ninan/Android/AutoSpree/mobile/build/outputs/apk/release/mobile-release.apk
+
 public class HelpTxt {
 
     public static final String EasyGrocTxt = "Create Planner lists. Click planner tab in the bottom tab bar to " +
