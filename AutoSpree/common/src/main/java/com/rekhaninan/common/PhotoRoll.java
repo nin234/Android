@@ -26,6 +26,7 @@ public class PhotoRoll extends AppCompatActivity {
     private GridViewAdapter gridAdapter;
     private final String TAG="PhotoRoll";
     private ArrayList<String> images;
+    private ArrayList<String> images_share;
     private String album_name;
     private String app_name;
     private int viewType;
@@ -76,11 +77,14 @@ public class PhotoRoll extends AppCompatActivity {
     private ArrayList<ImageItem> getData() {
         final ArrayList<ImageItem> imageItems = new ArrayList<>();
         images = new ArrayList<>();
+        images_share = new ArrayList<>();
 
         File dir = getFilesDir();
         String thumbDir = album_name + File.separator + "thumbnails";
+        String shareDir = album_name + File.separator + "sharing";
         File thumbNailsDir = new File(dir, thumbDir);
         File albumsDir = new File(dir, album_name);
+        File sharingDir = new File(dir, shareDir);
 
         if (!thumbNailsDir.exists())
         {
@@ -110,7 +114,23 @@ public class PhotoRoll extends AppCompatActivity {
                 else
                 {
                     Log.d(TAG, "No such file = " + picFile.getAbsolutePath() + " or video file=" + vidFile.getAbsolutePath());
-            }
+                }
+
+                File picShareFile = new File(sharingDir, pictureFile);
+                File vidShareFile = new File(albumsDir, videoFile);
+                if (picShareFile.exists())
+                {
+                    images_share.add(picShareFile.getAbsolutePath());
+                }
+                else if (vidShareFile.exists())
+                {
+                    images_share.add(vidShareFile.getAbsolutePath());
+                }
+                else
+                {
+                    Log.d(TAG, "No such file = " + picShareFile.getAbsolutePath() + " or video file=" + vidShareFile.getAbsolutePath());
+                }
+
             }
             else
             {
@@ -154,7 +174,7 @@ public class PhotoRoll extends AppCompatActivity {
             {
                 if (selItem)
                 {
-                    selImages.add(images.get(i))  ;
+                    selImages.add(images_share.get(i))  ;
                 }
                 ++i;
             }

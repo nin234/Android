@@ -21,6 +21,7 @@ import android.widget.Switch;
 import android.widget.CompoundButton;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -40,6 +41,7 @@ public class CameraActivity extends AppCompatActivity {
     private int orientation;
     private File album_dir;
     private File thumbNailsDir;
+    private File sharingDir;
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
     private static final String TAG="CameraActivity";
@@ -66,6 +68,12 @@ public class CameraActivity extends AppCompatActivity {
         if (!thumbNailsDir.exists())
         {
             thumbNailsDir.mkdirs();
+        }
+        String shareDir = album_name + File.separator + "sharing";
+        sharingDir = new File(dir, shareDir);
+        if (!sharingDir.exists())
+        {
+            sharingDir.mkdirs();
         }
         album_dir = new File(dir, album_name);
         if (!album_dir.exists())
@@ -213,6 +221,7 @@ public class CameraActivity extends AppCompatActivity {
 
         File thumbNail = new File(thumbNailsDir, pictureFile.getName());
         writeThumbImage(ThumbImage, thumbNail);
+        saveSharingFile(pictureFile, data);
         } catch (FileNotFoundException e) {
             Log.d(TAG, "File not found: " + e.getMessage());
         } catch (IOException e) {
@@ -222,6 +231,70 @@ public class CameraActivity extends AppCompatActivity {
             Log.d(TAG, "Caught exception: " + e.getMessage());
         }
     }
+
+    private void saveSharingFile(final File pictureFile, final byte[] data)
+    {
+        try
+        {
+            String name = pictureFile.getName();
+            String extension = "";
+
+            int i = name.lastIndexOf('.');
+            if (i > 0) {
+                extension = name.substring(i+1);
+            }
+
+            File shareFile = new File(sharingDir, name);
+            if (extension.equals("mp4"))
+            {
+                FileOutputStream fos = new FileOutputStream(shareFile);
+                fos.write(data);
+                Log.d(TAG, "Saved picture in sharing file " + shareFile);
+                fos.close();
+                return;
+            }
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            o.inSampleSize = 6;
+            // factor of downsizing the image
+
+            FileInputStream inputStream = new FileInputStream(pictureFile);
+            //Bitmap selectedBitmap = null;
+            BitmapFactory.decodeStream(inputStream, null, o);
+            inputStream.close();
+
+            // The new size we want to scale to
+            final int REQUIRED_SIZE=75;
+
+            // Find the correct scale value. It should be the power of 2.
+            int scale = 1;
+            while(o.outWidth / scale / 2 >= REQUIRED_SIZE &&
+                    o.outHeight / scale / 2 >= REQUIRED_SIZE) {
+                scale *= 2;
+            }
+
+            BitmapFactory.Options o2 = new BitmapFactory.Options();
+            o2.inSampleSize = scale;
+            inputStream = new FileInputStream(pictureFile);
+
+            Bitmap selectedBitmap = BitmapFactory.decodeStream(inputStream, null, o2);
+            inputStream.close();
+
+
+            FileOutputStream outputStream = new FileOutputStream(shareFile);
+
+            selectedBitmap.compress(Bitmap.CompressFormat.JPEG, 100 , outputStream);
+
+        } catch (FileNotFoundException e) {
+            Log.d(TAG, "File not found: " + e.getMessage());
+        } catch (IOException e) {
+            Log.d(TAG, "Error accessing file: " + e.getMessage());
+        }
+        catch (Exception e) {
+            Log.d(TAG, "Caught exception: " + e.getMessage());
+        }
+    }
+
 
     public  void setCameraDisplayOrientation(Activity activity,
                                                    int cameraId, android.hardware.Camera camera) {

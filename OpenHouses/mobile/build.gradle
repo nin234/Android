@@ -3,10 +3,11 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         oh_config {
-            keyAlias 'autospreekey'
-            keyPassword 'cr67Klp'
-            storeFile file('/Users/ninan/Dropbox/nshare/androidkeystores/autospree')
-            storePassword 'j2SnRa34'
+            keyAlias 'easygroclist'
+            keyPassword 'se45xh8sxs'
+            storeFile file('/Users/ninan/Dropbox/nshare/androidkeystores/easygroclist')
+            storePassword 'ufsd36zbhd'
+
         }
     }
     compileSdkVersion 29
@@ -15,8 +16,8 @@ android {
         applicationId "com.rekhaninan.openhouses"
         minSdkVersion 25
         targetSdkVersion 28
-        versionCode 6
-        versionName '1.2'
+        versionCode 7
+        versionName '1.3'
         multiDexEnabled true
     }
     buildTypes {

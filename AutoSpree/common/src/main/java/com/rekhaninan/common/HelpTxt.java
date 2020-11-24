@@ -8,6 +8,10 @@ package com.rekhaninan.common;
 // Build bundle/APKs build APK. This will generate the following output file
 ///Users/ninan/Android/AutoSpree/mobile/build/outputs/apk/release/mobile-release.apk
 
+//Upload key for all the apps are same
+//If upload key lost follow the procedure in this link and contact google support
+//https://support.google.com/googleplay/android-developer/answer/9842756#create
+
 public class HelpTxt {
 
     public static final String EasyGrocTxt = "Create Planner lists. Click planner tab in the bottom tab bar to " +

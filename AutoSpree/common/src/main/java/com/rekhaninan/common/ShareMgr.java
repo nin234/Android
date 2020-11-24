@@ -10,6 +10,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
+import android.os.Build;
+import android.os.FileUtils;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
@@ -44,6 +46,7 @@ import android.content.SharedPreferences;
 import android.provider.Settings;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -70,9 +73,12 @@ public class ShareMgr extends Thread {
     private long picsofar;
     private String  app_name;
     private File thumbNailsDir;
+    private File sharingDir;
     private FileOutputStream fos;
+    private FileOutputStream fosSharing;
     private final int THUMBSIZE = 100;
     private File pictureFile, pictureFileTmp;
+    private File pictureSharingFile;
     private ShareDBIntf shareDBIntf;
     private  long lastPicRcvdTime;
     private boolean sendGetItemReq;
@@ -207,6 +213,12 @@ public class ShareMgr extends Thread {
                     if (!thumbNailsDir.exists()) {
                         thumbNailsDir.mkdirs();
                     }
+                    String shareDir = itm.getAlbum_name() + File.separator + "sharing";
+                    sharingDir = new File(dir, shareDir);
+                    if (!sharingDir.exists()) {
+                        sharingDir.mkdirs();
+                    }
+
                     File album_dir = new File(dir, itm.getAlbum_name());
                     if (!album_dir.exists()) {
                         album_dir.mkdirs();
@@ -226,6 +238,10 @@ public class ShareMgr extends Thread {
                         append = true;
                     fos = new FileOutputStream(pictureFile, append);
                     Log.i(TAG, "Opened picture file for writing=" + fileName);
+
+                    String sharingFileName = sharingDir.getAbsolutePath() + File.separator + picName;
+                    pictureSharingFile = new File(sharingFileName);
+                    fosSharing = new FileOutputStream(pictureSharingFile, false);
                     return true;
 
                 }
@@ -293,6 +309,12 @@ public class ShareMgr extends Thread {
                 if (!album_dir.exists()) {
                     album_dir.mkdirs();
                 }
+                String shareDir = itm.getAlbum_name() + File.separator + "sharing";
+                sharingDir = new File(dir, shareDir);
+                if (!sharingDir.exists()) {
+                    sharingDir.mkdirs();
+                }
+
                 File mediaFileDir = new File(album_dir.getAbsolutePath() + File.separator
                         + Long.toString(shareId));
                 if (!mediaFileDir.exists())
@@ -312,6 +334,9 @@ public class ShareMgr extends Thread {
                 if (picoffset > 0)
                     append = true;
                 fos = new FileOutputStream(pictureFile, append);
+                String sharingFileName = sharingDir.getAbsolutePath() + File.separator + picName;
+                pictureSharingFile = new File(sharingFileName);
+                fosSharing = new FileOutputStream(pictureSharingFile, false);
                 return true;
             }
         }catch (FileNotFoundException excp)
@@ -480,22 +505,7 @@ public class ShareMgr extends Thread {
                 updatePicLenStored(picsofar);
                 if (picsofar >= piclen)
                 {
-                    fos.close();
-                    fos = null;
-                    piclen =0;
-                    picsofar = 0;
-                    lastPicRcvdTime = 0;
-                    rotatePictureIfReqd();
-                    if (app_name.equals(EASYGROC))
-                    {
-                        Log.i(TAG, "Finishing storing picture closing fileoutputstream fos");
-                        refreshMainVw();
-                        return;
-                    }
-                    extractAndStoreThumbNail();
-                    Log.i(TAG, "Finishing storing picture closing fileoutputstream fos");
-                    ntwIntf.sendMsg(MessageTranslator.picDoneMsg(ctxt, share_id));
-                    Log.i(TAG, "Sent picDone msg");
+                   storePicturePostProcessing();
                 }
             }
         }
@@ -506,7 +516,45 @@ public class ShareMgr extends Thread {
         return;
     }
 
+    private void storePicturePostProcessing()
+    {
+        try {
+            fos.close();
+            fos = null;
+            piclen = 0;
+            picsofar = 0;
+            lastPicRcvdTime = 0;
+            rotatePictureIfReqd();
+            if (app_name.equals(EASYGROC)) {
+                Log.i(TAG, "Finishing storing picture closing fileoutputstream fos");
+                refreshMainVw();
+                return;
+            }
+            extractAndStoreThumbNail();
+            Log.i(TAG, "Finishing storing picture closing fileoutputstream fos");
+            ntwIntf.sendMsg(MessageTranslator.picDoneMsg(ctxt, share_id));
+            Log.i(TAG, "Sent picDone msg");
+            FileInputStream fis = new FileInputStream(pictureFile);
 
+            byte[] buffer = new byte[1024];
+            int read;
+            while ((read = fis.read(buffer)) != -1) {
+                fosSharing.write(buffer, 0, read);
+            }
+            fis.close();
+            fis = null;
+
+            // write the output file
+            fosSharing.flush();
+            fosSharing.close();
+            fosSharing = null;
+
+        }
+         catch (IOException excp)
+            {
+                Log.e(TAG, "Caught IOException  exception " + excp.getMessage(), excp);
+            }
+    }
 
     public void  start_thr(Context ctx, String appname)
     {

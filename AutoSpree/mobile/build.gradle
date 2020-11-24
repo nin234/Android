@@ -3,10 +3,11 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         config {
-            keyAlias 'autospreekey'
-            keyPassword 'cr67Klp'
-            storeFile file('/Users/ninan/Dropbox/nshare/androidkeystores/autospree')
-            storePassword 'j2SnRa34'
+
+            keyAlias 'easygroclist'
+            keyPassword 'se45xh8sxs'
+            storeFile file('/Users/ninan/Dropbox/nshare/androidkeystores/easygroclist')
+            storePassword 'ufsd36zbhd'
         }
     }
     compileSdkVersion 29
@@ -25,7 +26,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
-            isDefault = true
+            isDefault = false
         }
         debug {
             debuggable true
