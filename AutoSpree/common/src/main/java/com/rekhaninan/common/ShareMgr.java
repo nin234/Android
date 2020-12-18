@@ -155,6 +155,21 @@ public class ShareMgr extends Thread {
         shareDeviceTkn();
     }
 
+    public long getMaxShareId() {
+        return maxShareId;
+    }
+
+    public void setMaxShareId(long maxShareId) {
+        this.maxShareId = maxShareId;
+        SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharing.edit();
+        editor.putLong("MaxShareId", maxShareId);
+        editor.commit();
+        Log.i(TAG, "Setting maxShareId=" + maxShareId);
+    }
+
+    private long maxShareId;
+
     public boolean isbUpdateTkn() {
         return bUpdateTkn;
     }
@@ -726,6 +741,15 @@ public class ShareMgr extends Thread {
         resp = ByteBuffer.allocate(RCV_BUF_LEN);
 
         bUpdateTkn = sharing.getBoolean("update", true);
+
+        maxShareId = sharing.getLong("MaxShareId", 0);
+        if (maxShareId == 0)
+        {
+            maxShareId = 2000;
+            SharedPreferences.Editor editor = sharing.edit();
+            editor.putLong("MaxShareId", maxShareId);
+            editor.commit();
+        }
         Log.i(TAG, "update token=" + bUpdateTkn);
 
         downLoadAlexaItems();

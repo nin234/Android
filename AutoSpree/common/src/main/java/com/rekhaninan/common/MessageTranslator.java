@@ -208,7 +208,7 @@ public class MessageTranslator {
             SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
             String picName = sharing.getString("PicName", "NoName");
             int uuidLen = uuid.getBytes("UTF-8").length +1;
-            int msglen = uuidLen + 28 + picName.getBytes("UTF-8").length + 1;
+            int msglen = uuidLen + 36 + picName.getBytes("UTF-8").length + 1;
             ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
             byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
             byteBuffer.putInt(msglen);
@@ -226,6 +226,7 @@ public class MessageTranslator {
             byteBuffer.put(picName.getBytes("UTF-8"));
             byteBuffer.put((byte)0x00);
             byteBuffer.putLong(sharing.getLong("PicShareId", 0));
+            byteBuffer.putLong(sharing.getLong("MaxShareId", 0));
             return byteBuffer;
         }
         catch (UnsupportedEncodingException excep)

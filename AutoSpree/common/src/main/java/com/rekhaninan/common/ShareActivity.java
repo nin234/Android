@@ -1,5 +1,6 @@
 package com.rekhaninan.common;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 
@@ -8,6 +9,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -550,6 +553,68 @@ public class ShareActivity extends AppCompatActivity {
         startActivityForResult(intent, SHARE_PICTURE_ACTIVITY_REQUEST);
     }
 
+    private boolean validateShareId(long shareId)
+    {
+
+        long maxShareId = ShareMgr.getInstance().getMaxShareId();
+        boolean validShareId = true;
+        String errMsg = "Invalid Share Id";
+        if (maxShareId == shareId)
+        {
+            errMsg = "Invalid Share Id. Share Id of a Contact cannot be your Share Id";
+            validShareId = false;
+        }
+        else if (shareId < 1000 || shareId > maxShareId)
+        {
+            errMsg = "Invalid ShareId. To obtain share Id of a " +
+                "Contact click the ME row on Contacts screen. This will bring up the Contact " +
+                "Details screen with Share Id. For example the Share Id of the App on this" +
+                    " iPhone is " + ShareMgr.getInstance().getShare_id();
+            validShareId = false;
+        }
+
+        if (validShareId == false)
+        {
+            AlertDialog alertDialog = new AlertDialog.Builder(ShareActivity.this).create();
+            alertDialog.setTitle("Invalid Share Id");
+            alertDialog.setMessage(errMsg);
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+            alertDialog.show();
+
+        }
+        return validShareId;
+    }
+    private void addNewContact()
+    {
+        ArrayAdapterMainVw  adapter = (ArrayAdapterMainVw)mListView.getAdapter();
+        Item newContact = adapter.getNewContact();
+        if (newContact.getShare_id() != 0)
+        {
+            if (validateShareId(newContact.getShare_id()) == false)
+            {
+                return;
+            }
+            if (newContact.getName() == null || newContact.getName().equals(""))
+            {
+                newContact.setName(Long.toString(newContact.getShare_id()));
+            }
+            DBOperations.getInstance().insertDb(newContact, CONTACTS_ITEM_ADD);
+            updateFriendList();
+        }
+
+        Intent intent = new Intent();
+        intent.putExtra("contact_name", newContact.getName());
+        intent.putExtra("refresh", "Needed");
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
@@ -606,28 +671,9 @@ public class ShareActivity extends AppCompatActivity {
         {
             switch (viewType)
             {
-
-
                 case CONTACTS_ITEM_ADD:
                 {
-                    ArrayAdapterMainVw  adapter = (ArrayAdapterMainVw)mListView.getAdapter();
-                    Item newContact = adapter.getNewContact();
-                    if (newContact.getShare_id() != 0)
-                    {
-                        if (newContact.getName() == null || newContact.getName().equals(""))
-                        {
-                            newContact.setName(Long.toString(newContact.getShare_id()));
-                        }
-                        DBOperations.getInstance().insertDb(newContact, CONTACTS_ITEM_ADD);
-                        updateFriendList();
-                    }
-
-                    Intent intent = new Intent();
-                    intent.putExtra("contact_name", newContact.getName());
-                    intent.putExtra("refresh", "Needed");
-                    setResult(RESULT_OK, intent);
-                    finish();
-
+                  addNewContact();
                 }
                 break;
 

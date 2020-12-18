@@ -129,6 +129,9 @@ public final class Constants {
     public static final int SHOULD_DOWNLOAD_MSG = 21;
     public static final int  FRIEND_LIST_MSG = 25;
 
+    public static final int  TOTAL_PIC_LEN_MSG = 1500;
+    public static final int  UPDATE_MAX_SHARE_ID_MSG = 1501;
+
     public static final int SHARE_POSN=0;
     public static final int CONTACTS_POSN=1;
     public static final int PLANNER_POSN=2;

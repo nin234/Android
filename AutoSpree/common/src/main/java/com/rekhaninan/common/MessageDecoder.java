@@ -32,6 +32,7 @@ import static com.rekhaninan.common.Constants.SHOULD_UPLOAD_MSG;
 import static com.rekhaninan.common.Constants.STORE_DEVICE_TKN_RPLY_MSG;
 import static com.rekhaninan.common.Constants.STORE_TRNSCTN_ID_RPLY_MSG;
 import static com.rekhaninan.common.Constants.TEMPLLISTSEPERATOR;
+import static com.rekhaninan.common.Constants.UPDATE_MAX_SHARE_ID_MSG;
 
 /**
  * Created by ninanthomas on 2/23/17.
@@ -210,6 +211,15 @@ public class MessageDecoder {
 
     }
 
+    boolean processUpdateMaxShareIdMessage(ByteBuffer buffer, int mlen)
+    {
+        int offset = 8;
+        int shareId =0;
+        shareId = (int) buffer.getLong(offset);
+        ShareMgr.getInstance().setMaxShareId(shareId);
+        return true;
+    }
+
     boolean processFrndLstMessage(ByteBuffer buffer, int mlen)
     {
         boolean bRet = false;
@@ -237,6 +247,7 @@ public class MessageDecoder {
         catch (Exception excp)
         {
             Log.e(TAG, "processFrndLstMessage exception  " + excp.getMessage(), excp);
+            return false;
         }
 
         return bRet;
@@ -655,6 +666,12 @@ public class MessageDecoder {
                 case FRIEND_LIST_MSG:
                 {
                     bRet = processFrndLstMessage(buffer, mlen);
+                }
+                break;
+
+                case UPDATE_MAX_SHARE_ID_MSG:
+                {
+                    bRet = processUpdateMaxShareIdMessage(buffer, mlen);
                 }
                 break;
 
