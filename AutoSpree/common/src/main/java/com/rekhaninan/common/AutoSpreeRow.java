@@ -62,7 +62,6 @@ public class AutoSpreeRow extends RowView
 
     private void displayAutoSpreeItem(View view, String carname)
     {
-       // TextView tv = (TextView) view;
         Item itm = (Item)view.getTag();
         Log.d(getClass().getName(), "Clicked row " + carname);
         Intent intent = new Intent(ctxt, SingleItemActivity.class);
