@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/-2106545470/OpenHouses.iml" filepath="$PROJECT_DIR$/.idea/modules/-2106545470/OpenHouses.iml" group="OpenHouses" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-186381794/common-debug.iml" filepath="$PROJECT_DIR$/.idea/modules/-186381794/common-debug.iml" group="OpenHouses/common-debug" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/824628498/common-release.iml" filepath="$PROJECT_DIR$/.idea/modules/824628498/common-release.iml" group="OpenHouses/common-release" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/mobile.iml" filepath="$PROJECT_DIR$/.idea/modules/mobile.iml" group="OpenHouses/mobile" />
     </modules>
   </component>

@@ -155,6 +155,45 @@ public class ShareMgr extends Thread {
         shareDeviceTkn();
     }
 
+    public void setHostPort(String host, int port)
+    {
+        SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharing.edit();
+        switch (app_name) {
+            case AUTOSPREE:{
+                editor.putString("autospree_host", host);
+                editor.putInt("autospree_port", port);
+            }
+            break;
+
+            case OPENHOUSES: {
+                editor.putString("openhouses_host", host);
+                editor.putInt("openhouses_port", port);
+            }
+            break;
+
+            case EASYGROC:
+            {
+                editor.putString("easygroc_host", host);
+                editor.putInt("easygroc_port", port);
+            }
+            break;
+
+            default:
+                break;
+        }
+
+        editor.commit();
+
+        ntwIntf = new NtwIntf(ctxt);
+        pDecoder = new MessageDecoder();
+        ntwIntf.setConnectionDetails(app_name);
+        if (share_id > 0)
+        {
+            getItems();
+        }
+    }
+
     public long getMaxShareId() {
         return maxShareId;
     }
@@ -745,7 +784,7 @@ public class ShareMgr extends Thread {
         maxShareId = sharing.getLong("MaxShareId", 0);
         if (maxShareId == 0)
         {
-            maxShareId = 2000;
+            maxShareId = 4000;
             SharedPreferences.Editor editor = sharing.edit();
             editor.putLong("MaxShareId", maxShareId);
             editor.commit();

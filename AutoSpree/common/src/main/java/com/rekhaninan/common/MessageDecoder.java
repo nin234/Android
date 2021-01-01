@@ -26,6 +26,7 @@ import static com.rekhaninan.common.Constants.OPENHOUSES_ADD_ITEM;
 import static com.rekhaninan.common.Constants.OPENHOUSES_EDIT_ITEM;
 import static com.rekhaninan.common.Constants.PIC_METADATA_MSG;
 import static com.rekhaninan.common.Constants.PIC_MSG;
+import static com.rekhaninan.common.Constants.SHARE_ID_REMOTE_HOST_MSG;
 import static com.rekhaninan.common.Constants.SHARE_ITEM_MSG;
 import static com.rekhaninan.common.Constants.SHARE_TEMPL_ITEM_MSG;
 import static com.rekhaninan.common.Constants.SHOULD_UPLOAD_MSG;
@@ -144,6 +145,19 @@ public class MessageDecoder {
         return true;
     }
 
+    boolean processRemoteShareIdHostPortMessage(ByteBuffer buffer, int mlen)
+    {
+        int hostLenOffset = 8;
+        int hostlen = buffer.getInt(hostLenOffset);
+        int hostOffset = hostLenOffset + 4;
+        String host = new String(buffer.array(), hostOffset, hostlen-1);
+        int portOffset = hostOffset + hostlen;
+        int port = buffer.getInt(portOffset);
+        ShareMgr.getInstance().setHostPort(host, port);
+
+        return true;
+    }
+
     boolean processPicMetaDataMessage(ByteBuffer buffer, int mlen)
     {
 
@@ -210,6 +224,7 @@ public class MessageDecoder {
         return bRet;
 
     }
+
 
     boolean processUpdateMaxShareIdMessage(ByteBuffer buffer, int mlen)
     {
@@ -672,6 +687,12 @@ public class MessageDecoder {
                 case UPDATE_MAX_SHARE_ID_MSG:
                 {
                     bRet = processUpdateMaxShareIdMessage(buffer, mlen);
+                }
+                break;
+
+                case SHARE_ID_REMOTE_HOST_MSG:
+                {
+                    bRet = processRemoteShareIdHostPortMessage(buffer, mlen);
                 }
                 break;
 

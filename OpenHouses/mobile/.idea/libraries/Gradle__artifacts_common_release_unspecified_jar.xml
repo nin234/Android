@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: artifacts:common-release:unspecified@jar">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../common-release/build/.transforms/e367253383f6f99db74d6dcf96d0ec47/jetified-common-release/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../common-release/build/.transforms/e367253383f6f99db74d6dcf96d0ec47/jetified-common-release/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

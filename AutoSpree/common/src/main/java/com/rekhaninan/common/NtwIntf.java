@@ -2,6 +2,7 @@ package com.rekhaninan.common;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.os.SystemClock;
 
@@ -66,32 +67,55 @@ public class NtwIntf {
 
     public void setConnectionDetails (String  app_name)
     {
-
+        SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
         switch (app_name)
         {
-            case EASYGROC:
+            case EASYGROC: {
+                String host = sharing.getString("easygroc_host", "None");
+                if (host.equals("None")) {
                     connectAddr = "easygroclist.ddns.net";
                     if (useSSL)
                         connectPort = 16805;
                     else
                         connectPort = 16791;
-                break;
+                }
+                else
+                {
+                    connectAddr = host;
+                    connectPort = sharing.getInt("easygroc_port", 0);
+                }
+            }
+            break;
 
-            case OPENHOUSES:
+            case OPENHOUSES: {
+                String host = sharing.getString("openhouses_host", "None");
+                if (host.equals("None")) {
                     connectAddr = "openhouses.ddns.net";
                     if (useSSL)
                         connectPort = 16803;
                     else
                         connectPort = 16789;
-                break;
+                } else {
+                    connectAddr = host;
+                    connectPort = sharing.getInt("openhouses_port", 0);
+                }
+            }
+            break;
 
-            case AUTOSPREE:
-                connectAddr = "autospree.ddns.net";
-                if (useSSL)
-                    connectPort = 16804;
-                else
-                    connectPort = 16790;
-                break;
+            case AUTOSPREE:{
+                String host = sharing.getString("autospree_host", "None");
+                if (host.equals("None")) {
+                    connectAddr = "autospree.ddns.net";
+                    if (useSSL)
+                        connectPort = 16804;
+                    else
+                        connectPort = 16790;
+                } else {
+                    connectAddr = host;
+                    connectPort = sharing.getInt("autospree_port", 0);
+                }
+            }
+            break;
 
             default:
                 break;
