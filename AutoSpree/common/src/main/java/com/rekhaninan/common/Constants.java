@@ -10,6 +10,10 @@ public final class Constants {
     public static final String OPENHOUSES= "OpenHouses";
     public static final String EASYGROC= "EasyGrocList";
 
+    public static final int OPENHOUSES_ID=0;
+    public static final int AUTOSPREE_ID = 1;
+    public static final int EASYGROC_ID = 1;
+
     public static final  int NOTES_ACTIVITY_REQUEST=1;
     public static final  int PICTURE_ACTIVITY_REQUEST=2;
     public static final  int IMAGE_SWIPE_ACTIVITY_REQUEST=3;
@@ -132,6 +136,7 @@ public final class Constants {
     public static final int  TOTAL_PIC_LEN_MSG = 1500;
     public static final int  UPDATE_MAX_SHARE_ID_MSG = 1501;
     public static final int  SHARE_ID_REMOTE_HOST_MSG = 1502;
+    public static final int  GET_REMOTE_HOST_MSG = 1503;
 
     public static final int SHARE_POSN=0;
     public static final int CONTACTS_POSN=1;

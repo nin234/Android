@@ -8,6 +8,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import static com.rekhaninan.common.Constants.GET_ITEMS_MSG;
+import static com.rekhaninan.common.Constants.GET_REMOTE_HOST_MSG;
 import static com.rekhaninan.common.Constants.GET_SHARE_ID_MSG;
 import static com.rekhaninan.common.Constants.PIC_DONE_MSG;
 import static com.rekhaninan.common.Constants.PIC_METADATA_MSG;
@@ -77,6 +78,24 @@ public class MessageTranslator {
 
     }
 
+    public static ByteBuffer getRemoteHostPortMsg(long shareId, int appId)
+    {
+        try {
+            int msglen = 3*4 + 8;
+            ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
+            byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
+            byteBuffer.putInt(msglen);
+            byteBuffer.putInt(GET_REMOTE_HOST_MSG);
+            byteBuffer.putInt(appId);
+            byteBuffer.putLong(shareId);
+            return byteBuffer;
+        }
+        catch (Exception excp)
+        {
+            Log.e (TAG, "shareDevicTknMsg Caught exception " + excp.getMessage(), excp);
+        }
+        return null;
+    }
     public static ByteBuffer shareDevicTknMsg(long shareId, String deviceTkn)
     {
         try
@@ -199,6 +218,7 @@ public class MessageTranslator {
         }
         return null;
     }
+
 
     public static ByteBuffer getItemsMsg(Context ctxt, long shareId)
     {

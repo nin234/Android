@@ -34,13 +34,16 @@ import java.util.concurrent.locks.ReentrantLock;
 
 
 import static com.rekhaninan.common.Constants.AUTOSPREE;
+import static com.rekhaninan.common.Constants.AUTOSPREE_ID;
 import static com.rekhaninan.common.Constants.CONTACTS_ITEM_ADD_NOVWTYP;
 import static com.rekhaninan.common.Constants.CONTACTS_MAINVW;
 import static com.rekhaninan.common.Constants.EASYGROC;
 import static com.rekhaninan.common.Constants.EASYGROC_ADD_ITEM;
+import static com.rekhaninan.common.Constants.EASYGROC_ID;
 import static com.rekhaninan.common.Constants.MAINVW;
 import static com.rekhaninan.common.Constants.MAX_BUF;
 import static com.rekhaninan.common.Constants.OPENHOUSES;
+import static com.rekhaninan.common.Constants.OPENHOUSES_ID;
 import static com.rekhaninan.common.Constants.RCV_BUF_LEN;
 import android.content.SharedPreferences;
 import android.provider.Settings;
@@ -83,8 +86,10 @@ public class ShareMgr extends Thread {
     private  long lastPicRcvdTime;
     private boolean sendGetItemReq;
     private long lastIdSentTime;
+    private long lastRemoteHostSentTime;
     private long lastTokenUpdateSentTime;
     private boolean bNtwConnected;
+    private boolean bGetRemoteHostPort;
     private AppSyncInterface appSyncInterface;
     private String androidId;
 
@@ -404,6 +409,25 @@ public class ShareMgr extends Thread {
         return false;
     }
 
+    private int getAppId()
+    {
+        switch (app_name)
+        {
+            case AUTOSPREE:
+                return AUTOSPREE_ID;
+
+            case OPENHOUSES:
+                return OPENHOUSES_ID;
+
+            case EASYGROC:
+                return EASYGROC_ID;
+            default:
+                break;
+
+        }
+        return AUTOSPREE_ID;
+    }
+
     public void setPicDetails (long shareId, String picName, String itemName, long picLen, int picoffset)
     {
         lastPicRcvdTime = System.currentTimeMillis();
@@ -612,7 +636,8 @@ public class ShareMgr extends Thread {
 
     public void  start_thr(Context ctx, String appname)
     {
-        Log.i(TAG, "Starting share mgr thread");
+        app_name = appname;
+        Log.i(TAG, "Starting share mgr thread for app=" + app_name);
 
         handler = new Handler(Looper.getMainLooper());
         Log.i(TAG, "Got handler handle");
@@ -622,7 +647,7 @@ public class ShareMgr extends Thread {
         Log.d(TAG, "Current device token=" + devTkn);
         getCurrentToken();
         share_id = 0;
-        app_name = appname;
+
         String uniqueID = UUID.randomUUID().toString();
          androidId = Settings.Secure.getString(ctxt.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
@@ -703,7 +728,40 @@ public class ShareMgr extends Thread {
             }
 
             Log.i(TAG, "ShareId set to " + share_id);
+            SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
+            if (share_id > 0)
+            {
+                return;
+            }
+            switch (app_name)
+            {
+                case EASYGROC: {
+                    String host = sharing.getString("easygroc_host", "None");
+                    if (host.equals("None")) {
+                        bGetRemoteHostPort = true;
+                    }
+                }
+                break;
 
+                case OPENHOUSES: {
+                    String host = sharing.getString("openhouses_host", "None");
+                    if (host.equals("None")) {
+                        bGetRemoteHostPort = true;
+                    }
+                }
+                break;
+
+                case AUTOSPREE:{
+                    String host = sharing.getString("autospree_host", "None");
+                    if (host.equals("None")) {
+                        bGetRemoteHostPort = true;
+                    }
+                }
+                break;
+
+                default:
+                    break;
+            }
         }
         catch(Exception e)
         {
@@ -717,6 +775,32 @@ public class ShareMgr extends Thread {
         return;
     }
 
+    private void getRemoteHostPort()
+    {
+        if (bGetRemoteHostPort == false)
+        {
+            return;
+        }
+        long now = System.currentTimeMillis();
+        if (lastRemoteHostSentTime > 0)
+        {
+            if (now < lastRemoteHostSentTime + 1000*60)
+                return;
+        }
+        lastRemoteHostSentTime = now;
+        Log.d(TAG, "Getting remote host and port");
+        if (ntwIntf.sendMsg(MessageTranslator.getRemoteHostPortMsg(share_id, getAppId())))
+        {
+            Log.i(TAG, "Send GET_REMOTE_HOST_PORT request");
+        }
+        else
+        {
+            Log.d(TAG, "Failed to send GET_REMOTE_HOST_PORT request");
+        }
+
+        return;
+    }
+
     private void getIdIfRequired()
     {
         if (share_id != 0)
@@ -724,7 +808,7 @@ public class ShareMgr extends Thread {
         long now = System.currentTimeMillis();
         if (lastIdSentTime >0)
         {
-            if (now < lastIdSentTime+1000*120)
+            if (now < lastIdSentTime+1000*60)
                 return;
         }
         lastIdSentTime = now;
@@ -757,14 +841,17 @@ public class ShareMgr extends Thread {
 
     @Override
     public void run() {
+        Log.i(TAG, "Start the running for app=" + app_name);
         uploadPicOffset = 0;
         bSendPic = false;
         bSendPicMetaData = true;
         lastIdSentTime  = 0;
+        lastRemoteHostSentTime = 0;
         lastPicRcvdTime = 0;
         lastPicRcvdTime = 0;
         sendGetItemReq = false;
         bNtwConnected = true;
+        bGetRemoteHostPort = false;
 
 
             // TODO: Implement this method to send any registration to your app's servers.
@@ -815,6 +902,7 @@ public class ShareMgr extends Thread {
                 }
                 getIdIfRequired();
                 shareDeviceTkn();
+                getRemoteHostPort();
                 sendMsgs();
 
 
@@ -857,7 +945,7 @@ public class ShareMgr extends Thread {
 
     public void getItems()
     {
-        if (share_id <= 0)
+        if (share_id <= 0 || bGetRemoteHostPort)
         {
             return;
         }
@@ -906,7 +994,7 @@ public class ShareMgr extends Thread {
 
         if (devTkn.equals("None"))
             return;
-        if (share_id == 0)
+        if (share_id == 0 || bGetRemoteHostPort)
         {
             return;
         }
