@@ -637,6 +637,7 @@ public class ShareMgr extends Thread {
     public void  start_thr(Context ctx, String appname)
     {
         app_name = appname;
+        MessageTranslator.setAppId(NshareUtil.appNameToAppId(app_name));
         Log.i(TAG, "Starting share mgr thread for app=" + app_name);
 
         handler = new Handler(Looper.getMainLooper());

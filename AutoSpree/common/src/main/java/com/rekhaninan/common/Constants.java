@@ -9,10 +9,14 @@ public final class Constants {
     public static final String AUTOSPREE = "AutoSpree";
     public static final String OPENHOUSES= "OpenHouses";
     public static final String EASYGROC= "EasyGrocList";
+    public static final String SMARTMSG = "SmartMsg";
+    public static final String NSHARELIST = "NShareList";
 
     public static final int OPENHOUSES_ID=0;
     public static final int AUTOSPREE_ID = 1;
     public static final int EASYGROC_ID = 1;
+    public static final int SMARTMSG_ID = 3;
+    public static final int NSHARELIST_ID = 4;
 
     public static final  int NOTES_ACTIVITY_REQUEST=1;
     public static final  int PICTURE_ACTIVITY_REQUEST=2;
@@ -137,6 +141,27 @@ public final class Constants {
     public static final int  UPDATE_MAX_SHARE_ID_MSG = 1501;
     public static final int  SHARE_ID_REMOTE_HOST_MSG = 1502;
     public static final int  GET_REMOTE_HOST_MSG = 1503;
+
+    public static final int  GET_SHARE_ID_1_MSG = 101;
+    public static final int GET_SHARE_ID_RPLY_1_MSG = 102;
+
+            public static final int STORE_DEVICE_TKN_1_MSG = 111;
+            public static final int STORE_DEVICE_TKN_RPLY_1_MSG = 112;
+
+            public static final int GET_ITEMS_1_MSG = 113;
+            public static final int GET_ITEMS_1_RPLY_MSG = 114;
+            public static final int STORE_FRIEND_LIST_1_MSG =  105;
+            public static final int STORE_FRIEND_LIST_RPLY_1_MSG = 106;
+
+            public static final int SHARE_ITEM_1_MSG = 109;
+            public static final int SHARE_ITEM_RPLY_1_MSG = 110;
+            public static final int GET_REMOTE_HOST_1_MSG = 1504;
+
+            public static final int PIC_METADATA_1_MSG = 115;
+            public static final int PIC_METADATA_RPLY_1_MSG = 116;
+            public static final int PIC_1_MSG = 117;
+            public static final int PIC_RPLY_1_MSG = 118;
+            public static final int SHOULD_DOWNLOAD_1_MSG = 121;
 
     public static final int SHARE_POSN=0;
     public static final int CONTACTS_POSN=1;

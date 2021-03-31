@@ -18,6 +18,7 @@ import static com.rekhaninan.common.Constants.SHARE_TEMPL_ITEM_MSG;
 import static com.rekhaninan.common.Constants.SHOULD_DOWNLOAD_MSG;
 import static com.rekhaninan.common.Constants.STORE_DEVICE_TKN_MSG;
 import static com.rekhaninan.common.Constants.STORE_FRIEND_LIST_MSG;
+import static com.rekhaninan.common.Constants.*;
 
 /**
  * Created by ninanthomas on 2/13/17.
@@ -27,14 +28,37 @@ public class MessageTranslator {
 
     private static final String TAG="MessageTranslator";
 
+    public static int getAppId() {
+        return APP_ID;
+    }
+
+    public static void setAppId(int appId) {
+        APP_ID = appId;
+    }
+
+    private static int APP_ID;
+
+
     public static ByteBuffer sharePicMsg(byte[] msg, int len)
     {
         try {
             int msglen = len + 8;
+            if (APP_ID > SMARTMSG_ID)
+            {
+                msglen += 4;
+            }
             ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
             byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
             byteBuffer.putInt(msglen);
-            byteBuffer.putInt(PIC_MSG);
+            if (APP_ID > SMARTMSG_ID)
+            {
+                byteBuffer.putInt(PIC_1_MSG);
+                byteBuffer.putInt(APP_ID);
+            }
+            else
+            {
+                byteBuffer.putInt(PIC_MSG);
+            }
             byteBuffer.put(msg, 0, len);
             return byteBuffer;
         }
@@ -45,25 +69,24 @@ public class MessageTranslator {
         return null;
     }
 
-    public static ByteBuffer createIdRequest(String androidId)
+    private static ByteBuffer createIdRequestNoAppId(String androidId)
     {
-
         try
         {
-        int tridLen = 8;
-        long trid = 1000;
-        int idLen = androidId.getBytes("UTF-8").length+1;
-        int msglen =  tridLen + 8 + idLen;
-        ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
+            int tridLen = 8;
+            long trid = 1000;
+            int idLen = androidId.getBytes("UTF-8").length+1;
+            int msglen =  tridLen + 8 + idLen;
+            ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
 
-        byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
-        byteBuffer.putInt( msglen);
-        byteBuffer.putInt(GET_SHARE_ID_MSG);
-        byteBuffer.putLong(trid);
-        byteBuffer.put(androidId.getBytes("UTF-8"));
-        byteBuffer.put((byte)0x00);
-        Log.i(TAG, "Created id request of length=" + msglen);
-        return byteBuffer;
+            byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
+            byteBuffer.putInt( msglen);
+            byteBuffer.putInt(GET_SHARE_ID_MSG);
+            byteBuffer.putLong(trid);
+            byteBuffer.put(androidId.getBytes("UTF-8"));
+            byteBuffer.put((byte)0x00);
+            Log.i(TAG, "Created id request of length=" + msglen);
+            return byteBuffer;
         }
         catch (UnsupportedEncodingException excep)
         {
@@ -75,6 +98,51 @@ public class MessageTranslator {
             Log.e (TAG, "shareDevicTknMsg Caught exception " + excp.getMessage(), excp);
         }
         return null;
+    }
+
+    private static ByteBuffer createIdRequestAppId(String androidId)
+    {
+        try
+        {
+            int tridLen = 8;
+            long trid = 1000;
+            int idLen = androidId.getBytes("UTF-8").length+1;
+            int msglen =  tridLen + 12 + idLen;
+            ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
+
+            byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
+            byteBuffer.putInt( msglen);
+            byteBuffer.putInt(GET_SHARE_ID_1_MSG);
+            byteBuffer.putInt(APP_ID);
+            byteBuffer.putLong(trid);
+            byteBuffer.put(androidId.getBytes("UTF-8"));
+            byteBuffer.put((byte)0x00);
+            Log.i(TAG, "Created id request of length=" + msglen);
+            return byteBuffer;
+        }
+        catch (UnsupportedEncodingException excep)
+        {
+            Log.e(TAG, "shareDevicTknMsg Unsupported encoding UTF-8 " + excep.getMessage(), excep);
+
+        }
+        catch (Exception excp)
+        {
+            Log.e (TAG, "shareDevicTknMsg Caught exception " + excp.getMessage(), excp);
+        }
+        return null;
+    }
+
+    public static ByteBuffer createIdRequest(String androidId)
+    {
+
+        if (APP_ID > SMARTMSG_ID)
+        {
+            return createIdRequestAppId(androidId);
+        }
+        else
+        {
+            return createIdRequestNoAppId(androidId);
+        }
 
     }
 
@@ -82,10 +150,22 @@ public class MessageTranslator {
     {
         try {
             int msglen = 3*4 + 8;
+            if (APP_ID > SMARTMSG_ID)
+            {
+                msglen += 4;
+            }
             ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
             byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
             byteBuffer.putInt(msglen);
-            byteBuffer.putInt(GET_REMOTE_HOST_MSG);
+            if (APP_ID > SMARTMSG_ID)
+            {
+                byteBuffer.putInt(GET_REMOTE_HOST_1_MSG);
+                byteBuffer.putInt(APP_ID);
+            }
+            else
+            {
+                byteBuffer.putInt(GET_REMOTE_HOST_MSG);
+            }
             byteBuffer.putInt(appId);
             byteBuffer.putLong(shareId);
             return byteBuffer;
@@ -103,13 +183,24 @@ public class MessageTranslator {
             int devTknLen = deviceTkn.getBytes("UTF-8").length+1;
             String  os = "android";
             int osLen = os.getBytes("UTF-8").length+1;
-
             int msglen = osLen + devTknLen + 16;
+            if (APP_ID > SMARTMSG_ID)
+            {
+                msglen += 4;
+            }
             Log.d(TAG, "SharedDevice token msg osLen=" + osLen+ " devTknLen=" + devTknLen + " msglen=" +msglen);
             ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
             byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
             byteBuffer.putInt(msglen);
-            byteBuffer.putInt(STORE_DEVICE_TKN_MSG);
+            if (APP_ID > SMARTMSG_ID)
+            {
+                byteBuffer.putInt(STORE_DEVICE_TKN_1_MSG);
+                byteBuffer.putInt(APP_ID);
+            }
+            else
+            {
+                byteBuffer.putInt(STORE_DEVICE_TKN_MSG);
+            }
             byteBuffer.putLong(shareId);
             byteBuffer.put(deviceTkn.getBytes("UTF-8"));
             byteBuffer.put((byte)0x00);
@@ -135,10 +226,23 @@ public class MessageTranslator {
         {
         int frndLen = frndLst.getBytes("UTF-8").length +1;
         int msglen = frndLen + 16;
+        if (APP_ID > SMARTMSG_ID)
+        {
+            msglen += 4;
+        }
         ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
-            byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
+        byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
         byteBuffer.putInt(msglen);
-        byteBuffer.putInt(STORE_FRIEND_LIST_MSG);
+        if (APP_ID > SMARTMSG_ID)
+        {
+            byteBuffer.putInt(STORE_FRIEND_LIST_1_MSG);
+            byteBuffer.putInt(APP_ID);
+        }
+        else
+        {
+            byteBuffer.putInt(STORE_FRIEND_LIST_MSG);
+        }
+
         byteBuffer.putLong(shareId);
         byteBuffer.put(frndLst.getBytes("UTF-8"));
             byteBuffer.put((byte)0x00);
@@ -164,10 +268,22 @@ public class MessageTranslator {
             Log.i(TAG, "shouldDownloadmsg shareId=" + shareId + " picName=" + picName + " download=" + download);
             int picnamelen = picName.getBytes("UTF-8").length + 1;
             int msglen = 20 + picnamelen;
+            if (APP_ID > SMARTMSG_ID)
+            {
+                msglen += 4;
+            }
             ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
             byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
             byteBuffer.putInt(msglen);
-            byteBuffer.putInt(SHOULD_DOWNLOAD_MSG);
+            if (APP_ID > SMARTMSG_ID)
+            {
+                byteBuffer.putInt(SHOULD_DOWNLOAD_1_MSG);
+                byteBuffer.putInt(APP_ID);
+            }
+            else
+            {
+                byteBuffer.putInt(SHOULD_DOWNLOAD_MSG);
+            }
             byteBuffer.putLong(shareId);
             int dwld=0;
             if (download)
@@ -229,10 +345,22 @@ public class MessageTranslator {
             String picName = sharing.getString("PicName", "NoName");
             int uuidLen = uuid.getBytes("UTF-8").length +1;
             int msglen = uuidLen + 36 + picName.getBytes("UTF-8").length + 1;
+            if (APP_ID > SMARTMSG_ID)
+            {
+                msglen += 4;
+            }
             ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
             byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
             byteBuffer.putInt(msglen);
-            byteBuffer.putInt(GET_ITEMS_MSG);
+            if (APP_ID > SMARTMSG_ID)
+            {
+                byteBuffer.putInt(GET_ITEMS_1_MSG);
+                byteBuffer.putInt(APP_ID);
+            }
+            else
+            {
+                byteBuffer.putInt(GET_ITEMS_MSG);
+            }
             byteBuffer.putLong(shareId);
             byteBuffer.put(uuid.getBytes("UTF-8"));
             byteBuffer.put((byte)0x00);
@@ -276,10 +404,22 @@ public static ByteBuffer sharePicMetaDataMsg(long shareId, String picUrl, int pi
         int metaStrLen = picMetaStr1.getBytes("UTF-8").length +1;
       //  int msglen = 5*sizeof(int) + nameLen  + sizeof(long long) + metaStrLen;
         int msglen = 28 + nameLen + metaStrLen;
+        if (APP_ID > SMARTMSG_ID)
+        {
+            msglen += 4;
+        }
         ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
         byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
         byteBuffer.putInt(msglen);
-        byteBuffer.putInt(PIC_METADATA_MSG);
+        if (APP_ID > SMARTMSG_ID)
+        {
+            byteBuffer.putInt(PIC_METADATA_1_MSG);
+            byteBuffer.putInt(APP_ID);
+        }
+        else
+        {
+            byteBuffer.putInt(PIC_METADATA_MSG);
+        }
         byteBuffer.putLong( shareId);
 
         byteBuffer.putInt(nameLen);
@@ -311,10 +451,18 @@ public static ByteBuffer sharePicMetaDataMsg(long shareId, String picUrl, int pi
             int nameLen = name.getBytes("UTF-8").length+1;
             int listLen = item.getBytes("UTF-8").length+1;
             int msglen = 16 + nameLen + listLen + 8;
+            if (APP_ID > SMARTMSG_ID)
+            {
+                msglen += 4;
+            }
             ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
             byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
             byteBuffer.putInt(msglen);
             byteBuffer.putInt(msgId);
+            if (APP_ID > SMARTMSG_ID)
+            {
+                byteBuffer.putInt(APP_ID);
+            }
             byteBuffer.putLong(shareId);
             byteBuffer.putInt(nameLen);;
             byteBuffer.putInt(listLen);
@@ -344,6 +492,10 @@ public static ByteBuffer sharePicMetaDataMsg(long shareId, String picUrl, int pi
 
 public static ByteBuffer shareItemMsg(long shareId, String name, String item)
 {
+    if (APP_ID > SMARTMSG_ID)
+    {
+        return shareCmnItemMsg(shareId, name, item, SHARE_ITEM_1_MSG);
+    }
    return shareCmnItemMsg(shareId, name, item, SHARE_ITEM_MSG);
 }
 
