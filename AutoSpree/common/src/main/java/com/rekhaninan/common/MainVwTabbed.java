@@ -223,6 +223,13 @@ public class MainVwTabbed extends Fragment {
             }
             break;
 
+            case NSHARELIST:{
+
+                intent.putExtra("HelpText", HelpTxt.NShareListTxt);
+            }
+
+            break;
+
             default:
 
                 break;

@@ -37,6 +37,7 @@ import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_ADD_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_LISTS;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_NAME_ADD_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_NAME_LISTS;
+import static com.rekhaninan.common.Constants.NSHARELIST;
 import static com.rekhaninan.common.Constants.OPENHOUSES;
 import static com.rekhaninan.common.Constants.OPENHOUSES_ADD_ITEM;
 import static com.rekhaninan.common.Constants.OPENHOUSES_ADD_ITEM_REQUEST;
@@ -62,7 +63,7 @@ public class PlannerVwTabbed extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        if (app_name.equals(EASYGROC)) {
+        if (app_name.equals(EASYGROC) || app_name.equals(NSHARELIST)) {
             return inflater.inflate(R.layout.activity_main_vw, container, false);
         }
         else {
@@ -76,7 +77,7 @@ public class PlannerVwTabbed extends Fragment {
         List<Item> mainLst = DBOperations.getInstance().getTemplNameLst();
         Log.i(TAG, "No of elements in Templ name list=" + mainLst.size());
 
-        if (app_name.equals(EASYGROC)) {
+        if (app_name.equals(EASYGROC) || app_name.equals(NSHARELIST)) {
             mListView = (ListView) view.findViewById(R.id.recipe_list_view);
             adapter = new ArrayAdapterMainVw(getActivity(), R.layout.simple_list_1, mainLst);
             adapter.setParams(app_name, EASYGROC_TEMPL_NAME_LISTS);
@@ -167,20 +168,26 @@ public class PlannerVwTabbed extends Fragment {
     private void addTemplListName()
     {
 
-
         switch (app_name) {
 
+            case NSHARELIST:
             case EASYGROC: {
+                String type = "Store ";
+                if (app_name.equals(NSHARELIST))
+                {
+                    type = "Template List ";
+                }
                 Log.d(TAG, "Adding template list item");
                 AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
                 alertDialog.setTitle("New Planner");
 
-                String delMsg = "Please enter name of store ";
+                String delMsg = "Please enter name of " + type;
                 alertDialog.setMessage(delMsg);
                 final EditText input = new EditText(getContext());
                 input.setInputType(InputType.TYPE_CLASS_TEXT);
                 alertDialog.setView(input);
 // Set up the buttons
+                String finalType = type;
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -193,7 +200,7 @@ public class PlannerVwTabbed extends Fragment {
                                 if (DBOperations.getInstance().itemExists(nameItem, EASYGROC_TEMPL_ADD_ITEM)) {
                                     AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
                                     alertDialog.setTitle("Error");
-                                    String err = "Store " + nameItem.getName() + " exists. Choose different name";
+                                    String err = finalType + nameItem.getName() + " exists. Choose different name";
                                     alertDialog.setMessage(err);
                                     alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                                             new DialogInterface.OnClickListener() {

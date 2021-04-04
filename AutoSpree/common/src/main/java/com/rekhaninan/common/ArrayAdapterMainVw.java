@@ -335,6 +335,7 @@ public class ArrayAdapterMainVw extends ArrayAdapter<Item> {
                 break;
 
             case EASYGROC:
+            case NSHARELIST:
                     rowView = new EasyGrocRow();
                 break;
             default:

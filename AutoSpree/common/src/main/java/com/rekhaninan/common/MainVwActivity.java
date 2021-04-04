@@ -50,7 +50,13 @@ public class MainVwActivity extends AppCompatActivity {
             app_name = message;
             PermissionsManager.getInstance().requestPermissionIfReqd(getApplicationContext(), this);
             dbClassName = "com.rekhaninan.common.";
-            dbClassName +=   message;
+            if (app_name.equals(NSHARELIST))
+            {
+                dbClassName += EASYGROC;
+            }
+            else {
+                dbClassName += app_name;
+            }
             dbClassName += "DBIntf";
             Log.d(getClass().getSimpleName(), dbClassName);
             DBOperations.getInstance().initDb(dbClassName, this);
@@ -85,6 +91,9 @@ public class MainVwActivity extends AppCompatActivity {
                                 case PLANNER_POSN:
                                     if (app_name.equals(EASYGROC)) {
                                         tab.setText("Planner");
+                                    }
+                                    else if (app_name.equals(NSHARELIST)) {
+                                        tab.setText("Templates");
                                     }
                                     else
                                     {

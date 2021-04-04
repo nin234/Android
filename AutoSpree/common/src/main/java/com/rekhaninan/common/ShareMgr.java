@@ -42,6 +42,8 @@ import static com.rekhaninan.common.Constants.EASYGROC_ADD_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_ID;
 import static com.rekhaninan.common.Constants.MAINVW;
 import static com.rekhaninan.common.Constants.MAX_BUF;
+import static com.rekhaninan.common.Constants.NSHARELIST;
+import static com.rekhaninan.common.Constants.NSHARELIST_ID;
 import static com.rekhaninan.common.Constants.OPENHOUSES;
 import static com.rekhaninan.common.Constants.OPENHOUSES_ID;
 import static com.rekhaninan.common.Constants.RCV_BUF_LEN;
@@ -177,6 +179,7 @@ public class ShareMgr extends Thread {
             }
             break;
 
+            case NSHARELIST:
             case EASYGROC:
             {
                 editor.putString("easygroc_host", host);
@@ -421,6 +424,10 @@ public class ShareMgr extends Thread {
 
             case EASYGROC:
                 return EASYGROC_ID;
+
+            case NSHARELIST:
+                return NSHARELIST_ID;
+
             default:
                 break;
 
