@@ -109,6 +109,7 @@ public class PlannerVwTabbed extends Fragment {
 
 
                 case EASYGROC:
+                case NSHARELIST:
                     addTemplListName();
                     break;
 
@@ -180,7 +181,9 @@ public class PlannerVwTabbed extends Fragment {
                 Log.d(TAG, "Adding template list item");
                 AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
                 alertDialog.setTitle("New Planner");
-
+                if (app_name.equals(NSHARELIST)) {
+                    alertDialog.setTitle("New Template List");
+                }
                 String delMsg = "Please enter name of " + type;
                 alertDialog.setMessage(delMsg);
                 final EditText input = new EditText(getContext());

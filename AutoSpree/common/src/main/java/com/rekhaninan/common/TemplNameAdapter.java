@@ -16,6 +16,7 @@ import java.util.List;
 import static com.rekhaninan.common.Constants.CONTACTS_ITEM_DISPLAY;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_ADD_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_DISPLAY_ITEM;
+import static com.rekhaninan.common.Constants.NSHARELIST;
 
 /**
  * Created by ninanthomas on 4/2/17.
@@ -26,11 +27,14 @@ public class TemplNameAdapter extends BaseExpandableListAdapter {
     private List<Item> groupItem;
     private Context ctxt;
     private final String TAG = "TemplNameAdapter";
-    public TemplNameAdapter (List<Item> gitems, Context ctx)
+    private String app_name;
+
+    public TemplNameAdapter (List<Item> gitems, Context ctx, String app)
     {
         super();
         groupItem = gitems;
         ctxt = ctx;
+        app_name = app;
     }
 
     public List<Item> getGroupItem() {
@@ -163,7 +167,6 @@ public class TemplNameAdapter extends BaseExpandableListAdapter {
 
     public int getChildrenCount (int groupPosition)
     {
-
         return 3;
     }
 

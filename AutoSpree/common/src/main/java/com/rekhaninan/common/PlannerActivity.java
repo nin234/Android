@@ -27,6 +27,7 @@ import static com.rekhaninan.common.Constants.EASYGROC_SAVE_VIEW;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_ADD_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_DISPLAY_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_EDIT_ITEM;
+import static com.rekhaninan.common.Constants.NSHARELIST;
 import static com.rekhaninan.common.Constants.ONETIME_POSN;
 import static com.rekhaninan.common.Constants.REPLENISH_POSN;
 
@@ -42,6 +43,7 @@ public class PlannerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         try {
+            String app_name = DBOperations.getInstance().getApp_name();
             Log.d(getClass().getSimpleName(), "Starting onCreate of PlannerActivity");
             super.onCreate(savedInstanceState);
             ActionBar actionBar = getSupportActionBar();
@@ -71,29 +73,33 @@ public class PlannerActivity extends AppCompatActivity {
                     new TabLayoutMediator.TabConfigurationStrategy() {
                         @Override public void onConfigureTab(TabLayout.Tab tab, int position) {
                             Log.d(getClass().getSimpleName(), "Configuring tab at=" + position);
-                            switch (position)
+                            if (app_name.equals(EASYGROC))
                             {
-                                case REPLENISH_POSN:
-                                    tab.setText("Replenish");
-                                    break;
+                                switch (position) {
+                                    case REPLENISH_POSN:
+                                        tab.setText("Replenish");
+                                        break;
 
-                                case ONETIME_POSN:
-                                    tab.setText("One-time");
-                                    break;
+                                    case ONETIME_POSN:
+                                        tab.setText("One-time");
+                                        break;
 
-                                case ALWAYS_POSN:
-                                    tab.setText("Always");
-                                    break;
+                                    case ALWAYS_POSN:
+                                        tab.setText("Always");
+                                        break;
 
-                                default:
-                                    tab.setText("Invalid Posn");
-                                    break;
+                                    default:
+                                        tab.setText("Invalid Posn");
+                                        break;
+                                }
                             }
 
                         }
                     }).attach();
 
-            viewPager.setCurrentItem(REPLENISH_POSN);
+            if (app_name.equals(EASYGROC)) {
+                viewPager.setCurrentItem(REPLENISH_POSN);
+            }
 
 
         }

@@ -42,6 +42,7 @@ import static com.rekhaninan.common.Constants.AUTOSPREE;
 import static com.rekhaninan.common.Constants.CHECK_INTERVAL;
 import static com.rekhaninan.common.Constants.EASYGROC;
 import static com.rekhaninan.common.Constants.MAX_BUF;
+import static com.rekhaninan.common.Constants.NSHARELIST;
 import static com.rekhaninan.common.Constants.OPENHOUSES;
 
 /**
@@ -70,7 +71,9 @@ public class NtwIntf {
         SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
         switch (app_name)
         {
-            case EASYGROC: {
+            case EASYGROC:
+            case NSHARELIST:
+            {
                 String host = sharing.getString("easygroc_host", "None");
                 if (host.equals("None")) {
                     connectAddr = "easygroclist.ddns.net";

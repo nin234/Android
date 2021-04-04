@@ -12,6 +12,7 @@ import static com.rekhaninan.common.Constants.*;
 public class PlannerAdapter extends FragmentStateAdapter {
 
     private static final int PLANNER_TABS = 3;
+    private static final int PLANNER_TABS_NSHARELIST = 1;
 
     private Item item;
     private int viewType;
@@ -30,20 +31,30 @@ public class PlannerAdapter extends FragmentStateAdapter {
 
     public void setViewType(int type) {viewType = type;}
 
+    private Fragment getReplenishVw(int position)
+    {
+        replenishVw = new ReplenishVw();
+        replenishVw.setItem(item);
+        replenishVw.setViewType(viewType);
+        Bundle args = new Bundle();
+        // Our object is just an integer :-P
+        args.putInt(ReplenishVw.ARG_OBJECT, position + 1);
+        replenishVw.setArguments(args);
+
+        return replenishVw;
+    }
     public Fragment createFragment(int position) {
         // Return a NEW fragment instance in createFragment(int)
         Log.d(getClass().getSimpleName(), "Creating fragment at=" + position);
+        String app_name = DBOperations.getInstance().getApp_name();
+        if (app_name.equals(NSHARELIST))
+        {
+            return getReplenishVw(position);
+        }
+
         switch (position) {
             case REPLENISH_POSN: {
-                replenishVw = new ReplenishVw();
-                replenishVw.setItem(item);
-                replenishVw.setViewType(viewType);
-                Bundle args = new Bundle();
-                // Our object is just an integer :-P
-                args.putInt(ReplenishVw.ARG_OBJECT, position + 1);
-                replenishVw.setArguments(args);
-                
-                return replenishVw;
+               return getReplenishVw(position) ;
             }
 
             case ONETIME_POSN: {
@@ -94,7 +105,11 @@ public class PlannerAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-
+        String app_name = DBOperations.getInstance().getApp_name();
+        if (app_name.equals(NSHARELIST))
+        {
+            return PLANNER_TABS_NSHARELIST;
+        }
         return PLANNER_TABS;
     }
 

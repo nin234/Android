@@ -467,12 +467,14 @@ public class SingleItemActivity extends AppCompatActivity
 
         switch (app_name) {
 
-            case EASYGROC: {
+            case EASYGROC:
+            case NSHARELIST:
+            {
                 setContentView(R.layout.templ_name_layout);
                List<Item>  mainLst = DBOperations.getInstance().getTemplNameLst();
                 Log.i(TAG, "No of elements in Templ name list=" + mainLst.size());
                 mTemplNameView = (ExpandableListView) findViewById(R.id.templName);
-                templNameAdapter = new TemplNameAdapter(mainLst, this);
+                templNameAdapter = new TemplNameAdapter(mainLst, this, app_name);
                 mTemplNameView.setAdapter(templNameAdapter);
 
             }

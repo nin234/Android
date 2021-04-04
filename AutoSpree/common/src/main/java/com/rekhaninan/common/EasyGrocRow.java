@@ -80,6 +80,7 @@ import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_NAME_LISTS;
 import static com.rekhaninan.common.Constants.HOME_POSN;
 import static com.rekhaninan.common.Constants.MAINVW;
 import static com.rekhaninan.common.Constants.NOTES_ACTIVITY_REQUEST;
+import static com.rekhaninan.common.Constants.NSHARELIST;
 import static com.rekhaninan.common.Constants.ONETIME_POSN;
 import static com.rekhaninan.common.Constants.PICTURE_ACTIVITY_REQUEST;
 import static com.rekhaninan.common.Constants.PLANNER_POSN;
@@ -424,6 +425,14 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                             }
 
                             }
+                        else if (app_name.equals(NSHARELIST)) {
+                            Item nameitem = getAdapter().getItem(0);
+                            if (nameitem.getName().endsWith(":INV")) {
+                                return getLabelSwitchInventoryView(parent, txtHeight, width, itm, EASYGROC_TEMPL_DISPLAY_ITEM);
+                            } else {
+                                return getEasyTemplRow(parent, txtHeight, width, itm.getItem());
+                            }
+                        }
                         else {
                             return getEasyTemplRow(parent, txtHeight, width, itm.getItem());
                         }
