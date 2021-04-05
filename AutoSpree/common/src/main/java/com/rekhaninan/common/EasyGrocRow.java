@@ -344,7 +344,13 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
 
                     case EASYGROC_ADD_TEMPL_LIST:
                     {
-                        return getNoLabelView(parent, txtHeight, width, "Create List from Planner");
+                        String app_name = DBOperations.getInstance().getApp_name();
+                        String labelTxt ="Create List from Planner";
+                        if (app_name.equals(NSHARELIST))
+                        {
+                            labelTxt ="Create List from Templates";
+                        }
+                        return getNoLabelView(parent, txtHeight, width, labelTxt);
                     }
 
                     default:
@@ -575,8 +581,15 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                 java.util.List<Item> templInvList = DBOperations.getInstance().getTemplList(itm.getName() + ":INV", itm.getShare_id());
                 Log.i(TAG, "No of elements in inventory list for " + itm.getName() + ":INV for=" + templInvList.size());
                 for (Item invItem : templInvList) {
-                    if (invItem.getInventory() > 0)
-                        continue;
+                    if (app_name.equals(NSHARELIST))
+                    {
+                        if (invItem.getInventory() <= 0)
+                            continue;
+                    }
+                    else {
+                        if (invItem.getInventory() > 0)
+                            continue;
+                    }
                     mainLst.add(invItem);
                 }
                 java.util.List<Item> templScrList = DBOperations.getInstance().getTemplList(itm.getName() + ":SCRTCH", itm.getShare_id());

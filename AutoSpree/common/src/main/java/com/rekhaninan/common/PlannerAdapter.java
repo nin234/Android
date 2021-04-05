@@ -90,6 +90,12 @@ public class PlannerAdapter extends FragmentStateAdapter {
 
     public void delete()
     {
+        String app_name = DBOperations.getInstance().getApp_name();
+        if (app_name.equals(NSHARELIST))
+        {
+            replenishVw.delete();
+            return;
+        }
         alwaysVw.delete();
         replenishVw.delete();
         oneTimeVw.delete();
@@ -97,6 +103,12 @@ public class PlannerAdapter extends FragmentStateAdapter {
 
     public void save()
     {
+        String app_name = DBOperations.getInstance().getApp_name();
+        if (app_name.equals(NSHARELIST))
+        {
+            replenishVw.save();
+            return;
+        }
         alwaysVw.save();
         replenishVw.save();
         oneTimeVw.save();

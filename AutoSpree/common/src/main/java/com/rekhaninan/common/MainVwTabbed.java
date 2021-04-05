@@ -138,7 +138,9 @@ public class MainVwTabbed extends Fragment {
                 }
                 break;
 
-                case EASYGROC: {
+                case NSHARELIST:
+                case EASYGROC:
+                {
                     intent.putExtra("ViewType", EASYGROC_ADD_ITEM_OPTIONS);
                     Item itm = new Item();
                     intent.putExtra("item", itm);
