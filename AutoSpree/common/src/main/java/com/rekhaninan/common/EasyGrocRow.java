@@ -211,7 +211,8 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
                                           ctxt.startActivity(intent);
 
                                       }
-                                      else if (app_name.equals(EASYGROC) && vwType   == MAINVW)
+                                      else if ((app_name.equals(EASYGROC) || app_name.equals(NSHARELIST))
+                                              && vwType   == MAINVW)
                                       {
                                           Activity mainVwTabbed = (Activity) ctxt;
                                           mainVwTabbed.startActivityForResult(intent, EASYGROC_DELETE_ITEM_REQUEST);

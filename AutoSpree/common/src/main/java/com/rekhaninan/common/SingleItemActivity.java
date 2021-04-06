@@ -725,7 +725,14 @@ public class SingleItemActivity extends AppCompatActivity
                 break;
 
             case EASYGROC_DISPLAY_ITEM:
-                inflater.inflate(R.menu.easygroc_edit, menu);
+                String app_name = DBOperations.getInstance().getApp_name();
+                if (app_name.equals(NSHARELIST)) {
+                    inflater.inflate(R.menu.nsharelist_edit, menu);
+                }
+                else
+                {
+                    inflater.inflate(R.menu.easygroc_edit, menu);
+                }
                 break;
 
             case EASYGROC_TEMPL_DELETE_ITEM:
@@ -1343,7 +1350,7 @@ public class SingleItemActivity extends AppCompatActivity
 
                         String app_name = DBOperations.getInstance().getApp_name();
                         DBOperations.getInstance().deleteDb(itm, viewType);
-                    if (app_name.equals(EASYGROC)) {
+                    if (app_name.equals(EASYGROC) || app_name.equals(NSHARELIST)) {
                         Intent intent = new Intent();
                         intent.putExtra("refresh", "Needed");
                         setResult(RESULT_OK, intent);
