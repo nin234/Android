@@ -619,8 +619,9 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
             itmL.setRowno(i);
             itmL.setShare_id(ShareMgr.getInstance().getShare_id());
 
-            Log.d(TAG, "Inserting into db item="+ itmL.getItem() +
-                    " share_id="+itmL.getShare_id()+ " rowno=" + itmL.getRowno());
+            Log.d(TAG, "Inserting into EASYGROC_ADD_ITEM db item="+ itmL.getItem() +
+                    " share_id="+itmL.getShare_id()+ " rowno=" + itmL.getRowno() + " inventory="
+                    + itmL.getInventory());
             DBOperations.getInstance().insertDb(itmL, EASYGROC_ADD_ITEM);
 
             ++i;
@@ -1068,31 +1069,28 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         {
             label.setText(" ");
         }
-        Log.d(TAG, "getLabelSwitchView text=" + itm.getItem() + " rowno="+ itm.getRowno());
+        Log.d(TAG, "getLabelSwitchView text=" + itm.getItem() + " rowno="+ itm.getRowno()
+        + " inventory=" + itm.getInventory());
         label.setHeight(txtHeight);
         label.setWidth((width / 10) * 8);
         label.setTextSize(TypedValue.COMPLEX_UNIT_PX, txtHeight*0.35f);
         Switch onoff = (Switch) vw.findViewById(R.id.done);
+        final String app_name = DBOperations.getInstance().getApp_name();
+        if (app_name.equals(NSHARELIST))
+        {
+            if (itm.isSelected())
+            {
+                onoff.setChecked(true);
+            }
+            else
+            {
+                onoff.setChecked(false);
+            }
+        }
         onoff.setOnCheckedChangeListener(
                 new CompoundButton.OnCheckedChangeListener() {
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        // do something, the isChecked will be
-                        // true if the switch is in the On position
-                        if (isChecked)
-                        {
-                             itm.setHidden(false);
-                              adapter.notifyDataSetChanged();
-                            adapter.undoPush(itm.getRowno());
-                            Log.d(TAG, "Toggled tag to false in " + itm.getItem() + " rowno=" + itm.getRowno());
-                        }
-                        else
-                        {
-                            itm.setHidden(true);
-                            adapter.undoPush(itm.getRowno());
-                            adapter.notifyDataSetChanged();
-                            Log.d(TAG, "Toggled tag to true in " + itm.getItem() + " rowno=" + itm.getRowno());
-                        }
-
+                        switchPosnChangeAction(isChecked, itm, app_name);
                     }
                 }
         );
@@ -1101,6 +1099,36 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         onoff.setMaxWidth((width / 10)*2);
 
         return vw;
+    }
+
+    private void switchPosnChangeAction(boolean isChecked, final Item itm, String app_name)
+    {
+        // do something, the isChecked will be
+        // true if the switch is in the On position
+        if (app_name.equals(NSHARELIST))
+        {
+            if (isChecked) {
+                itm.setSelected(true);
+                Log.d(TAG, "Toggled selected to true in " + itm.getItem() + " rowno=" + itm.getRowno());
+            } else {
+                itm.setSelected(false);
+                Log.d(TAG, "Toggled selected to false in " + itm.getItem() + " rowno=" + itm.getRowno());
+            }
+            DBOperations.getInstance().updateDb(itm, EASYGROC_DISPLAY_ITEM);
+        }
+        else {
+            if (isChecked) {
+                itm.setHidden(false);
+                adapter.notifyDataSetChanged();
+                adapter.undoPush(itm.getRowno());
+                Log.d(TAG, "Toggled tag to false in " + itm.getItem() + " rowno=" + itm.getRowno());
+            } else {
+                itm.setHidden(true);
+                adapter.undoPush(itm.getRowno());
+                adapter.notifyDataSetChanged();
+                Log.d(TAG, "Toggled tag to true in " + itm.getItem() + " rowno=" + itm.getRowno());
+            }
+        }
     }
 
     private View getTemplView(ViewGroup parent, int txtHeight, int width, String labelTxt)

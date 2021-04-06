@@ -323,6 +323,14 @@ public class EasyGrocListDBIntf extends DBInterface {
                 values.put("inventory", itm.getInventory());
                 break;
 
+            case EASYGROC_DISPLAY_ITEM:
+                dbName = "List";
+                int hidden=0;
+                if (itm.isSelected())
+                    hidden =1;
+                values.put("hidden", hidden);
+                break;
+
             default:
                 break;
         }
