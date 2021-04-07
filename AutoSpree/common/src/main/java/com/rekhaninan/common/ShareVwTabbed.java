@@ -32,6 +32,7 @@ import static com.rekhaninan.common.Constants.GET_CONTACTS_ACTIVITY_REQUEST;
 import static com.rekhaninan.common.Constants.ITEMSEPARATOR;
 import static com.rekhaninan.common.Constants.KEYVALSEPARATOR;
 import static com.rekhaninan.common.Constants.MAINVW;
+import static com.rekhaninan.common.Constants.NSHARELIST;
 import static com.rekhaninan.common.Constants.OPENHOUSES;
 import static com.rekhaninan.common.Constants.RESULT_NO_CONTACT_SELECTED;
 import static com.rekhaninan.common.Constants.SHARE_MAINVW;
@@ -119,7 +120,7 @@ public class ShareVwTabbed extends Fragment {
                boolean bShowAlert = true;
                if (resultCode == RESULT_OK) {
                    java.util.ArrayList<Item> contactsLst = data.getParcelableArrayListExtra("contactslist");
-                   if (app_name.equals(EASYGROC))
+                   if (app_name.equals(EASYGROC) || app_name.equals(NSHARELIST))
                    {
                        shareEasyGrocItem(contactsLst);
                    }
