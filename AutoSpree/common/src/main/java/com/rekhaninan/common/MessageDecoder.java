@@ -21,6 +21,7 @@ import static com.rekhaninan.common.Constants.GET_SHARE_ID_RPLY_MSG;
 import static com.rekhaninan.common.Constants.ITEMSEPARATOR;
 import static com.rekhaninan.common.Constants.KEYVALSEPARATORREGEX;
 import static com.rekhaninan.common.Constants.MSG_AGGR_BUF_LEN;
+import static com.rekhaninan.common.Constants.NSHARELIST;
 import static com.rekhaninan.common.Constants.OPENHOUSES;
 import static com.rekhaninan.common.Constants.OPENHOUSES_ADD_ITEM;
 import static com.rekhaninan.common.Constants.OPENHOUSES_EDIT_ITEM;
@@ -296,6 +297,7 @@ public class MessageDecoder {
             break;
 
             case EASYGROC:
+            case NSHARELIST:
                 bRet =  decodeAndStoreEasyGrocItem(name, list, true);
             break;
 
