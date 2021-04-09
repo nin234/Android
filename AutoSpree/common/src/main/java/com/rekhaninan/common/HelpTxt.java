@@ -49,7 +49,7 @@ public class HelpTxt {
 
             public static final String NShareListTxt = "Create Template lists. Click Templates icon in the" +
                     " bottom tab bar to go to the Template lists section of the App.\n\nCreate a new Template" +
-                    " list by clicking the + button on the top right hand corner. Enter the name of the list " +
+                    " list by clicking the ADD button on the top right hand corner. Enter the name of the list " +
                     "in the text box. Template lists can be created for multiple categories. Some examples are " +
                     "Template list for items to be packed for a trip, tasks to be accomplished daily, tasks to " +
                     "be assigned to spouse or partner.\n\nTo add items to template list, select the newly created" +
@@ -57,7 +57,7 @@ public class HelpTxt {
                     "corner to make changes to template list and click the Save button to save the changes\n\n" +
                     "The switch in the off position (red color) indicates that particular item has to be excluded" +
                     " next time a list is created from the template list.\n\n After creating Template lists click " +
-                    "the + button on the top right corner of the Home screen. Create a new list by selecting the " +
+                    "the ADD button on the top right corner of the Home screen. Create a new list by selecting the " +
                     "appropriate Template list. A new list created  from the Template list excluding items in the " +
                     "Template list that have switch in the off position (red color). After the list is created all " +
                     "the items in the Template list revert back to switch in the On position (green color). " +
@@ -70,7 +70,7 @@ public class HelpTxt {
                     "to share the list with. Click the Contacts icon in the bottom tab bar to bring up the Contacts " +
                     "screen. There will be a ME line. Selecting the ME line, shows the share Id of the nsharelist " +
                     "on this iPhone. This number uniquely identifies the App for sharing purposes. Now navigate " +
-                    "back to Contacts screen by clicking the Contacts button on top left corner. Click the + button " +
+                    "back to Contacts screen by clicking the Contacts button on top left corner. Click the ADD button " +
                     "on top right corner to add a new contact. Enter the share Id and a name to identify the contact." +
                     "The Share Id is the number in the ME row of your friend's nsharelist app. \n\nClick the Share " +
                     "icon in the bottom tab bar. This will bring up the Share screen. Select the List to share and " +

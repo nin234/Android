@@ -18,10 +18,12 @@ import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_ADD_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_DELETE_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_DISPLAY_ITEM;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_EDIT_ITEM;
+import static com.rekhaninan.common.Constants.NSHARELIST;
 
 public class ReplenishVw extends Fragment {
 
     private Item item;
+    private Item itemAlwys;
     private ListView mListView;
     ArrayAdapterMainVw adapter;
     int viewType;
@@ -37,10 +39,13 @@ public class ReplenishVw extends Fragment {
     public void setItem(Item itm) {
 
         item = new Item();
+        itemAlwys = new Item();
         String name = itm.getName();
         name += ":INV";
         item.setName(name);
         item.setShare_id(itm.getShare_id());
+        itemAlwys.setShare_id(itm.getShare_id());
+        itemAlwys.setName(itm.getName());
     }
 
     public void setViewType(int type)
@@ -82,6 +87,11 @@ public class ReplenishVw extends Fragment {
     public void delete()
     {
         DBOperations.getInstance().deleteDb(item, EASYGROC_TEMPL_DELETE_ITEM);
+        String app_name = DBOperations.getInstance().getApp_name();
+        if (app_name.equals(NSHARELIST))
+        {
+            DBOperations.getInstance().deleteDb(itemAlwys, EASYGROC_TEMPL_DELETE_ITEM);
+        }
     }
 
     public void save()
