@@ -14,7 +14,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            isDefault = false
+            isDefault = true
         }
         debug {
             debuggable true
@@ -45,7 +45,9 @@ dependencies {
     implementation 'com.amazonaws:aws-android-sdk-core:2.17.1'
     implementation 'com.amazonaws:aws-android-sdk-ddb:2.17.1'
     implementation 'com.amazonaws:aws-android-sdk-ddb-document:2.17.1'
+    def billing_version = "3.0.0"
 
+    implementation "com.android.billingclient:billing:$billing_version"
 }
 
 
