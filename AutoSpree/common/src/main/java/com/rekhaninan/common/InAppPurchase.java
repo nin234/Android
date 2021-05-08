@@ -84,11 +84,11 @@ public class InAppPurchase {
 
     }
 
-    public InAppPurchase(Activity act, Context ctx)
+    public InAppPurchase(Context ctx)
     {
         bPurchasing = false;
-      activity = act;
       ctxt = ctx;
+      activity = (Activity) ctxt;
       setParams();
         SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
          firstUseTime = sharing.getLong("FirstUseTime", 0);
@@ -111,16 +111,18 @@ public class InAppPurchase {
             Log.d(getClass().getSimpleName(), "App is not purchased");
         }
 
-        billingClient = BillingClient.newBuilder(activity)
-                .setListener(purchasesUpdatedListener)
-                .enablePendingPurchases()
-                .build();
 
-        setupPurchaseHandler();
+
+
     }
 
     private void setupPurchaseHandler()
     {
+
+        billingClient = BillingClient.newBuilder(activity)
+                .setListener(purchasesUpdatedListener)
+                .enablePendingPurchases()
+                .build();
         purchasesUpdatedListener = new PurchasesUpdatedListener() {
             @Override
             public void onPurchasesUpdated(BillingResult billingResult, List<Purchase> purchases) {
@@ -171,6 +173,9 @@ public class InAppPurchase {
         {
             return true;
         }
+
+        setupPurchaseHandler();
+
         purchase();
         return false;
     }

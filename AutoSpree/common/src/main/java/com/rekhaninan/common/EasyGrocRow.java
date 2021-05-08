@@ -185,13 +185,19 @@ public class EasyGrocRow extends RowView implements AdapterView.OnItemSelectedLi
         lp.setMargins((width / 10) * 8, 5, 5, 5);
         disclosure.setLayoutParams(lp);
 
+
         vw.setOnClickListener(new View.OnClickListener() {
                                   @Override
                                   public void onClick(View view) {
 
+                                      if (checkEntitlement() == false)
+                                      {
+                                          return;
+                                      }
 
                                       Intent intent = new Intent(ctxt, SingleItemActivity.class);
                                       if (vwType == MAINVW) {
+
                                           intent.putExtra("ViewType", EASYGROC_DISPLAY_ITEM);
                                       }
                                       else if (vwType == EASYGROC_TEMPL_LISTS)

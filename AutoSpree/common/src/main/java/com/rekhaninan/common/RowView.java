@@ -90,6 +90,11 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
         return vwType;
     }
 
+    protected boolean checkEntitlement()
+    {
+        InAppPurchase inApp = new InAppPurchase(ctxt);
+        return inApp.canContinue();
+    }
 
     public void setCtxt(Context ctxt1)
     {

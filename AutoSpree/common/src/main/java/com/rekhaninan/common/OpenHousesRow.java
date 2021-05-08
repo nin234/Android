@@ -53,6 +53,10 @@ public class OpenHousesRow extends RowView {
 
     private void displayItem(View view, String housename)
     {
+        if (checkEntitlement() == false)
+        {
+            return;
+        }
         Item itm = (Item) view.getTag();
         Log.d(getClass().getName(), "Clicked row " + housename);
         Intent intent = new Intent(ctxt, SingleItemActivity.class);
