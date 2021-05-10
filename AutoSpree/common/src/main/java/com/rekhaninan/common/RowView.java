@@ -46,6 +46,7 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
     private int ratings;
     private Spinner ratingsSpnr;
     protected Fragment fragment;
+    private InAppPurchase inApp;
 
     public void setFragment(Fragment frg) {fragment = frg;}
 
@@ -92,7 +93,9 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
 
     protected boolean checkEntitlement()
     {
-        InAppPurchase inApp = new InAppPurchase(ctxt);
+        if (inApp == null) {
+            inApp = new InAppPurchase(ctxt);
+        }
         return inApp.canContinue();
     }
 

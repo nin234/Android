@@ -74,7 +74,8 @@ public class InAppPurchase {
             case AUTOSPREE:
             {
                 productId = "com.rekhaninan.autospree_yearly";
-                delta = 3600*24*7;
+                //delta = 3600*24*7;
+                delta = 27;
             }
             break;
 
@@ -118,11 +119,6 @@ public class InAppPurchase {
 
     private void setupPurchaseHandler()
     {
-
-        billingClient = BillingClient.newBuilder(activity)
-                .setListener(purchasesUpdatedListener)
-                .enablePendingPurchases()
-                .build();
         purchasesUpdatedListener = new PurchasesUpdatedListener() {
             @Override
             public void onPurchasesUpdated(BillingResult billingResult, List<Purchase> purchases) {
@@ -158,11 +154,16 @@ public class InAppPurchase {
                 }
             }
         };
+
+        billingClient = BillingClient.newBuilder(activity)
+                .setListener(purchasesUpdatedListener)
+                .enablePendingPurchases()
+                .build();
     }
 
     public boolean  canContinue()
     {
-        if (bPurchased == true)
+        if (bPurchased == true || bPurchasing == true)
         {
             return true;
         }
@@ -182,19 +183,25 @@ public class InAppPurchase {
 
     private void onPurchaseConfirm()
     {
-
+        Log.d(getClass().getSimpleName(), "Starting inapp purchase");
         bPurchasing = true;
 
         billingClient.startConnection(new BillingClientStateListener() {
+
+          // Log.d(getClass().getSimpleName(), "Querying sku details ");
+
             @Override
             public void onBillingSetupFinished(BillingResult billingResult) {
+
+                Log.d(getClass().getSimpleName(), "Billing set up finished ");
                 if (billingResult.getResponseCode() ==  BillingClient.BillingResponseCode.OK) {
                     // The BillingClient is ready. You can query purchases here.
-
-                    List<String> skuList = new ArrayList<>();
+                    Log.d(getClass().getSimpleName(), "Querying sku details productId="
+                            + productId);
+                            List<String> skuList = new ArrayList<>();
                     skuList.add(productId);
                     SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
-                    params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP);
+                    params.setSkusList(skuList).setType(BillingClient.SkuType.SUBS);
                     billingClient.querySkuDetailsAsync(params.build(),
                             new SkuDetailsResponseListener() {
                                 @Override
@@ -234,11 +241,19 @@ public class InAppPurchase {
                                 }
                             });
                 }
+                else
+                {
+                    Log.d(getClass().getSimpleName(), "Error in billing setup response=" +
+                            billingResult.getResponseCode());
+                }
             }
             @Override
             public void onBillingServiceDisconnected() {
                 // Try to restart the connection on the next request to
                 // Google Play by calling the startConnection() method.
+
+                Log.d(getClass().getSimpleName(), "Billing service disconnected ");
+
                 if (bPurchasing == true) {
                     bPurchasing = false;
                     AlertDialog alertDialog = new AlertDialog.Builder(ctxt).create();
@@ -259,10 +274,7 @@ public class InAppPurchase {
 
     private void purchase()
     {
-        if (bPurchasing == true)
-        {
-            return;
-        }
+
         AlertDialog alertDialog = new AlertDialog.Builder(ctxt).create();
         alertDialog.setTitle("Nshare apps unlimited");
         String purchaseMsg = "Purchase subscription to continue using Nshare suite of productivity apps" +
