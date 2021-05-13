@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 
 import androidx.appcompat.app.AlertDialog;
 
+import com.android.billingclient.api.AcknowledgePurchaseParams;
+import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
@@ -36,6 +38,7 @@ public class InAppPurchase {
     private boolean bPurchased;
     private boolean bPurchasing;
     private String productId;
+    AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener;
 
     private PurchasesUpdatedListener purchasesUpdatedListener;
 
@@ -54,6 +57,7 @@ public class InAppPurchase {
             case EASYGROC: {
                 productId = "com.rekhaninan.easygroclist_yearly";
                 delta = 3600 * 24 * 30;
+                //delta = 27;
             }
                 break;
 
@@ -61,6 +65,7 @@ public class InAppPurchase {
             {
                 productId = "com.rekhaninan.nsharelist_yearly";
                 delta = 3600*24*30;
+              //  delta = 27;
             }
             break;
 
@@ -68,14 +73,15 @@ public class InAppPurchase {
             {
                 productId = "com.rekhaninan.openhouses_yearly";
                 delta = 3600*24*7;
+                //delta = 27;
             }
             break;
 
             case AUTOSPREE:
             {
                 productId = "com.rekhaninan.autospree_yearly";
-                //delta = 3600*24*7;
-                delta = 27;
+                delta = 3600*24*7;
+                //delta = 27;
             }
             break;
 
@@ -117,22 +123,55 @@ public class InAppPurchase {
 
     }
 
+    private void updatePrefAndAlert()
+    {
+        Log.d(getClass().getSimpleName(), "Purchase finished alerting user");
+        bPurchased = true;
+        bPurchasing = false;
+        SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharing.edit();
+        editor.putBoolean("Purchased", bPurchased);
+        editor.commit();
+        AlertDialog alertDialog = new AlertDialog.Builder(ctxt).create();
+        alertDialog.setTitle("Success");
+        String purchaseMsg = "Subscribed to Nshare Apps Unlimited";
+        alertDialog.setMessage(purchaseMsg);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                (dialog, which) -> {
+                    dialog.dismiss();
+                    return;
+                });
+        alertDialog.show();
+    }
+
+    private void ackPurchase(Purchase purchase)
+    {
+        if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
+            Log.d(getClass().getSimpleName(), "Purchased product" + productId);
+            if (!purchase.isAcknowledged()) {
+                AcknowledgePurchaseParams acknowledgePurchaseParams =
+                        AcknowledgePurchaseParams.newBuilder()
+                                .setPurchaseToken(purchase.getPurchaseToken())
+                                .build();
+                billingClient.acknowledgePurchase(acknowledgePurchaseParams, acknowledgePurchaseResponseListener);
+                Log.d(getClass().getSimpleName(), "Acking purchases");
+            }
+        }
+    }
+
     private void setupPurchaseHandler()
     {
         purchasesUpdatedListener = new PurchasesUpdatedListener() {
             @Override
             public void onPurchasesUpdated(BillingResult billingResult, List<Purchase> purchases) {
-                bPurchasing = false;
                 // To be implemented in a later section.
+                Log.d(getClass().getSimpleName(), "Purchase updated callback");
                 if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK
                         && purchases != null) {
                     for (Purchase purchase : purchases) {
                         if (purchase.getSku().equals(productId)) {
-                            bPurchased = true;
-                            SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharing.edit();
-                            editor.putBoolean("Purchased", bPurchased);
-                            editor.commit();
+
+                            ackPurchase(purchase);
                         }
                     }
                 } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
@@ -159,6 +198,14 @@ public class InAppPurchase {
                 .setListener(purchasesUpdatedListener)
                 .enablePendingPurchases()
                 .build();
+        acknowledgePurchaseResponseListener = billingResult -> {
+
+            Log.d(getClass().getSimpleName(), "Purchase acked callback");
+            if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK)
+            {
+                updatePrefAndAlert();
+            }
+        };
     }
 
     public boolean  canContinue()
@@ -223,7 +270,6 @@ public class InAppPurchase {
                                             int responseCode = billingClient.launchBillingFlow(activity, billingFlowParams).getResponseCode();
                                             if (responseCode != BillingClient.BillingResponseCode.OK)
                                             {
-                                                bPurchasing = false;
                                                 bPurchasing = false;
                                                 AlertDialog alertDialog = new AlertDialog.Builder(ctxt).create();
                                                 alertDialog.setTitle("Failed to buy");

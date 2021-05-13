@@ -97,6 +97,7 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
             inApp = new InAppPurchase(ctxt);
         }
         return inApp.canContinue();
+
     }
 
     public void setCtxt(Context ctxt1)
