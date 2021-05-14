@@ -107,6 +107,10 @@ public abstract class RowView implements AdapterView.OnItemSelectedListener{
     }
        public  View getView(final Item itm, int position, ViewGroup parent)
        {
+           if (inApp == null) {
+               inApp = new InAppPurchase(ctxt);
+           }
+           inApp.queryPurchases();
 
            WindowManager wm = (WindowManager) ctxt.getSystemService(Context.WINDOW_SERVICE);
            Display display = wm.getDefaultDisplay();

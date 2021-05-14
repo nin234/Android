@@ -23,6 +23,7 @@ import com.android.billingclient.api.SkuDetailsResponseListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.android.billingclient.api.BillingClient.SkuType.SUBS;
 import static com.rekhaninan.common.Constants.AUTOSPREE;
 import static com.rekhaninan.common.Constants.EASYGROC;
 import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_DISPLAY_ITEM;
@@ -37,6 +38,7 @@ public class InAppPurchase {
     private  long firstUseTime;
     private boolean bPurchased;
     private boolean bPurchasing;
+    private boolean bQuerying;
     private String productId;
     AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener;
 
@@ -57,7 +59,7 @@ public class InAppPurchase {
             case EASYGROC: {
                 productId = "com.rekhaninan.easygroclist_yearly";
                 delta = 3600 * 24 * 30;
-                //delta = 27;
+                delta = 27;
             }
                 break;
 
@@ -65,7 +67,7 @@ public class InAppPurchase {
             {
                 productId = "com.rekhaninan.nsharelist_yearly";
                 delta = 3600*24*30;
-              //  delta = 27;
+                delta = 27;
             }
             break;
 
@@ -73,7 +75,7 @@ public class InAppPurchase {
             {
                 productId = "com.rekhaninan.openhouses_yearly";
                 delta = 3600*24*7;
-                //delta = 27;
+                delta = 27;
             }
             break;
 
@@ -81,7 +83,7 @@ public class InAppPurchase {
             {
                 productId = "com.rekhaninan.autospree_yearly";
                 delta = 3600*24*7;
-                //delta = 27;
+                delta = 27;
             }
             break;
 
@@ -94,6 +96,7 @@ public class InAppPurchase {
     public InAppPurchase(Context ctx)
     {
         bPurchasing = false;
+        bQuerying = false;
       ctxt = ctx;
       activity = (Activity) ctxt;
       setParams();
@@ -105,7 +108,6 @@ public class InAppPurchase {
             SharedPreferences.Editor editor = sharing.edit();
             editor.putLong("FirstUseTime", firstUseTime);
             editor.commit();
-
         }
 
         bPurchased = sharing.getBoolean("Purchased", false);
@@ -117,21 +119,37 @@ public class InAppPurchase {
         {
             Log.d(getClass().getSimpleName(), "App is not purchased");
         }
+        setupPurchaseHandler();
+    }
+
+    public void queryPurchases()
+    {
+
+        if (bPurchased == true || bPurchasing == true || bQuerying == true)
+        {
+            return;
+        }
+
+        long  now =  System.currentTimeMillis()/1000;
 
 
-
+        bQuerying = true;
+        queryPurchaseSetup();
 
     }
+
 
     private void updatePrefAndAlert()
     {
         Log.d(getClass().getSimpleName(), "Purchase finished alerting user");
         bPurchased = true;
-        bPurchasing = false;
+        bQuerying = false;
+
         SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharing.edit();
         editor.putBoolean("Purchased", bPurchased);
         editor.commit();
+
         AlertDialog alertDialog = new AlertDialog.Builder(ctxt).create();
         alertDialog.setTitle("Success");
         String purchaseMsg = "Subscribed to Nshare Apps Unlimited";
@@ -147,7 +165,7 @@ public class InAppPurchase {
     private void ackPurchase(Purchase purchase)
     {
         if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
-            Log.d(getClass().getSimpleName(), "Purchased product" + productId);
+            Log.d(getClass().getSimpleName(), "Purchased product=" + productId);
             if (!purchase.isAcknowledged()) {
                 AcknowledgePurchaseParams acknowledgePurchaseParams =
                         AcknowledgePurchaseParams.newBuilder()
@@ -155,6 +173,10 @@ public class InAppPurchase {
                                 .build();
                 billingClient.acknowledgePurchase(acknowledgePurchaseParams, acknowledgePurchaseResponseListener);
                 Log.d(getClass().getSimpleName(), "Acking purchases");
+            }
+            else
+            {
+                updatePrefAndAlert();
             }
         }
     }
@@ -176,9 +198,19 @@ public class InAppPurchase {
                     }
                 } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
                     // Handle an error caused by a user cancelling the purchase flow.
+                    bPurchasing  = false;
+                    bQuerying = false;
                     Log.d(getClass().getSimpleName(), "User cancelled purchased");
                 } else {
-                    // Handle any other error codes.
+                    Log.d(getClass().getSimpleName(), "Failed to purchase error="
+                            + billingResult.getResponseCode());
+                            // Handle any other error codes
+                    if (bQuerying ==  true)
+                    {
+                        bQuerying = false;
+                        return;
+                    }
+                    bPurchasing = false;
                     AlertDialog alertDialog = new AlertDialog.Builder(ctxt).create();
                     alertDialog.setTitle("Failed to buy");
                     String purchaseMsg = "Failed to buy subscription for Nshare Apps Unlimited, try again later";
@@ -201,9 +233,14 @@ public class InAppPurchase {
         acknowledgePurchaseResponseListener = billingResult -> {
 
             Log.d(getClass().getSimpleName(), "Purchase acked callback");
+            bPurchasing = false;
             if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK)
             {
                 updatePrefAndAlert();
+            }
+            else
+            {
+                bQuerying = false;
             }
         };
     }
@@ -222,10 +259,59 @@ public class InAppPurchase {
             return true;
         }
 
-        setupPurchaseHandler();
-
         purchase();
         return false;
+    }
+
+    private void queryPurchaseSetup()
+    {
+        Log.d(getClass().getSimpleName(), "Querying purchases");
+
+        billingClient.startConnection(new BillingClientStateListener() {
+
+            // Log.d(getClass().getSimpleName(), "Querying sku details ");
+
+            @Override
+            public void onBillingSetupFinished(BillingResult billingResult) {
+
+                if (billingResult.getResponseCode() ==  BillingClient.BillingResponseCode.OK) {
+                    // The BillingClient is ready. You can query purchases here.
+                    boolean bAck = false;
+                    Log.d(getClass().getSimpleName(), "Billing set up finished for querying " +
+                            "purchases");
+                   List<Purchase>  purchases = billingClient.queryPurchases(SUBS).getPurchasesList();
+                    for (Purchase purchase : purchases) {
+                        if (purchase.getSku().equals(productId)) {
+                            Log.d(getClass().getSimpleName(), "Acking product found in querying productId=" +
+                                    productId);
+                            bAck = true;
+                            ackPurchase(purchase);
+                        }
+                    }
+                    if (bAck == false)
+                    {
+                        bQuerying = false;
+                        Log.d(getClass().getSimpleName(), "Could not find productId=" +
+                                productId);
+                    }
+
+                }
+                else
+                {
+                    bQuerying = false;
+                    Log.d(getClass().getSimpleName(), "Error in billing setup response=" +
+                            billingResult.getResponseCode());
+                }
+            }
+            @Override
+            public void onBillingServiceDisconnected() {
+                // Try to restart the connection on the next request to
+                // Google Play by calling the startConnection() method.
+
+                Log.d(getClass().getSimpleName(), "Billing service disconnected ");
+                bQuerying = false;
+            }
+        });
     }
 
     private void onPurchaseConfirm()
@@ -248,7 +334,7 @@ public class InAppPurchase {
                             List<String> skuList = new ArrayList<>();
                     skuList.add(productId);
                     SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
-                    params.setSkusList(skuList).setType(BillingClient.SkuType.SUBS);
+                    params.setSkusList(skuList).setType(SUBS);
                     billingClient.querySkuDetailsAsync(params.build(),
                             new SkuDetailsResponseListener() {
                                 @Override
@@ -289,6 +375,7 @@ public class InAppPurchase {
                 }
                 else
                 {
+                    bPurchasing = false;
                     Log.d(getClass().getSimpleName(), "Error in billing setup response=" +
                             billingResult.getResponseCode());
                 }

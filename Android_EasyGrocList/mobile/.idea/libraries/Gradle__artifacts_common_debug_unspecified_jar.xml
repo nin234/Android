@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: artifacts:common-debug:unspecified@jar">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../common-debug/build/.transforms/b7ceb899888fd00b2fb24fcc53a76e3c/jetified-common-debug/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../common-debug/build/.transforms/b7ceb899888fd00b2fb24fcc53a76e3c/jetified-common-debug/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
