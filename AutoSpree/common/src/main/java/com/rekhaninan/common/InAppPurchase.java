@@ -149,7 +149,7 @@ public class InAppPurchase {
         SharedPreferences.Editor editor = sharing.edit();
         editor.putBoolean("Purchased", bPurchased);
         editor.commit();
-
+        ShareMgr.getInstance().storePurchaseInCloud(productId);
         AlertDialog alertDialog = new AlertDialog.Builder(ctxt).create();
         alertDialog.setTitle("Success");
         String purchaseMsg = "Subscribed to Nshare Apps Unlimited";

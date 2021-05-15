@@ -163,6 +163,10 @@ public final class Constants {
             public static final int PIC_RPLY_1_MSG = 118;
             public static final int SHOULD_DOWNLOAD_1_MSG = 121;
 
+            public static final int STORE_PURCHASED = 130;
+            public static final int GET_PURCHASES = 131;
+            public static final int GET_PURCHASES_REPLY = 132;
+
     public static final int SHARE_POSN=0;
     public static final int CONTACTS_POSN=1;
     public static final int PLANNER_POSN=2;

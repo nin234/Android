@@ -797,6 +797,7 @@ public class ShareMgr extends Thread {
         }
         lastRemoteHostSentTime = now;
         Log.d(TAG, "Getting remote host and port");
+
         if (ntwIntf.sendMsg(MessageTranslator.getRemoteHostPortMsg(share_id, getAppId())))
         {
             Log.i(TAG, "Send GET_REMOTE_HOST_PORT request");
@@ -831,6 +832,11 @@ public class ShareMgr extends Thread {
         }
 
         return;
+    }
+
+    public void storePurchaseInCloud(String productId)
+    {
+        putMsgInQ(MessageTranslator.getStorePurchasedMsg(share_id, androidId, productId));
     }
 
     private void downLoadAlexaItems()
