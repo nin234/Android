@@ -342,14 +342,18 @@ public class MessageTranslator {
         {
             int idLen = androidId.getBytes("UTF-8").length+1;
             int pIdLen = productId.getBytes("UTF-8").length+1;
-            int msglen = 4 + 4 + 4 + 8 + idLen + pIdLen;
+            int msglen = 4 + 4 + 4 + 8 + 4 + 4+ idLen + pIdLen;
+            //msgLen + msgId + appId + shareId + idLen + pIdLen + androidId + productId
             ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
             byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
             byteBuffer.putInt(msglen);
             byteBuffer.putInt(STORE_PURCHASED);
             byteBuffer.putInt(APP_ID);
             byteBuffer.putLong(shareId);
+            byteBuffer.putInt(idLen);
+            byteBuffer.putInt(pIdLen);
             byteBuffer.put(androidId.getBytes("UTF-8"));
+            byteBuffer.put((byte)0x00);
             byteBuffer.put(productId.getBytes("UTF-8"));
             byteBuffer.put((byte)0x00);
             Log.i(TAG, "Created STORE_PURCHASED request of length=" + msglen);
