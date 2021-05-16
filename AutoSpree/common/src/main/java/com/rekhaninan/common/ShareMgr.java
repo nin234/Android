@@ -1,17 +1,12 @@
 package com.rekhaninan.common;
-import android.app.Activity;
-import android.content.Context;
 import android.content.Context;
 
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
-import android.os.Build;
-import android.os.FileUtils;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
@@ -47,11 +42,10 @@ import static com.rekhaninan.common.Constants.NSHARELIST_ID;
 import static com.rekhaninan.common.Constants.OPENHOUSES;
 import static com.rekhaninan.common.Constants.OPENHOUSES_ID;
 import static com.rekhaninan.common.Constants.RCV_BUF_LEN;
-import android.content.SharedPreferences;
+
 import android.provider.Settings;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -834,9 +828,51 @@ public class ShareMgr extends Thread {
         return;
     }
 
+    public boolean sendGetPurchasesMsg()
+    {
+        SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
+        long firstUseTime = sharing.getLong("FirstUseTime", 0);
+
+        boolean bPurchased = sharing.getBoolean("Purchased", false);
+        if (bPurchased == true)
+        {
+            return false;
+        }
+        long  now =  System.currentTimeMillis()/1000;
+
+        long delta = 0;
+        if (app_name.equals(AUTOSPREE) || app_name.equals(OPENHOUSES))
+        {
+            delta = 3600*24*7;
+        }
+        else
+        {
+            delta = 3600*24*30;
+        }
+
+        if ((now - firstUseTime) < delta )
+        {
+            return false;
+        }
+        SharedPreferences.Editor editor = sharing.edit();
+        editor.putBoolean("CheckPurchasedCloud", true);
+
+        return true;
+
+    }
     public void storePurchaseInCloud(String productId)
     {
-        putMsgInQ(MessageTranslator.getStorePurchasedMsg(share_id, androidId, productId));
+
+        putMsgInQ(MessageTranslator.storePurchasedMsg(share_id, androidId, productId));
+    }
+
+    public void getPurchasesFromCloud()
+    {
+        if (sendGetPurchasesMsg() == false)
+        {
+            return;
+        }
+        putMsgInQ(MessageTranslator.getPurchasesMsg(share_id, androidId));
     }
 
     private void downLoadAlexaItems()
@@ -894,6 +930,8 @@ public class ShareMgr extends Thread {
 
         downLoadAlexaItems();
         getItems();
+        getPurchasesFromCloud();
+
         for (;;)
         {
             dataToSend.lock();

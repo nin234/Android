@@ -245,6 +245,8 @@ public class InAppPurchase {
         };
     }
 
+
+
     public boolean  canContinue()
     {
         if (bPurchased == true || bPurchasing == true)

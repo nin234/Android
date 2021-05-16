@@ -335,8 +335,38 @@ public class MessageTranslator {
         return null;
     }
 
+    public static ByteBuffer getPurchasesMsg(long shareId, String androidId)
+    {
+        try
+        {
+            int idLen = androidId.getBytes("UTF-8").length+1;
+            int msglen = 4 + 4 + 4 + 8 + 4 +  idLen;
+            //msgLen + msgId + appId + shareId + idLen + pIdLen + androidId + productId
+            ByteBuffer byteBuffer = ByteBuffer.allocate(msglen);
+            byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
+            byteBuffer.putInt(msglen);
+            byteBuffer.putInt(GET_PURCHASES);
+            byteBuffer.putInt(APP_ID);
+            byteBuffer.putLong(shareId);
+            byteBuffer.putInt(idLen);
+            byteBuffer.put(androidId.getBytes("UTF-8"));
+            byteBuffer.put((byte)0x00);
+            Log.i(TAG, "Created GET_PURCHASES request of length=" + msglen);
+        }
+        catch (UnsupportedEncodingException excep)
+        {
+            Log.e(TAG, "getStorePurchaseMsg Unsupported encoding UTF-8 " + excep.getMessage(), excep);
 
-    public static ByteBuffer getStorePurchasedMsg(long shareId, String androidId, String productId)
+        }
+        catch (Exception excp)
+        {
+            Log.e (TAG, " Caught exception getStorePurchaseMsg" + excp.getMessage(), excp);
+
+        }
+        return null;
+    }
+
+    public static ByteBuffer storePurchasedMsg(long shareId, String androidId, String productId)
     {
         try
         {
