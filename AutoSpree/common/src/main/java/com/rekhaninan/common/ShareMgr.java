@@ -860,6 +860,19 @@ public class ShareMgr extends Thread {
         return true;
 
     }
+
+    public void handleGetPurchasesReplyMsg(String productId)
+    {
+        SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharing.edit();
+        editor.putBoolean("CheckPurchasedCloud", false);
+        if (productId.equals("INVALID"))
+        {
+            return;
+        }
+        editor.putBoolean("Purchased", true);
+    }
+
     public void storePurchaseInCloud(String productId)
     {
 

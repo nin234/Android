@@ -17,6 +17,7 @@ import static com.rekhaninan.common.Constants.EASYGROC_TEMPL_ADD_ITEM;
 import static com.rekhaninan.common.Constants.FRIEND_LIST_MSG;
 import static com.rekhaninan.common.Constants.FRNDLSTMSGFRNDSEPERATOR;
 import static com.rekhaninan.common.Constants.FRNDLSTMSGNAMESHIDSEPERATOR;
+import static com.rekhaninan.common.Constants.GET_PURCHASES_REPLY;
 import static com.rekhaninan.common.Constants.GET_SHARE_ID_RPLY_MSG;
 import static com.rekhaninan.common.Constants.ITEMSEPARATOR;
 import static com.rekhaninan.common.Constants.KEYVALSEPARATORREGEX;
@@ -264,6 +265,31 @@ public class MessageDecoder {
         {
             Log.e(TAG, "processFrndLstMessage exception  " + excp.getMessage(), excp);
             return false;
+        }
+
+        return bRet;
+    }
+
+    boolean processGetPurchasesReplyMsg(ByteBuffer buffer, int mlen)
+    {
+        boolean bRet = true;
+        try
+        {
+            int pidOffset = 24;
+            int pidLen = buffer.getInt(20);
+            String utf8 = new  String("UTF-8");
+            String productId = new String(buffer.array(), pidOffset, pidLen-1, utf8 );
+            ShareMgr.getInstance().handleGetPurchasesReplyMsg(productId);
+        }
+        catch (java.io.UnsupportedEncodingException excp)
+        {
+          Log.e(TAG, " processGetPurchasesReplyMsg UnsupportedEncodingException " + excp.getMessage(), excp);
+          bRet = false;
+        }
+        catch (Exception excp)
+        {
+             Log.e(TAG, " processGetPurchasesReplyMsg exception  " + excp.getMessage(), excp);
+             bRet = false;
         }
 
         return bRet;
@@ -697,6 +723,11 @@ public class MessageDecoder {
                     bRet = processRemoteShareIdHostPortMessage(buffer, mlen);
                 }
                 break;
+
+                case GET_PURCHASES_REPLY:
+                {
+                    bRet = processGetPurchasesReplyMsg(buffer, mlen);
+                }
 
                 default:
                     bRet = true;

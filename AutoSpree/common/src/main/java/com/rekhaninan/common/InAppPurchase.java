@@ -246,7 +246,6 @@ public class InAppPurchase {
     }
 
 
-
     public boolean  canContinue()
     {
         if (bPurchased == true || bPurchasing == true)
@@ -257,6 +256,12 @@ public class InAppPurchase {
        long  now =  System.currentTimeMillis()/1000;
 
         if ((now - firstUseTime) < delta )
+        {
+            return true;
+        }
+        SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
+        boolean   bCheckingInCloud      = sharing.getBoolean("CheckPurchasedCloud", false);
+        if (bCheckingInCloud == true)
         {
             return true;
         }
