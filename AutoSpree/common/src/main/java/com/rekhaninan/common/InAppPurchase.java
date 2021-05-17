@@ -59,7 +59,7 @@ public class InAppPurchase {
             case EASYGROC: {
                 productId = "com.rekhaninan.easygroclist_yearly";
                 delta = 3600 * 24 * 30;
-                delta = 27;
+                //delta = 27;
             }
                 break;
 
@@ -67,7 +67,7 @@ public class InAppPurchase {
             {
                 productId = "com.rekhaninan.nsharelist_yearly";
                 delta = 3600*24*30;
-                delta = 27;
+                //delta = 27;
             }
             break;
 
@@ -75,7 +75,7 @@ public class InAppPurchase {
             {
                 productId = "com.rekhaninan.openhouses_yearly";
                 delta = 3600*24*7;
-                delta = 27;
+               // delta = 27;
             }
             break;
 
@@ -83,7 +83,7 @@ public class InAppPurchase {
             {
                 productId = "com.rekhaninan.autospree_yearly";
                 delta = 3600*24*7;
-                delta = 27;
+               // delta = 27;
             }
             break;
 
@@ -415,11 +415,17 @@ public class InAppPurchase {
     private void purchase()
     {
 
+        String app_name = DBOperations.getInstance().getApp_name();
+
         AlertDialog alertDialog = new AlertDialog.Builder(ctxt).create();
         alertDialog.setTitle("Nshare apps unlimited");
         String purchaseMsg = "Purchase subscription to continue using Nshare suite of productivity apps" +
-                " - EasyGrocList, nsharelist, OpenHouses and AutoSpree- after the free trial period. " +
+                " -  nsharelist, OpenHouses and AutoSpree- after the free trial period. " +
                 "With one subscription of $0.99 per year you can use all our apps";
+        if (app_name.equals(EASYGROC))
+        {
+            purchaseMsg = "Purchase subscription of $0.99 per year to continue using EasyGroclist";
+        }
         alertDialog.setMessage(purchaseMsg);
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Buy",
                 new DialogInterface.OnClickListener() {

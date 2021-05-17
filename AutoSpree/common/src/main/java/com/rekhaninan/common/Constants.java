@@ -14,7 +14,7 @@ public final class Constants {
 
     public static final int OPENHOUSES_ID=0;
     public static final int AUTOSPREE_ID = 1;
-    public static final int EASYGROC_ID = 1;
+    public static final int EASYGROC_ID = 2;
     public static final int SMARTMSG_ID = 3;
     public static final int NSHARELIST_ID = 4;
 

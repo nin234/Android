@@ -277,8 +277,11 @@ public class MessageDecoder {
         {
             int pidOffset = 24;
             int pidLen = buffer.getInt(20);
+            Log.d(TAG, "pidLen=" + pidLen);
             String utf8 = new  String("UTF-8");
+
             String productId = new String(buffer.array(), pidOffset, pidLen-1, utf8 );
+            Log.d(TAG, "productId=" + productId);
             ShareMgr.getInstance().handleGetPurchasesReplyMsg(productId);
         }
         catch (java.io.UnsupportedEncodingException excp)

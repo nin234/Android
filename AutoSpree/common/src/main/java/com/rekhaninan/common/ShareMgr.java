@@ -47,6 +47,7 @@ import android.provider.Settings;
 
 import androidx.annotation.NonNull;
 
+import com.amazonaws.mobileconnectors.dynamodbv2.document.Table;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -88,6 +89,9 @@ public class ShareMgr extends Thread {
     private boolean bGetRemoteHostPort;
     private AppSyncInterface appSyncInterface;
     private String androidId;
+    private String productId;
+    private boolean bSendStorePurchasedMsg;
+    private boolean bSendGetPurchasesMsg;
 
     public void setActivity(MainVwActivity act) {
         activity = act;
@@ -154,6 +158,20 @@ public class ShareMgr extends Thread {
         editor.commit();
         activity.refreshContactVw();
         shareDeviceTkn();
+        if (bSendStorePurchasedMsg == true)
+        {
+            storePurchaseInCloud(productId);
+            bSendGetPurchasesMsg = false;
+            bSendStorePurchasedMsg = false;
+            return;
+        }
+
+        if (bSendGetPurchasesMsg == true)
+        {
+            getPurchasesFromCloud();
+        }
+        bSendGetPurchasesMsg = false;
+        bSendStorePurchasedMsg = false;
     }
 
     public void setHostPort(String host, int port)
@@ -638,6 +656,9 @@ public class ShareMgr extends Thread {
     public void  start_thr(Context ctx, String appname)
     {
         app_name = appname;
+        bSendGetPurchasesMsg = false;
+        bSendStorePurchasedMsg = false;
+
         MessageTranslator.setAppId(NshareUtil.appNameToAppId(app_name));
         Log.i(TAG, "Starting share mgr thread for app=" + app_name);
 
@@ -844,11 +865,14 @@ public class ShareMgr extends Thread {
         if (app_name.equals(AUTOSPREE) || app_name.equals(OPENHOUSES))
         {
             delta = 3600*24*7;
+
         }
         else
         {
             delta = 3600*24*30;
         }
+
+       // delta = 10;
 
         if ((now - firstUseTime) < delta )
         {
@@ -856,7 +880,7 @@ public class ShareMgr extends Thread {
         }
         SharedPreferences.Editor editor = sharing.edit();
         editor.putBoolean("CheckPurchasedCloud", true);
-
+        editor.commit();
         return true;
 
     }
@@ -866,16 +890,24 @@ public class ShareMgr extends Thread {
         SharedPreferences sharing = ctxt.getSharedPreferences("Sharing", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharing.edit();
         editor.putBoolean("CheckPurchasedCloud", false);
+        editor.commit();
         if (productId.equals("INVALID"))
         {
             return;
         }
+        Log.d(TAG, "Setting app to Purchased");
         editor.putBoolean("Purchased", true);
+        editor.commit();
     }
 
-    public void storePurchaseInCloud(String productId)
+    public void storePurchaseInCloud(String pId)
     {
-
+        productId = pId;
+        if (share_id == 0)
+        {
+            bSendStorePurchasedMsg = true;
+            return;
+        }
         putMsgInQ(MessageTranslator.storePurchasedMsg(share_id, androidId, productId));
     }
 
@@ -883,6 +915,11 @@ public class ShareMgr extends Thread {
     {
         if (sendGetPurchasesMsg() == false)
         {
+            return;
+        }
+        if (share_id == 0)
+        {
+            bSendGetPurchasesMsg = true;
             return;
         }
         putMsgInQ(MessageTranslator.getPurchasesMsg(share_id, androidId));

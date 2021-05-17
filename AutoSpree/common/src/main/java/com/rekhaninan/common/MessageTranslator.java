@@ -352,6 +352,7 @@ public class MessageTranslator {
             byteBuffer.put(androidId.getBytes("UTF-8"));
             byteBuffer.put((byte)0x00);
             Log.i(TAG, "Created GET_PURCHASES request of length=" + msglen);
+            return byteBuffer;
         }
         catch (UnsupportedEncodingException excep)
         {
@@ -387,6 +388,7 @@ public class MessageTranslator {
             byteBuffer.put(productId.getBytes("UTF-8"));
             byteBuffer.put((byte)0x00);
             Log.i(TAG, "Created STORE_PURCHASED request of length=" + msglen);
+            return byteBuffer;
         }
         catch (UnsupportedEncodingException excep)
         {
